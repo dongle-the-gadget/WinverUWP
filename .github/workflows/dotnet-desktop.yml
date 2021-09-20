@@ -86,7 +86,7 @@ jobs:
         Configuration: Release
     
     - name: List
-      run: dir /s
+      run: 'cmd.exe /C "dir /s"'
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload artifact
