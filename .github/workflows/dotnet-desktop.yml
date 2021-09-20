@@ -58,8 +58,7 @@ jobs:
 
     env:
       Solution_Name: WinverUWP.sln
-      Wap_Project_Directory: WinverUWP.Package
-      Wap_Project_Path: WinverUWP.Package\WinverUWP.Package.wapproj
+      Project_Name: WinverUWP.Package
       
     steps:
     - name: Checkout
@@ -79,7 +78,18 @@ jobs:
 
     # Create the app package by building and packaging the Windows Application Packaging project
     - name: Create the app package
-      run: msbuild $env:Wap_Project_Path /restore /p:AppxPackageDir=${{ github.workspace }}\artifacts\${{ matrix.platform }}-${{ matrix.architecture }} /p:Platform=${{ matrix.architecture }} /p:AppxBundle=$env:AppxBundle /p:AppxBundlePlatforms="${{ matrix.architecture }}" /p:AppxPackageDir=${{ github.workspace }}\artifacts\${{ matrix.platform }}-${{ matrix.architecture }} /p:AppxPackageSigningEnabled=false /p:RuntimeIdentifier=${{ matrix.platform }}-${{ matrix.architecture }} /p:PublishSingleFile=true /p:PublishTrimmed=true /p:Configuration=Release
+      run: msbuild /m /t:${{ env.Project_Name }} /restore /p:Platform=${{ matrix.architecture }} /p:AppxBundle=$env:AppxBundle /p:AppxBundlePlatforms="${{ matrix.architecture }}" /p:AppxPackageDir=${{ github.workspace }}\artifacts\${{ matrix.platform }}-${{ matrix.architecture }} /p:AppxPackageSigningEnabled=false /p:RuntimeIdentifier=${{ matrix.platform }}-${{ matrix.architecture }} /p:PublishDir=${{ github.workspace }}\artifacts\${{ matrix.platform }}-${{ matrix.architecture }}/UWP /p:PublishSingleFile=true /p:PublishTrimmed=true /p:Configuration=Release ${{ env.Solution_Name }}
+      env:
+        AppxBundle: Always
+        BuildMode: SideloadOnly
+        Configuration: Release
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ matrix.platform }}-${{ matrix.architecture }}
+        path: ${{ github.workspace }}/artifacts/${{ matrix.platform }}-${{ matrix.architecture }}
+
       env:
         Appx_Bundle: Always
         Appx_Package_Build_Mode: SideloadOnly
