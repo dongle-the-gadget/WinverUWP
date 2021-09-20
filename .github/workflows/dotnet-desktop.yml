@@ -50,7 +50,8 @@ jobs:
 
     strategy:
       matrix:
-        configuration: [Debug, Release]
+        architecture: [x86, x64, arm64]
+        platform: [win]
 
     runs-on: windows-latest  # For a list of available runner types, refer to
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
@@ -76,24 +77,17 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.2
 
-    # Restore the application to populate the obj folder with RuntimeIdentifiers
-    - name: Restore the application
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
-      env:
-        Configuration: ${{ matrix.configuration }}
-
     # Create the app package by building and packaging the Windows Application Packaging project
     - name: Create the app package
-      run: msbuild $env:Wap_Project_Path /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle
+      run: msbuild $env:Wap_Project_Path /restore /p:AppxPackageDir=${{ github.workspace }}\artifacts\${{ matrix.platform }}-${{ matrix.architecture }} /p:Platform=${{ matrix.architecture }} /p:AppxBundle=$env:AppxBundle /p:AppxBundlePlatforms="${{ matrix.architecture }}" /p:AppxPackageDir=${{ github.workspace }}\artifacts\${{ matrix.platform }}-${{ matrix.architecture }} /p:AppxPackageSigningEnabled=false /p:RuntimeIdentifier=${{ matrix.platform }}-${{ matrix.architecture }} /p:PublishSingleFile=true /p:PublishTrimmed=true /p:Configuration=Release
       env:
         Appx_Bundle: Always
-        Appx_Bundle_Platforms: x86|x64
         Appx_Package_Build_Mode: SideloadOnly
-        Configuration: ${{ matrix.configuration }}
+        Configuration: Release
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
-    - name: Upload build artifacts
+    - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
-        name: MSIX Package
-        path: ${{ env.Wap_Project_Directory }}\AppPackages
+        name: ${{ matrix.platform }}-${{ matrix.architecture }}
+        path: ${{ github.workspace }}/artifacts/${{ matrix.platform }}-${{ matrix.architecture }}
