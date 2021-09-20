@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinverUWP", "WinverUWP\Winv
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinverUWP.Broker", "WinverUWP.Broker\WinverUWP.Broker.csproj", "{6E8074AB-2642-437B-ACA5-F2B4FA4017E5}"
 EndProject
-Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "WinverUWP.Package", "WinverUWP.Package\WinverUWP.Package.wapproj", "{0449E1A8-B608-4041-8691-F404414FBB22}"
+Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "WinverUWPPackage", "WinverUWP.Package\WinverUWPPackage.wapproj", "{0449E1A8-B608-4041-8691-F404414FBB22}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinverUWP.InterCommunication", "WinverUWP.InterCommunication\WinverUWP.InterCommunication.csproj", "{DB0E5774-525A-405F-809C-75FA2598D02C}"
 EndProject
