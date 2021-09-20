@@ -32,7 +32,8 @@
   <Applications>
 	<Application Id="App"
       Executable="WinverUWP.exe"
-      EntryPoint="WinverUWP.App">
+      EntryPoint="WinverUWP.App"
+	  desktop4:Subsystem="windows">
       <uap:VisualElements
         DisplayName="WinverUWP"
         Description="Winver but in UWP"
@@ -52,6 +53,11 @@
 		<desktop:Extension Category="windows.fullTrustProcess" Executable="WinverUWP.Broker\WinverUWP.Broker.exe">
 		  <desktop:FullTrustProcess />
 		</desktop:Extension>
+		<uap5:Extension Category="windows.appExecutionAlias">
+		  <uap5:AppExecutionAlias desktop4:Subsystem="windows">
+		     <uap5:ExecutionAlias Alias="winveruwp.exe"/>
+		  </uap5:AppExecutionAlias>
+		</uap5:Extension>
 	  </Extensions>
     </Application>
   </Applications>
