@@ -78,7 +78,7 @@ jobs:
 
     # Create the app package by building and packaging the Windows Application Packaging project
     - name: Create the app package
-      run: msbuild /m /t:${{ env.Project_Name }} /restore /p:Platform=${{ matrix.architecture }} /p:AppxBundle=$env:AppxBundle /p:AppxBundlePlatforms="${{ matrix.architecture }}" /p:AppxPackageDir=${{ github.workspace }}\artifacts\${{ matrix.platform }}-${{ matrix.architecture }} /p:AppxPackageSigningEnabled=false /p:RuntimeIdentifier=${{ matrix.platform }}-${{ matrix.architecture }} /p:PublishDir=${{ github.workspace }}\artifacts\${{ matrix.platform }}-${{ matrix.architecture }}/UWP /p:PublishSingleFile=true /p:PublishTrimmed=true /p:Configuration=Release ${{ env.Solution_Name }}
+      run: msbuild /m /t:${{ env.Project_Name }} /p:Platform=${{ matrix.architecture }} /p:AppxBundle=$env:AppxBundle /p:AppxBundlePlatforms="${{ matrix.architecture }}" /p:AppxPackageDir=${{ github.workspace }}\artifacts\${{ matrix.platform }}-${{ matrix.architecture }} /p:AppxPackageSigningEnabled=false /p:RuntimeIdentifier=${{ matrix.platform }}-${{ matrix.architecture }} /p:PublishDir=${{ github.workspace }}\artifacts\${{ matrix.platform }}-${{ matrix.architecture }}/UWP /p:PublishSingleFile=true /p:PublishTrimmed=true /p:Configuration=Release ${{ env.Solution_Name }}
       env:
         AppxBundle: Always
         BuildMode: SideloadOnly
