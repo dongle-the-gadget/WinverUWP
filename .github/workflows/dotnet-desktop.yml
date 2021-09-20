@@ -58,7 +58,7 @@ jobs:
     env:
       Solution_Name: WinverUWP.sln
       Wap_Project_Directory: WinverUWP.Package
-      Wap_Project_Path: WinverUWP.Package.csproj
+      Wap_Project_Path: WinverUWP.Package\WinverUWP.Package.wapproj
       
     steps:
     - name: Checkout
