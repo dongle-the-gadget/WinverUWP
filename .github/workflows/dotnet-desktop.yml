@@ -84,6 +84,9 @@ jobs:
         Appx_Bundle: Always
         Appx_Package_Build_Mode: SideloadOnly
         Configuration: Release
+    
+    - name: List
+      run: dir /s
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload artifact
