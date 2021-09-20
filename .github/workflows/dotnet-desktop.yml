@@ -90,4 +90,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: ${{ matrix.platform }}-${{ matrix.architecture }}
-        path: ${{ github.workspace }}/artifacts/${{ matrix.platform }}-${{ matrix.architecture }}
+        path: ${{ github.workspace }}\artifacts\${{ matrix.platform }}-${{ matrix.architecture }}
