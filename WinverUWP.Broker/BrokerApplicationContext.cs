@@ -56,7 +56,7 @@ namespace WinverUWP.Broker
             build = Environment.OSVersion.Version.Build.ToString();
 
 #pragma warning disable CS8605 // Unboxing a possibly null value.
-            int revision = (int)Registry.GetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "BaseBuildRevisionNumber", 0);
+            int revision = (int)Registry.GetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "UBF", 0);
 #pragma warning restore CS8605 // Unboxing a possibly null value.
             if (revision > 0)
                 build += $".{revision}";
