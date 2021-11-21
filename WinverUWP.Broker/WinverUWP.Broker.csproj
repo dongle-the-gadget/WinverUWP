@@ -7,7 +7,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64;x86;ARM64</Platforms>
-    <RuntimeIdentifiers>win-arm64;win-x86;win-x64</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win-arm64;win-x86;win-x64;win-ARM64;win-X86;win-X64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
