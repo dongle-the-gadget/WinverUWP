@@ -8,7 +8,7 @@
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
   xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
-  IgnorableNamespaces="uap rescap uap3 desktop4 uap5">
+  IgnorableNamespaces="uap rescap uap3 desktop desktop4 uap5">
 
   <Identity
     Name="340a1c78-b046-4b55-8bb4-a62b77ea9ce0"
@@ -55,7 +55,7 @@
 		</desktop:Extension>
 		<uap5:Extension Category="windows.appExecutionAlias">
 		  <uap5:AppExecutionAlias desktop4:Subsystem="windows">
-		     <uap5:ExecutionAlias Alias="winveruwp.exe"/>
+		    <uap5:ExecutionAlias Alias="winveruwp.exe"/>
 		  </uap5:AppExecutionAlias>
 		</uap5:Extension>
 	  </Extensions>
