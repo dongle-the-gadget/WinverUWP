@@ -10,10 +10,10 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-    strategy:
-      matrix:
-        architecture: [x86, x64, arm64]
-        platform: [win]
+    # strategy:
+      # matrix:
+        # architecture: [x86, x64, arm64]
+        # platform: [win]
     steps:
       - name: Configure Pagefile
         uses: al-cheb/configure-pagefile-action@v1.2
@@ -38,7 +38,8 @@ jobs:
 
 
       - name: Build UWP utilities
-        run: msbuild /m /t:WinverUWPPackage /restore /p:Platform=${{ matrix.architecture }} /p:AppxBundle=$env:AppxBundle /p:AppxBundlePlatforms="${{ matrix.architecture }}" /p:AppxPackageDir=${{ github.workspace }}\artifacts\${{ matrix.platform }}-${{ matrix.architecture }} /p:AppxPackageSigningEnabled=false /p:RuntimeIdentifier=${{ matrix.platform }}-${{ matrix.architecture }} /p:PublishDir=${{ github.workspace }}\artifacts\${{ matrix.platform }}-${{ matrix.architecture }}/UWP /p:PublishSingleFile=true /p:Configuration=Release WinverUWP.sln
+#       run: msbuild /m /t:WinverUWPPackage /restore /p:Platform=${{ matrix.architecture }} /p:AppxBundle=$env:AppxBundle /p:AppxBundlePlatforms="${{ matrix.architecture }}" /p:AppxPackageDir=${{ github.workspace }}\artifacts\${{ matrix.platform }}-${{ matrix.architecture }} /p:AppxPackageSigningEnabled=false /p:RuntimeIdentifier=${{ matrix.platform }}-${{ matrix.architecture }} /p:PublishDir=${{ github.workspace }}\artifacts\${{ matrix.platform }}-${{ matrix.architecture }}/UWP /p:PublishSingleFile=true /p:Configuration=Release WinverUWP.sln
+        run: msbuild /m /t:WinverUWPPackage /restore /p:Platform=x64 /p:AppxBundle=$env:AppxBundle /p:AppxBundlePlatforms="x64" /p:AppxPackageDir=${{ github.workspace }}\artifacts\win-x64 /p:AppxPackageSigningEnabled=false /p:RuntimeIdentifier=win-x64 /p:PublishDir=${{ github.workspace }}\artifacts\win-x64/UWP /p:PublishSingleFile=true /p:Configuration=Release WinverUWP.sln
         env:
           AppxBundle: Always
           BuildMode: SideloadOnly
@@ -48,5 +49,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.platform }}-${{ matrix.architecture }}
-          path: ${{ github.workspace }}/artifacts/${{ matrix.platform }}-${{ matrix.architecture }}
+          name: win-x64
+          path: ${{ github.workspace }}/artifacts/win-x64
