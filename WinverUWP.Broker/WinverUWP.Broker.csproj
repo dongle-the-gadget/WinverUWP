@@ -6,7 +6,8 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Platforms>AnyCPU;x64;x86;ARM64</Platforms>
+    <Platforms>x64;x86;ARM64</Platforms>
+    <RuntimeIdentifiers>win-arm64;win-x86;win-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
