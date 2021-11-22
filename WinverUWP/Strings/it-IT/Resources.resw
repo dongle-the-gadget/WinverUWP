@@ -118,45 +118,45 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AboutWindows.Text" xml:space="preserve">
-    <value>About Windows</value>
+    <value>Informazioni su Windows</value>
   </data>
   <data name="Copied" xml:space="preserve">
-    <value>Copied!</value>
+    <value>Copiato!</value>
   </data>
   <data name="CopyButton.Content" xml:space="preserve">
-    <value>Copy</value>
+    <value>Copia</value>
   </data>
   <data name="Edition.Text" xml:space="preserve">
-    <value>Edition</value>
+    <value>Edizione</value>
   </data>
   <data name="Experience.Text" xml:space="preserve">
-    <value>Experience</value>
+    <value>Funzionalità</value>
   </data>
   <data name="ExperiencePack" xml:space="preserve">
     <value>Windows Feature Experience Pack</value>
   </data>
   <data name="InstalledOn.Text" xml:space="preserve">
-    <value>Installed on</value>
+    <value>Installato il</value>
   </data>
   <data name="LegalLabel.Text" xml:space="preserve">
-    <value>Legal</value>
+    <value>Note legali</value>
   </data>
   <data name="LicenseTo.Text" xml:space="preserve">
-    <value>This product is licensed under the Microsoft Software License Terms to:</value>
+    <value>Prodotto connesso in licenza in base alle Condizioni di licenza software Microsoft a:</value>
   </data>
   <data name="OKButton.Content" xml:space="preserve">
     <value>OK</value>
   </data>
   <data name="OSBuild.Text" xml:space="preserve">
-    <value>OS build</value>
+    <value>Build</value>
   </data>
   <data name="Trademark.Text" xml:space="preserve">
-    <value>The Windows operating system and its user interface are protected by trademark and other pending or existing intellecutal property rights in the United States and other countries or regions.</value>
+    <value>Il sistema operativo Windows 10 Home e la relativa interfaccia utente sono protetti da marchi e da altri diritti di proprietà intellettuale in corso di registrazione o registrati negli Stati Uniti e/o negli altri paesi o aree geografiche.</value>
   </data>
   <data name="Version.Text" xml:space="preserve">
-    <value>Version</value>
+    <value>Versione</value>
   </data>
   <data name="WindowsSpecifications.Text" xml:space="preserve">
-    <value>Windows specifications</value>
+    <value>Specifiche Windows</value>
   </data>
 </root>
