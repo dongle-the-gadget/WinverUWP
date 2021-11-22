@@ -13,7 +13,7 @@
   <Identity
     Name="340a1c78-b046-4b55-8bb4-a62b77ea9ce0"
     Publisher="CN=Dongle"
-    Version="1.0.1.0" />
+    Version="1.1.0.0" />
 
   <Properties>
     <DisplayName>WinverUWP</DisplayName>
@@ -26,7 +26,8 @@
   </Dependencies>
 
   <Resources>
-    <Resource Language="x-generate"/>
+    <Resource Language="en-US"/>
+	<Resource Language="qps-ploc"/>
   </Resources>
 
   <Applications>

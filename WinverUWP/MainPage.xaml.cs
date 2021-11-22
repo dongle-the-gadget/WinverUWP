@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.System.Profile;
@@ -34,12 +35,16 @@ namespace WinverUWP
     {
         private static MainPage _current;
         private string OSName = "";
+        private ResourceLoader resourceLoader;
 
         public static MainPage Current => _current;
 
         public MainPage()
         {
             this.InitializeComponent();
+
+            resourceLoader = ResourceLoader.GetForCurrentView();
+
             ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
             titleBar.ButtonBackgroundColor = Colors.Transparent;
 
@@ -69,10 +74,7 @@ namespace WinverUWP
             }
         }
 
-        string baseText = "The Windows operating system and its user interface are protected by trademark and other pending or existing intellecutal property rights in the United States and other countries or regions.";
-
         public event PropertyChangedEventHandler PropertyChanged;
-
 
         private void Current_Activated(object sender, Windows.UI.Core.WindowActivatedEventArgs e)
         {
@@ -120,8 +122,8 @@ namespace WinverUWP
                     await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                     {
                         OSInfo = msg.OSInfo;
-                        LicensingText.Text = baseText.Replace("Windows", msg.OSInfo.Edition);
-                        Experience.Text = $"Windows Feature Experience Pack {msg.OSInfo.Experience}";
+                        LicensingText.Text = resourceLoader.GetString("Trademark/Text").Replace("Windows", msg.OSInfo.Edition);
+                        Experience.Text = $"{resourceLoader.GetString("ExperiencePack")} {msg.OSInfo.Experience}";
                     });
                 }
             }
@@ -131,20 +133,32 @@ namespace WinverUWP
         private async void CopyButton_Click(object sender, RoutedEventArgs e)
         {
             DataPackage package = new DataPackage();
-            package.SetText(
-                $"Edition         {Edition.Text}" +
-                Environment.NewLine +
-                $"Version         {Version.Text}" +
-                Environment.NewLine +
-                $"Installed on    {InstalledOn.Text}" +
-                Environment.NewLine +
-                $"OS build        {Build.Text}" +
-                Environment.NewLine +
-                $"Experience      {Experience.Text}");
+            string[] labels = new[]
+            {
+                $"{resourceLoader.GetString("Edition/Text")}",
+                $"{resourceLoader.GetString("Version/Text")}",
+                $"{resourceLoader.GetString("InstalledOn/Text")}",
+                $"{resourceLoader.GetString("OSBuild/Text")}",
+                $"{resourceLoader.GetString("Experience/Text")}",
+            };
+
+            int length = labels.Max(f => f.Length) + 4;
+
+            labels = labels.Select(f => string.Format($"{{0,-{length}}}", f)).ToArray();
+
+            string text =
+                $@"{labels[0]}{OSInfo.Edition}
+{labels[1]}{OSInfo.Version}
+{labels[2]}{OSInfo.InstalledOn}
+{labels[3]}{OSInfo.Build}
+{labels[4]}{Experience.Text}";
+
+            package.SetText(text);
+
             Clipboard.SetContent(package);
-            CopyButton.Content = "Copied!";
+            CopyButton.Content = resourceLoader.GetString("Copied");
             await Task.Delay(1000);
-            CopyButton.Content = "Copy";
+            CopyButton.Content = resourceLoader.GetString("CopyButton/Content");
         }
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)

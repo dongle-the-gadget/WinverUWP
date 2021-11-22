@@ -210,6 +210,12 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <PRIResource Include="Strings\en-US\Resources.resw">
+      <SubType>Designer</SubType>
+    </PRIResource>
+    <PRIResource Include="Strings\qps-ploc\Resources.resw">
+      <SubType>Designer</SubType>
+    </PRIResource>
     <None Include="WinverUWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

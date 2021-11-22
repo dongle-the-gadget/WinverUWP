@@ -26,7 +26,7 @@
         <Grid Background="Transparent" Name="TitleBar" Height="32">
             <TextBlock VerticalAlignment="Center"
                        HorizontalAlignment="Left"
-                       Text="About Windows"
+                       x:Uid="AboutWindows"
                        Name="AppTitle"
                        Style="{StaticResource CaptionTextBlockStyle}"
                        Margin="{StaticResource TitleBarLeftMargin}"/>
@@ -49,8 +49,8 @@
                        VerticalContentAlignment="Stretch">
                 <muxc:Expander.Header>
                     <Grid>
-                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left">Windows specifications</TextBlock>
-                        <Button VerticalAlignment="Center" HorizontalAlignment="Right" Name="CopyButton" Click="CopyButton_Click">Copy</Button>
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" x:Uid="WindowsSpecifications"/>
+                        <Button VerticalAlignment="Center" HorizontalAlignment="Right" Name="CopyButton" Click="CopyButton_Click" x:Uid="CopyButton"/>
                     </Grid>
                 </muxc:Expander.Header>
                 <Grid HorizontalAlignment="Stretch">
@@ -65,34 +65,34 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Margin="0,0,20,5">Edition</TextBlock>
+                    <TextBlock Margin="0,0,20,5" x:Uid="Edition"/>
                     <TextBlock Name="Edition" 
                            Margin="0,0,0,5" 
                            Grid.Column="1" 
                            Foreground="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" 
                            Text="{x:Bind OSInfo.Edition,Mode=OneWay}"/>
-                    <TextBlock Margin="0,0,20,5" Grid.Row="1">Version</TextBlock>
+                    <TextBlock Margin="0,0,20,5" Grid.Row="1" x:Uid="Version"/>
                     <TextBlock Name="Version" 
                            Margin="0,0,0,5" 
                            Grid.Column="1" 
                            Foreground="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" 
                            Grid.Row="1"
                            Text="{x:Bind OSInfo.Version,Mode=OneWay}"/>
-                    <TextBlock Margin="0,0,20,5" Grid.Row="2">Installed on</TextBlock>
+                    <TextBlock Margin="0,0,20,5" Grid.Row="2" x:Uid="InstalledOn"/>
                     <TextBlock Name="InstalledOn" 
                            Margin="0,0,0,5" 
                            Grid.Column="1" 
                            Foreground="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"
                            Grid.Row="2"
                            Text="{x:Bind OSInfo.InstalledOn,Mode=OneWay}"/>
-                    <TextBlock Margin="0,0,20,5" Grid.Row="3">OS build</TextBlock>
+                    <TextBlock Margin="0,0,20,5" Grid.Row="3" x:Uid="OSBuild"/>
                     <TextBlock Name="Build" 
                            Margin="0,0,0,5" 
                            Grid.Column="1" 
                            Foreground="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" 
                            Grid.Row="3"
                            Text="{x:Bind OSInfo.Build,Mode=OneWay}"/>
-                    <TextBlock Margin="0,0,20,5" Grid.Row="4">Experience</TextBlock>
+                    <TextBlock Margin="0,0,20,5" Grid.Row="4" x:Uid="Experience"/>
                     <TextBlock Name="Experience" Margin="0,0,0,5" Grid.Column="1" Foreground="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" Grid.Row="4"/>
                 </Grid>
             </muxc:Expander>
@@ -106,21 +106,15 @@
                        Margin="0,5,0,0">
                 <muxc:Expander.Header>
                     <Grid>
-                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left">Legal</TextBlock>
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" x:Uid="LegalLabel"/>
                     </Grid>
                 </muxc:Expander.Header>
                 <StackPanel HorizontalAlignment="Stretch">
                     <TextBlock TextWrapping="WrapWholeWords"
                            Name="LicensingText"
-                           HorizontalAlignment="Stretch">
-                    The Windows operating system and its user interface
-                    are protected by trademark and other pending or existing
-                    intellecutal property rights in the United States and other
-                    countries or regions.
-                    </TextBlock>
-                    <TextBlock Margin="0,20,0,0" TextWrapping="WrapWholeWords">
-                    This product is licensed under the Microsoft Software License Terms to:
-                    </TextBlock>
+                           HorizontalAlignment="Stretch"
+                           x:Uid="Trademark"/>
+                    <TextBlock Margin="0,20,0,0" TextWrapping="WrapWholeWords" x:Uid="LicenseTo"/>
                     <StackPanel Margin="0,5,0,0">
                         <TextBlock TextWrapping="Wrap" 
                                Name="OwnerText" 
@@ -135,9 +129,10 @@
             </muxc:Expander>
         </StackPanel>
         <Button Style="{StaticResource AccentButtonStyle}"
-                Content="OK"
                 Margin="10"
                 Grid.Row="3"
-                HorizontalAlignment="Right" Click="Button_Click"/>
+                HorizontalAlignment="Right" 
+                Click="Button_Click"
+                x:Uid="OKButton"/>
     </Grid>
 </Page>
