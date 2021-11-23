@@ -121,7 +121,7 @@
     <value>Sobre Windows</value>
   </data>
   <data name="Copied" xml:space="preserve">
-    <value>Copiado!</value>
+    <value>¡Copiado!</value>
   </data>
   <data name="CopyButton.Content" xml:space="preserve">
     <value>Copiar</value>
