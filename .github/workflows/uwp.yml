@@ -48,5 +48,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: win-x64
+          name: ${{ matrix.platform }}-${{ matrix.architecture }}
           path: ${{ github.workspace }}/artifacts/${{ matrix.platform }}-${{ matrix.architecture }}
