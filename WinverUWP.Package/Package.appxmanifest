@@ -28,6 +28,7 @@
   <Resources>
     <Resource Language="ko-KR"/>
     <Resource Language="en-US"/>
+	  <Resource Language="it-IT"/>
     <Resource Language="pt-BR"/>
     <Resource Language="pt-PT"/>
 	  <Resource Language="qps-ploc"/>
