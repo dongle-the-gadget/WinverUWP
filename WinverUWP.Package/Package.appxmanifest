@@ -28,6 +28,7 @@
   <Resources>
     <Resource Language="en-US"/>
 	<Resource Language="qps-ploc"/>
+	  <Resource Language="pl-PL"/>
   </Resources>
 
   <Applications>
