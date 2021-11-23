@@ -41,7 +41,7 @@ Starting with Release 1.1, you can now have WinverUWP in multiple languages! If 
    |Experience.Text|Experience|
    |LegalLabel.Text|Legal|
    |LicenseTo.Text|This product is licensed under the Microsoft Software License Terms to:|
-   |Trademark.Text|The Windows operating system and its user interface are protected by trademark and other pending or existing intellecutal property rights in the United States and other countries or regions.|
+   |Trademark.Text|The Windows operating system and its user interface are protected by trademark and other pending or existing intellectual property rights in the United States and other countries or regions.|
    |OKButton.Content|OK|
    |ExperiencePack|Windows Feature Experience Pack|
    |Copied|Copied!|
