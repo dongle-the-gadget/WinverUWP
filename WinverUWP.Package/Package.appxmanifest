@@ -10,68 +10,68 @@
   xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
   IgnorableNamespaces="uap rescap uap3 desktop desktop4 uap5">
 
-  <Identity
-    Name="340a1c78-b046-4b55-8bb4-a62b77ea9ce0"
-    Publisher="CN=Dongle"
-    Version="1.1.0.0" />
+	<Identity
+	  Name="340a1c78-b046-4b55-8bb4-a62b77ea9ce0"
+	  Publisher="CN=Dongle"
+	  Version="1.1.0.0" />
 
-  <Properties>
-    <DisplayName>WinverUWP</DisplayName>
-    <PublisherDisplayName>Dongle</PublisherDisplayName>
-    <Logo>Images\StoreLogo.png</Logo>
-  </Properties>
+	<Properties>
+		<DisplayName>WinverUWP</DisplayName>
+		<PublisherDisplayName>Dongle</PublisherDisplayName>
+		<Logo>Images\StoreLogo.png</Logo>
+	</Properties>
 
-  <Dependencies>
-    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.22000.0" />
-  </Dependencies>
+	<Dependencies>
+		<TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.22000.0" />
+	</Dependencies>
 
-  <Resources>
-    <Resource Language="ko-KR"/>
-    <Resource Language="en-US"/>
-	  <Resource Language="it-IT"/>
-    <Resource Language="pt-BR"/>
-    <Resource Language="pt-PT"/>
-	  <Resource Language="qps-ploc"/>
-	  <Resource Language="pl-PL"/>
-	  <Resource Language="es-ES"/>
-  </Resources>
+	<Resources>
+		<Resource Language="ko-KR"/>
+		<Resource Language="en-US"/>
+		<Resource Language="it-IT"/>
+		<Resource Language="pt-BR"/>
+		<Resource Language="pt-PT"/>
+		<Resource Language="qps-ploc"/>
+		<Resource Language="pl-PL"/>
+		<Resource Language="es-ES"/>
+	</Resources>
 
-  <Applications>
-	<Application Id="App"
-      Executable="WinverUWP.exe"
-      EntryPoint="WinverUWP.App"
-	  desktop4:Subsystem="windows">
-      <uap:VisualElements
-        DisplayName="WinverUWP"
-        Description="Winver but in UWP"
-        BackgroundColor="transparent"
-        Square150x150Logo="Images\Square150x150Logo.png"
-        Square44x44Logo="Images\Square44x44Logo.png">
-        <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png" />
-        <uap:SplashScreen Image="Images\SplashScreen.png" />
-      </uap:VisualElements>
-	  <Extensions>
-		<uap:Extension Category="windows.protocol">
-          <uap:Protocol Name="winveruwp"/>
-		</uap:Extension>
-		<uap:Extension Category="windows.appService">
-		  <uap3:AppService Name="WinverUWPAppService"/>
-		</uap:Extension>
-		<desktop:Extension Category="windows.fullTrustProcess" Executable="WinverUWP.Broker\WinverUWP.Broker.exe">
-		  <desktop:FullTrustProcess />
-		</desktop:Extension>
-		<uap5:Extension Category="windows.appExecutionAlias">
-		  <uap5:AppExecutionAlias desktop4:Subsystem="windows">
-		    <uap5:ExecutionAlias Alias="winveruwp.exe"/>
-		  </uap5:AppExecutionAlias>
-		</uap5:Extension>
-	  </Extensions>
-    </Application>
-  </Applications>
+	<Applications>
+		<Application Id="App"
+		  Executable="WinverUWP.exe"
+		  EntryPoint="WinverUWP.App"
+		  desktop4:Subsystem="windows">
+			<uap:VisualElements
+			  DisplayName="WinverUWP"
+			  Description="Winver but in UWP"
+			  BackgroundColor="transparent"
+			  Square150x150Logo="Images\Square150x150Logo.png"
+			  Square44x44Logo="Images\Square44x44Logo.png">
+				<uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png" />
+				<uap:SplashScreen Image="Images\SplashScreen.png" />
+			</uap:VisualElements>
+			<Extensions>
+				<uap:Extension Category="windows.protocol">
+					<uap:Protocol Name="winveruwp"/>
+				</uap:Extension>
+				<uap:Extension Category="windows.appService">
+					<uap3:AppService Name="WinverUWPAppService"/>
+				</uap:Extension>
+				<desktop:Extension Category="windows.fullTrustProcess" Executable="WinverUWP.Broker\WinverUWP.Broker.exe">
+					<desktop:FullTrustProcess />
+				</desktop:Extension>
+				<uap5:Extension Category="windows.appExecutionAlias">
+					<uap5:AppExecutionAlias desktop4:Subsystem="windows">
+						<uap5:ExecutionAlias Alias="winveruwp.exe"/>
+					</uap5:AppExecutionAlias>
+				</uap5:Extension>
+			</Extensions>
+		</Application>
+	</Applications>
 
-  <Capabilities>
-    <Capability Name="internetClient" />
-    <rescap:Capability Name="runFullTrust" />
-	<rescap:Capability Name="confirmAppClose" />
-  </Capabilities>
+	<Capabilities>
+		<Capability Name="internetClient" />
+		<rescap:Capability Name="runFullTrust" />
+		<rescap:Capability Name="confirmAppClose" />
+	</Capabilities>
 </Package>
