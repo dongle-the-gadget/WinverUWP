@@ -130,10 +130,10 @@
     <value>Edición</value>
   </data>
   <data name="Experience.Text" xml:space="preserve">
-    <value>Experience</value>
+    <value>Experiencia</value>
   </data>
   <data name="ExperiencePack" xml:space="preserve">
-    <value>Windows Feature Experience Pack</value>
+    <value>Paquete de experiencia de características de Windows</value>
   </data>
   <data name="InstalledOn.Text" xml:space="preserve">
     <value>Instalado en</value>
@@ -151,7 +151,7 @@
     <value>Compilación del SO</value>
   </data>
   <data name="Trademark.Text" xml:space="preserve">
-    <value>The Windows operating system and its user interface are protected by trademark and other pending or existing intellecutal property rights in the United States and other countries or regions.</value>
+    <value>El sistema operativo Windows y su interfaz de usuario están protegidos por marcas comerciales y otros derechos de propiedad intelectual pendientes o existentes en Estados Unidos y otros países o regiones.</value>
   </data>
   <data name="Version.Text" xml:space="preserve">
     <value>Versión</value>
