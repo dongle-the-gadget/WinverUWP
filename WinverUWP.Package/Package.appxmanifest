@@ -26,14 +26,14 @@
 	</Dependencies>
 
 	<Resources>
-		<Resource Language="ko-KR"/>
-		<Resource Language="en-US"/>
-		<Resource Language="it-IT"/>
-		<Resource Language="pt-BR"/>
-		<Resource Language="pt-PT"/>
+		<Resource Language="ko-kr"/>
+		<Resource Language="en-us"/>
+		<Resource Language="it-it"/>
+		<Resource Language="pt-br"/>
+		<Resource Language="pt-pt"/>
 		<Resource Language="qps-ploc"/>
-		<Resource Language="pl-PL"/>
-		<Resource Language="es-ES"/>
+		<Resource Language="pl-pl"/>
+		<Resource Language="es-es"/>
 		<Resource Language="vi-vn"/>
 	</Resources>
 
