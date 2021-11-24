@@ -71,6 +71,7 @@
 						Name="Edition"
                         Margin="0,0,0,5"
                         Grid.Column="1"
+                        TextWrapping="WrapWholeWords"
                         Foreground="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"
                         Text="{x:Bind OSInfo.Edition,Mode=OneWay}"/>
 					<TextBlock Margin="0,0,20,5" Grid.Row="1" x:Uid="Version"/>
@@ -78,6 +79,7 @@
 						Name="Version"
                         Margin="0,0,0,5"
                         Grid.Column="1"
+                        TextWrapping="WrapWholeWords"
                         Foreground="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"
                         Grid.Row="1"
                         Text="{x:Bind OSInfo.Version,Mode=OneWay}"/>
@@ -86,6 +88,7 @@
 						Name="InstalledOn"
                         Margin="0,0,0,5"
                         Grid.Column="1"
+                        TextWrapping="WrapWholeWords"
                         Foreground="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"
                         Grid.Row="2"
                         Text="{x:Bind OSInfo.InstalledOn,Mode=OneWay}"/>
@@ -94,11 +97,18 @@
 						Name="Build"
                         Margin="0,0,0,5"
                         Grid.Column="1"
+                        TextWrapping="WrapWholeWords"
                         Foreground="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"
                         Grid.Row="3"
                         Text="{x:Bind OSInfo.Build,Mode=OneWay}"/>
 					<TextBlock Margin="0,0,20,5" Grid.Row="4" x:Uid="Experience"/>
-					<TextBlock Name="Experience" Margin="0,0,0,5" Grid.Column="1" Foreground="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" Grid.Row="4"/>
+					<TextBlock 
+                        Name="Experience" 
+                        Margin="0,0,0,5" 
+                        Grid.Column="1"
+                        TextWrapping="WrapWholeWords"
+                        Foreground="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" 
+                        Grid.Row="4"/>
 				</Grid>
 			</muxc:Expander>
 

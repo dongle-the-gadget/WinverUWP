@@ -192,13 +192,17 @@ namespace WinverUWP
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            if (App.Connection == null)
+                return;
             InterCommunicationMessage msg = new InterCommunicationMessage { Type = InterCommunicationType.Exit };
             string json = JsonSerializer.Serialize(msg);
             ValueSet valueSet = new ValueSet
             {
                 { InterCommunicationConstants.MessageKey, json }
             };
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             App.Connection.SendMessageAsync(valueSet);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Application.Current.Exit();
         }
     }
