@@ -213,6 +213,9 @@
     <PRIResource Include="Strings\**\Resources.resw">
       <SubType>Designer</SubType>
     </PRIResource>
+    <PRIResource Include="Strings\si-LK\Resources.resw">
+      <SubType>Designer</SubType>
+    </PRIResource>
     <None Include="WinverUWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
