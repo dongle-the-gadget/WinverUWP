@@ -34,6 +34,7 @@
 		<Resource Language="qps-ploc"/>
 		<Resource Language="pl-pl"/>
 		<Resource Language="es-es"/>
+		<Resource Language="zh-cn"/>
 		<Resource Language="vi-vn"/>
 	</Resources>
 
