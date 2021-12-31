@@ -31,13 +31,10 @@ namespace WinverUWP
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page, INotifyPropertyChanged
+    public sealed partial class MainPage : Page
     {
-        private static MainPage _current;
         private string OSName = "";
         private ResourceLoader resourceLoader;
-
-        public static MainPage Current => _current;
 
         public MainPage()
         {
@@ -45,37 +42,14 @@ namespace WinverUWP
 
             resourceLoader = ResourceLoader.GetForCurrentView();
 
-            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            titleBar.ButtonBackgroundColor = Colors.Transparent;
-            titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+            UpdateTitleBarLayout(App.TitleBar);
 
-            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-            coreTitleBar.ExtendViewIntoTitleBar = true;
-
-            UpdateTitleBarLayout(coreTitleBar);
-            coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
-            coreTitleBar.IsVisibleChanged += CoreTitleBar_IsVisibleChanged;
+            App.TitleBarChanged += (s, e) => UpdateTitleBarLayout(App.TitleBar);
 
             Window.Current.SetTitleBar(TitleBar);
 
             Window.Current.Activated += Current_Activated;
-
-            _current = this;
         }
-
-        private OSInfoData osInfo;
-
-        public OSInfoData OSInfo
-        {
-            get => osInfo;
-            set
-            {
-                osInfo = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OSInfo)));
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         private void Current_Activated(object sender, Windows.UI.Core.WindowActivatedEventArgs e)
         {
@@ -92,16 +66,6 @@ namespace WinverUWP
             }
         }
 
-        private void CoreTitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args)
-        {
-            TitleBar.Visibility = sender.IsVisible ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
-        {
-            UpdateTitleBarLayout(sender);
-        }
-
         private void UpdateTitleBarLayout(CoreApplicationViewTitleBar coreTitleBar)
         {
             // Update title bar control size as needed to account for system size changes.
@@ -110,25 +74,6 @@ namespace WinverUWP
             // Ensure the custom title bar does not overlap window caption controls
             Thickness currMargin = TitleBar.Margin;
             TitleBar.Margin = new Thickness(currMargin.Left, currMargin.Top, coreTitleBar.SystemOverlayRightInset, currMargin.Bottom);
-        }
-
-        public async void Connection_RequestReceived(Windows.ApplicationModel.AppService.AppServiceConnection sender, Windows.ApplicationModel.AppService.AppServiceRequestReceivedEventArgs args)
-        {
-            var deferral = args.GetDeferral();
-            if (args.Request.Message.ContainsKey(InterCommunicationConstants.MessageKey))
-            {
-                var msg = JsonSerializer.Deserialize<InterCommunicationMessage>(args.Request.Message[InterCommunicationConstants.MessageKey] as string);
-                if (msg != null && msg.Type == InterCommunicationType.OSInfo)
-                {
-                    await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-                    {
-                        OSInfo = msg.OSInfo;
-                        LicensingText.Text = resourceLoader.GetString("Trademark/Text").Replace("Windows", msg.OSInfo.Edition);
-                        Experience.Text = $"{resourceLoader.GetString("ExperiencePack")} {msg.OSInfo.Experience}";
-                    });
-                }
-            }
-            deferral.Complete();
         }
 
         private async void CopyButton_Click(object sender, RoutedEventArgs e)
@@ -148,10 +93,10 @@ namespace WinverUWP
             labels = labels.Select(f => string.Format($"{{0,-{length}}}", f)).ToArray();
 
             string text =
-                $@"{labels[0]}{OSInfo.Edition}
-{labels[1]}{OSInfo.Version}
-{labels[2]}{OSInfo.InstalledOn}
-{labels[3]}{OSInfo.Build}
+                $@"{labels[0]}{Edition.Text}
+{labels[1]}{Version.Text}
+{labels[2]}{App.OSInfo.InstalledOn}
+{labels[3]}{App.OSInfo.Build}
 {labels[4]}{Experience.Text}";
 
             package.SetText(text);
@@ -162,11 +107,12 @@ namespace WinverUWP
             CopyButton.Content = resourceLoader.GetString("CopyButton/Content");
         }
 
-        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             string deviceFamilyVersion = AnalyticsInfo.VersionInfo.DeviceFamilyVersion;
             ulong version = ulong.Parse(deviceFamilyVersion);
             ulong build = (version & 0x00000000FFFF0000L) >> 16;
+            var release = version & 0x000000000000FFFF;
 
             OSName = build >= 21996 ? "Windows11Logo" : "Windows10Logo";
             UpdateWindowsBrand();
@@ -176,7 +122,15 @@ namespace WinverUWP
                 UpdateWindowsBrand();
             };
 
-            await Windows.ApplicationModel.FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+            OwnerText.Text = App.OSInfo.Owner;
+            OwnerText.Visibility = string.IsNullOrWhiteSpace(App.OSInfo.Owner) ? Visibility.Collapsed : Visibility.Visible;
+            OrgText.Text = App.OSInfo.Corporation;
+            OrgText.Visibility = string.IsNullOrWhiteSpace(App.OSInfo.Corporation) ? Visibility.Collapsed : Visibility.Visible;
+            InstalledOn.Text = App.OSInfo.InstalledOn;
+            Version.Text = App.OSInfo.Version;
+            Edition.Text = App.OSInfo.Edition;
+            LicensingText.Text = resourceLoader.GetString("Trademark/Text").Replace("Windows", App.OSInfo.Edition);
+            Experience.Text = $"{resourceLoader.GetString("ExperiencePack")} {App.OSInfo.Experience}";
         }
 
         private void UpdateWindowsBrand()

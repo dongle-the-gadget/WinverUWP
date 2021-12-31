@@ -34,11 +34,7 @@ namespace WinverUWP.Broker
                 return;
             }
 
-            while (true)
-            {
-                await SendOSInfo();
-                await Task.Delay(1000);
-            }
+            await SendOSInfo();
         }
 
         private async Task SendOSInfo()

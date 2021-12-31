@@ -47,9 +47,11 @@ namespace WinverUWP
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
         }
 
+        SplashScreen extendedSplash;
+
         protected override void OnActivated(IActivatedEventArgs args)
         {
-            StartApp();
+            StartApp(args.SplashScreen);
         }
 
         /// <summary>
@@ -59,7 +61,7 @@ namespace WinverUWP
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            StartApp();
+            StartApp(e.SplashScreen);
         }
 
         protected override void OnBackgroundActivated(BackgroundActivatedEventArgs args)
@@ -73,8 +75,25 @@ namespace WinverUWP
                     Deferral?.Complete();
                 };
                 Connection = triggerDetails.AppServiceConnection;
-                Connection.RequestReceived += MainPage.Current.Connection_RequestReceived;
+                Connection.RequestReceived += OnRequest;
             }
+        }
+
+        public static OSInfoData OSInfo { get; set; }
+
+        private void OnRequest(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
+        {
+            var deferral = args.GetDeferral();
+            if (args.Request.Message.ContainsKey(InterCommunicationConstants.MessageKey))
+            {
+                var msg = JsonSerializer.Deserialize<InterCommunicationMessage>(args.Request.Message[InterCommunicationConstants.MessageKey] as string);
+                if (msg != null && msg.Type == InterCommunicationType.OSInfo)
+                {
+                    OSInfo = msg.OSInfo;
+                    extendedSplash.DismissExtendedSplash();
+                }
+            }
+            deferral.Complete();
         }
 
         /// <summary>
@@ -101,35 +120,45 @@ namespace WinverUWP
             deferral.Complete();
         }
 
-        private void StartApp()
+        private async void StartApp(Windows.ApplicationModel.Activation.SplashScreen splash)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
+            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            titleBar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
+            titleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
 
-            // Do not repeat app initialization when the Window already has content,
-            // just ensure that the window is active
-            if (rootFrame == null)
-            {
-                // Create a Frame to act as the navigation context and navigate to the first page
-                rootFrame = new Frame();
+            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = true;
 
-                rootFrame.NavigationFailed += OnNavigationFailed;
+            TitleBar = coreTitleBar;
+            coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
+            coreTitleBar.IsVisibleChanged += CoreTitleBar_IsVisibleChanged;
 
-                // Place the frame in the current Window
-                Window.Current.Content = rootFrame;
-            }
+            extendedSplash = new SplashScreen(splash);
+            Window.Current.Content = extendedSplash;
 
-            if (rootFrame.Content == null)
-            {
-                // When the navigation stack isn't restored navigate to the first page,
-                // configuring the new page by passing required information as a navigation
-                // parameter
-                rootFrame.Navigate(typeof(MainPage));
+            await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
 
-                // Register close
-                SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App_CloseRequested;
-            }
+            // Register close
+            SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App_CloseRequested;
+            
             // Ensure the current window is active
             Window.Current.Activate();
+        }
+
+        public static event EventHandler TitleBarChanged;
+
+        public static CoreApplicationViewTitleBar TitleBar { get; set; }
+
+        private void CoreTitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args)
+        {
+            TitleBar = sender;
+            TitleBarChanged?.Invoke(null, EventArgs.Empty);
+        }
+
+        private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
+        {
+            TitleBar = sender;
+            TitleBarChanged?.Invoke(null, EventArgs.Empty);
         }
 
         private void App_CloseRequested(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
