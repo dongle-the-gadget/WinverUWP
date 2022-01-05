@@ -130,13 +130,13 @@
     <value>Editie</value>
   </data>
   <data name="Experience.Text" xml:space="preserve">
-    <value>Experience</value>
+    <value>Ervaring</value>
   </data>
   <data name="ExperiencePack" xml:space="preserve">
     <value>Windows Feature Experience Pack</value>
   </data>
   <data name="InstalledOn.Text" xml:space="preserve">
-    <value>Geïnstalleerd op</value>
+    <value>Installatiedatum</value>
   </data>
   <data name="LegalLabel.Text" xml:space="preserve">
     <value>Wettelijke informatie</value>
