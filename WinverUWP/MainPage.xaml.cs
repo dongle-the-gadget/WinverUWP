@@ -1,9 +1,7 @@
 ﻿using RegistryRT;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -13,19 +11,13 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.System.Profile;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -130,10 +122,10 @@ namespace WinverUWP
             {
                 string[] labels = new[]
                 {
-                    $"{resourceLoader.GetString("Edition/Text")}",
-                    $"{resourceLoader.GetString("Version/Text")}",
-                    $"{resourceLoader.GetString("InstalledOn/Text")}",
-                    $"{resourceLoader.GetString("OSBuild/Text")}"
+                    resourceLoader.GetString("Edition/Text"),
+                    resourceLoader.GetString("Version/Text"),
+                    resourceLoader.GetString("InstalledOn/Text"),
+                    resourceLoader.GetString("OSBuild/Text")
                 };
 
                 int length = labels.Max(f => f.Length) + 4;
@@ -254,7 +246,7 @@ namespace WinverUWP
         }
 
         [DllImport("api-ms-win-core-processthreads-l1-1-0.dll", SetLastError = true), SuppressUnmanagedCodeSecurityAttribute]
-        static extern int OpenProcessToken(System.IntPtr processHandle, int desiredAccess, ref IntPtr tokenHandle);
+        static extern int OpenProcessToken(IntPtr processHandle, int desiredAccess, ref IntPtr tokenHandle);
         const int OpenProcessTokenFail = 0;
 
         [DllImport("api-ms-win-security-base-l1-1-0.dll", SetLastError = true)]

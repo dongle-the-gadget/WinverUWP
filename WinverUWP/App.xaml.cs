@@ -1,24 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel.AppService;
-using Windows.ApplicationModel.Background;
-using Windows.ApplicationModel.Core;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Core.Preview;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace WinverUWP
@@ -28,10 +14,6 @@ namespace WinverUWP
     /// </summary>
     sealed partial class App : Application
     {
-        public static AppServiceConnection Connection { get; private set; }
-
-        private BackgroundTaskDeferral Deferral;
-
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -87,6 +69,7 @@ namespace WinverUWP
         private void StartApp()
         {
             Frame frame = new Frame();
+            frame.NavigationFailed += OnNavigationFailed;
             frame.Navigate(typeof(MainPage));
             Window.Current.Content = frame;
             
