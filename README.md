@@ -21,7 +21,9 @@ You could launch this program in one of these three ways:
 
 ## Contributing
 ### Language translation
-Starting with Release 1.1, you can now have WinverUWP in multiple languages! If you want to help translate, follow the steps below:
+**Note:** instructions below are for version 2.0 and newer, which is available on this branch.
+
+If you want to help translate, follow the steps below:
 1. Create a fork of this repository.
 2. In `WinverUWP\Strings` folder, create a new folder with your locale name (i.e. "en-us" for American English).
 3. In the newly created folder, create a `Resources.resw` file, you may copy it from another locale folder as a reference.
@@ -45,7 +47,7 @@ Starting with Release 1.1, you can now have WinverUWP in multiple languages! If 
    |OKButton.Content|OK|
    |ExperiencePack|Windows Feature Experience Pack|
    |Copied|Copied!|
-5. In the `WinverUWP.Package\Package.appxmanifest` file, look for `<Resources>`.
+5. In the `WinverUWP\Package.appxmanifest` file, look for `<Resources>`.
 6. Create a new line after the tag with the value: `<Resource Language="(your locale here)"/>`.
 7. Commit your translations into your fork.
 8. Create a Pull request and wait for me to review it.
