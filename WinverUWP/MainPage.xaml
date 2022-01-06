@@ -40,7 +40,7 @@
                MaxWidth="300"
                Name="BrandImage"/>
 
-		<StackPanel Grid.Row="2" Margin="5">
+		<StackPanel Grid.Row="2" Margin="5,5,5,0">
 			<muxc:Expander
 				ExpandDirection="Down"
                 IsExpanded="True"
@@ -98,10 +98,10 @@
                         TextWrapping="WrapWholeWords"
                         Foreground="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"
                         Grid.Row="3"/>
-					<TextBlock Margin="0,0,20,5" Grid.Row="4" x:Uid="Experience"/>
+					<TextBlock Margin="0,0,20,5" Grid.Row="4" x:Uid="Experience" Name="ExperienceLabel"/>
 					<TextBlock 
                         Name="Experience" 
-                        Margin="0,0,0,5" 
+                        Margin="0,0,0,5"
                         Grid.Column="1"
                         TextWrapping="WrapWholeWords"
                         Foreground="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" 
