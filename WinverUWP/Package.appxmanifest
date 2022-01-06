@@ -37,6 +37,7 @@
 		<Resource Language="es-mx"/>
 		<Resource Language="id-id"/>
 		<Resource Language="nl-nl"/>
+		<Resource Language="zh-cn"/>
 	</Resources>
 
 	<Applications>
