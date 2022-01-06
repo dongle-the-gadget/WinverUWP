@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text.Json;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.AppService;
@@ -21,7 +20,6 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using WinverUWP.InterCommunication;
 
 namespace WinverUWP
 {
@@ -44,14 +42,12 @@ namespace WinverUWP
             this.Suspending += OnSuspending;
 
             ApplicationView.PreferredLaunchViewSize = new Size(500, 700);
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
         }
-
-        SplashScreen extendedSplash;
 
         protected override void OnActivated(IActivatedEventArgs args)
         {
-            StartApp(args.SplashScreen);
+            StartApp();
         }
 
         /// <summary>
@@ -61,39 +57,7 @@ namespace WinverUWP
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            StartApp(e.SplashScreen);
-        }
-
-        protected override void OnBackgroundActivated(BackgroundActivatedEventArgs args)
-        {
-            var taskInstance = args.TaskInstance;
-            if (taskInstance.TriggerDetails is AppServiceTriggerDetails triggerDetails)
-            {
-                Deferral = taskInstance.GetDeferral();
-                taskInstance.Canceled += (s, e) =>
-                {
-                    Deferral?.Complete();
-                };
-                Connection = triggerDetails.AppServiceConnection;
-                Connection.RequestReceived += OnRequest;
-            }
-        }
-
-        public static OSInfoData OSInfo { get; set; }
-
-        private void OnRequest(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
-        {
-            var deferral = args.GetDeferral();
-            if (args.Request.Message.ContainsKey(InterCommunicationConstants.MessageKey))
-            {
-                var msg = JsonSerializer.Deserialize<InterCommunicationMessage>(args.Request.Message[InterCommunicationConstants.MessageKey] as string);
-                if (msg != null && msg.Type == InterCommunicationType.OSInfo)
-                {
-                    OSInfo = msg.OSInfo;
-                    extendedSplash.DismissExtendedSplash();
-                }
-            }
-            deferral.Complete();
+            StartApp();
         }
 
         /// <summary>
@@ -120,63 +84,14 @@ namespace WinverUWP
             deferral.Complete();
         }
 
-        private async void StartApp(Windows.ApplicationModel.Activation.SplashScreen splash)
+        private void StartApp()
         {
-            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            titleBar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
-            titleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
-
-            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-            coreTitleBar.ExtendViewIntoTitleBar = true;
-
-            TitleBar = coreTitleBar;
-            coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
-            coreTitleBar.IsVisibleChanged += CoreTitleBar_IsVisibleChanged;
-
-            extendedSplash = new SplashScreen(splash);
-            Window.Current.Content = extendedSplash;
-
-            await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
-
-            // Register close
-            SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App_CloseRequested;
+            Frame frame = new Frame();
+            frame.Navigate(typeof(MainPage));
+            Window.Current.Content = frame;
             
             // Ensure the current window is active
             Window.Current.Activate();
-        }
-
-        public static event EventHandler TitleBarChanged;
-
-        public static CoreApplicationViewTitleBar TitleBar { get; set; }
-
-        private void CoreTitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args)
-        {
-            TitleBar = sender;
-            TitleBarChanged?.Invoke(null, EventArgs.Empty);
-        }
-
-        private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
-        {
-            TitleBar = sender;
-            TitleBarChanged?.Invoke(null, EventArgs.Empty);
-        }
-
-        private void App_CloseRequested(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
-        {
-            var deferral = e.GetDeferral();
-            if (Connection != null)
-            {
-                InterCommunicationMessage msg = new InterCommunicationMessage { Type = InterCommunicationType.Exit };
-                string json = JsonSerializer.Serialize(msg);
-                ValueSet valueSet = new ValueSet
-                {
-                    { InterCommunicationConstants.MessageKey, json }
-                };
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                Connection.SendMessageAsync(valueSet);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            }
-            deferral.Complete();
         }
     }
 }
