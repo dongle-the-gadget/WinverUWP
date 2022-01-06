@@ -22,6 +22,7 @@ You could launch this program in one of these three ways:
 ## Contributing
 ### Language translation
 **Note:** instructions below are for version 2.0 and newer, which is available on this branch.
+
 If you want to help translate, follow the steps below:
 1. Create a fork of this repository.
 2. In `WinverUWP\Strings` folder, create a new folder with your locale name (i.e. "en-us" for American English).
