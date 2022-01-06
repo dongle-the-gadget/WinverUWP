@@ -25,7 +25,15 @@
 	</Dependencies>
 
 	<Resources>
-		<Resource Language="x-generate"/>
+		<Resource Language="ko-kr"/>
+		<Resource Language="en-us"/>
+		<Resource Language="it-it"/>
+		<Resource Language="pt-br"/>
+		<Resource Language="pt-pt"/>
+		<Resource Language="qps-ploc"/>
+		<Resource Language="pl-pl"/>
+		<Resource Language="es-es"/>
+		<Resource Language="vi-vn"/>
 	</Resources>
 
 	<Applications>
