@@ -141,7 +141,7 @@
 			</muxc:Expander>
 		</StackPanel>
 		<Button Style="{StaticResource AccentButtonStyle}"
-                Margin="10"
+                Margin="5"
                 Grid.Row="3"
                 HorizontalAlignment="Right"
                 Click="Button_Click"
