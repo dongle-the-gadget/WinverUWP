@@ -40,7 +40,7 @@
                MaxWidth="300"
                Name="BrandImage"/>
 
-		<StackPanel Grid.Row="2" Margin="5">
+		<StackPanel Grid.Row="2" Margin="5,5,5,0">
 			<muxc:Expander
 				ExpandDirection="Down"
                 IsExpanded="True"
@@ -72,17 +72,16 @@
                         Margin="0,0,0,5"
                         Grid.Column="1"
                         TextWrapping="WrapWholeWords"
-                        Foreground="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"
-                        Text="{x:Bind OSInfo.Edition,Mode=OneWay}"/>
+                        Foreground="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"/>
 					<TextBlock Margin="0,0,20,5" Grid.Row="1" x:Uid="Version"/>
-					<TextBlock 
+                    <TextBlock 
 						Name="Version"
                         Margin="0,0,0,5"
                         Grid.Column="1"
                         TextWrapping="WrapWholeWords"
                         Foreground="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"
-                        Grid.Row="1"
-                        Text="{x:Bind OSInfo.Version,Mode=OneWay}"/>
+                        Grid.Row="1"/>
+                    <!--Text="{x:Bind OSInfo.Version,Mode=OneWay}"-->
 					<TextBlock Margin="0,0,20,5" Grid.Row="2" x:Uid="InstalledOn"/>
 					<TextBlock 
 						Name="InstalledOn"
@@ -90,8 +89,7 @@
                         Grid.Column="1"
                         TextWrapping="WrapWholeWords"
                         Foreground="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"
-                        Grid.Row="2"
-                        Text="{x:Bind OSInfo.InstalledOn,Mode=OneWay}"/>
+                        Grid.Row="2"/>
 					<TextBlock Margin="0,0,20,5" Grid.Row="3" x:Uid="OSBuild"/>
 					<TextBlock 
 						Name="Build"
@@ -99,12 +97,11 @@
                         Grid.Column="1"
                         TextWrapping="WrapWholeWords"
                         Foreground="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"
-                        Grid.Row="3"
-                        Text="{x:Bind OSInfo.Build,Mode=OneWay}"/>
-					<TextBlock Margin="0,0,20,5" Grid.Row="4" x:Uid="Experience"/>
+                        Grid.Row="3"/>
+					<TextBlock Margin="0,0,20,5" Grid.Row="4" x:Uid="Experience" Name="ExperienceLabel"/>
 					<TextBlock 
                         Name="Experience" 
-                        Margin="0,0,0,5" 
+                        Margin="0,0,0,5"
                         Grid.Column="1"
                         TextWrapping="WrapWholeWords"
                         Foreground="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" 
@@ -135,20 +132,16 @@
 					<StackPanel Margin="0,5,0,0">
 						<TextBlock 
 							TextWrapping="Wrap"
-                            Name="OwnerText"
-                            Visibility="{x:Bind OSInfo.Owner, Mode=OneWay, Converter={StaticResource TextToVisibilityConverter}}"
-                            Text="{x:Bind OSInfo.Owner, Mode=OneWay}"/>
+                            Name="OwnerText"/>
 						<TextBlock 
 							TextWrapping="Wrap"
-                            Name="OrgText"
-                            Visibility="{x:Bind OSInfo.Corporation, Mode=OneWay, Converter={StaticResource TextToVisibilityConverter}}"
-                            Text="{x:Bind OSInfo.Corporation, Mode=OneWay}"/>
+                            Name="OrgText"/>
 					</StackPanel>
 				</StackPanel>
 			</muxc:Expander>
 		</StackPanel>
 		<Button Style="{StaticResource AccentButtonStyle}"
-                Margin="10"
+                Margin="5"
                 Grid.Row="3"
                 HorizontalAlignment="Right"
                 Click="Button_Click"
