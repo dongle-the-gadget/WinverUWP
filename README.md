@@ -1,5 +1,7 @@
 # WinverUWP
-A UWP version of winver
+A UWP version of winver.
+
+[Discord channel](https://discord.gg/MUyRGUN4Ny)
 
 ![WinverUWP on Windows 11 (Dev)](/images/WinverUWP-dark-11.png)
 
