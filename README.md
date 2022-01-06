@@ -4,7 +4,7 @@ A UWP version of winver
 ![WinverUWP on Windows 11 (Dev)](/images/WinverUWP-dark-11.png)
 
 ## System requirements
-Windows 10 October 2018 Update (1809) or newer using the x86, x64 or ARM64 CPU architecture.
+Windows 10 October 2018 Update (1809) or newer using the x86, x64 ~~or ARM64~~ (lol) CPU architecture.
 
 ## Installing
 1. Download the latest version from [GitHub Releases](https://github.com/dongle-the-gadget/WinverUWP/releases).
