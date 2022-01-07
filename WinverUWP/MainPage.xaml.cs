@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources;
+using Windows.Globalization.DateTimeFormatting;
 using Windows.System.Profile;
 using Windows.UI;
 using Windows.UI.ViewManagement;
@@ -179,7 +181,9 @@ namespace WinverUWP
             var displayVersion = ReturnValueFromRegistry(RegistryHive.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "DisplayVersion");
             Version.Text = displayVersion;
 
-            InstalledOn.Text = GetWindowsInstallationDateTime().ToShortDateString();
+            var date = GetWindowsInstallationDateTime().ToLocalTime();
+            var userCulture = CultureInfoHelper.GetCurrentCulture();
+            InstalledOn.Text = date.ToString("d", userCulture);
 
             var ownerName = ReturnValueFromRegistry(RegistryHive.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "RegisteredOwner");
             OwnerText.Text = ownerName;
