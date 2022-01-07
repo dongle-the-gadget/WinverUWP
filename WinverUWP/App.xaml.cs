@@ -23,8 +23,8 @@ namespace WinverUWP
             this.InitializeComponent();
             this.Suspending += OnSuspending;
 
-            ApplicationView.PreferredLaunchViewSize = new Size(500, 700);
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
+            ApplicationView.PreferredLaunchViewSize = new Size(500, 650);
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
         }
 
         protected override void OnActivated(IActivatedEventArgs args)
