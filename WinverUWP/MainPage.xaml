@@ -13,7 +13,8 @@
 
 	<Page.Resources>
 		<converters:TextToVisibilityConverter x:Key="TextToVisibilityConverter"/>
-	</Page.Resources>
+        <SolidColorBrush x:Key="ExpanderContentBackground" Color="{Binding Source={ThemeResource LayerFillColorDefaultBrush}, Path=Color}" />
+    </Page.Resources>
 
 	<Grid>
 		<Grid.RowDefinitions>
@@ -54,7 +55,7 @@
 						<Button VerticalAlignment="Center" HorizontalAlignment="Right" Name="CopyButton" Click="CopyButton_Click" x:Uid="CopyButton"/>
 					</Grid>
 				</muxc:Expander.Header>
-				<Grid HorizontalAlignment="Stretch">
+                <Grid HorizontalAlignment="Stretch">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="Auto"/>
 						<ColumnDefinition/>
