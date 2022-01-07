@@ -4,13 +4,12 @@
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
-  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-  IgnorableNamespaces="uap mp rescap">
+  IgnorableNamespaces="uap mp">
 
 	<Identity
 	  Name="fda0e24a-1e63-4f79-8739-72fd5d68db9c"
 	  Publisher="CN=Dongle"
-	  Version="1.0.0.0" />
+	  Version="2.0.0.0" />
 
 	<mp:PhoneIdentity PhoneProductId="fda0e24a-1e63-4f79-8739-72fd5d68db9c" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -21,11 +20,24 @@
 	</Properties>
 
 	<Dependencies>
-		<TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+		<TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.17763.0" MaxVersionTested="10.0.22523.1000" />
 	</Dependencies>
 
 	<Resources>
-		<Resource Language="x-generate"/>
+		<Resource Language="ko-kr"/>
+		<Resource Language="en-us"/>
+		<Resource Language="it-it"/>
+		<Resource Language="pt-br"/>
+		<Resource Language="pt-pt"/>
+		<Resource Language="qps-ploc"/>
+		<Resource Language="pl-pl"/>
+		<Resource Language="es-es"/>
+		<Resource Language="vi-vn"/>
+		<Resource Language="es-mx"/>
+		<Resource Language="id-id"/>
+		<Resource Language="nl-nl"/>
+		<Resource Language="zh-cn"/>
+		<Resource Language="ro-ro"/>
 	</Resources>
 
 	<Applications>
@@ -46,6 +58,5 @@
 
 	<Capabilities>
 		<Capability Name="internetClient" />
-		<rescap:Capability Name="confirmAppClose" />
 	</Capabilities>
 </Package>
