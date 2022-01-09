@@ -7,11 +7,11 @@
   IgnorableNamespaces="uap mp">
 
 	<Identity
-	  Name="4ce31c2e-cf63-4300-9da0-4ff5cd22aa02"
+	  Name="fda0e24a-1e63-4f79-8739-72fd5d68db9c"
 	  Publisher="CN=Dongle"
 	  Version="2.0.9.0" />
 
-	<mp:PhoneIdentity PhoneProductId="4ce31c2e-cf63-4300-9da0-4ff5cd22aa02" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+	<mp:PhoneIdentity PhoneProductId="fda0e24a-1e63-4f79-8739-72fd5d68db9c" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
 	<Properties>
 		<DisplayName>WinverUWP (Dev)</DisplayName>
