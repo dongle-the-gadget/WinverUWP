@@ -7,14 +7,14 @@
   IgnorableNamespaces="uap mp">
 
 	<Identity
-	  Name="fda0e24a-1e63-4f79-8739-72fd5d68db9c"
+	  Name="4ce31c2e-cf63-4300-9da0-4ff5cd22aa02"
 	  Publisher="CN=Dongle"
-	  Version="2.0.0.0" />
+	  Version="2.0.9.0" />
 
-	<mp:PhoneIdentity PhoneProductId="fda0e24a-1e63-4f79-8739-72fd5d68db9c" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+	<mp:PhoneIdentity PhoneProductId="4ce31c2e-cf63-4300-9da0-4ff5cd22aa02" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
 	<Properties>
-		<DisplayName>WinverUWP</DisplayName>
+		<DisplayName>WinverUWP (Dev)</DisplayName>
 		<PublisherDisplayName>Dongle</PublisherDisplayName>
 		<Logo>Assets\StoreLogo.png</Logo>
 	</Properties>
@@ -46,7 +46,7 @@
 		  Executable="$targetnametoken$.exe"
 		  EntryPoint="WinverUWP.App">
 			<uap:VisualElements
-			  DisplayName="WinverUWP"
+			  DisplayName="WinverUWP (Dev)"
 			  Square150x150Logo="Assets\Square150x150Logo.png"
 			  Square44x44Logo="Assets\Square44x44Logo.png"
 			  Description="WinverUWP"
