@@ -26,11 +26,13 @@ Currently unavailable.
    
    **Note:** During installation, PowerShell may ask you about execution policies and administrator privileges. For execution scopes, select **Unrestricted**, and for administrator privileges (User Account Control), select Yes or enter in your administrator credentials.
 
+<!--
 ## Launching
 You could launch this program in one of these three ways:
 - As an app entry in Start, Search, PowerToys Run, ... (whatever has you)
 - Using the app execution alias: `winveruwp.exe`
 - Using the app protocol: `winveruwp://`
+-->
 
 ## Contributing
 ### Language translation
