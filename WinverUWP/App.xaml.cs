@@ -23,7 +23,7 @@ namespace WinverUWP
             this.InitializeComponent();
             this.Suspending += OnSuspending;
 
-            ApplicationView.PreferredLaunchViewSize = new Size(500, 650);
+            ApplicationView.PreferredLaunchViewSize = new Size(600, 750);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
         }
 
@@ -68,11 +68,16 @@ namespace WinverUWP
 
         private void StartApp()
         {
-            Frame frame = new Frame();
-            frame.NavigationFailed += OnNavigationFailed;
-            frame.Navigate(typeof(MainPage));
-            Window.Current.Content = frame;
-            
+            Frame frame = Window.Current.Content as Frame;
+
+            if (frame == null)
+            {
+                frame = new Frame();
+                frame.NavigationFailed += OnNavigationFailed;
+                frame.Navigate(typeof(MainPage));
+                Window.Current.Content = frame;
+            }
+
             // Ensure the current window is active
             Window.Current.Activate();
         }

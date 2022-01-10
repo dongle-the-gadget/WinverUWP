@@ -12,16 +12,19 @@
     Loaded="Page_Loaded">
 
 	<Page.Resources>
-		<converters:TextToVisibilityConverter x:Key="TextToVisibilityConverter"/>
+        <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
+        <Thickness x:Key="NavigationViewContentGridBorderThickness">0</Thickness>
+        <converters:TextToVisibilityConverter x:Key="TextToVisibilityConverter"/>
         <SolidColorBrush x:Key="ExpanderContentBackground" Color="{Binding Source={ThemeResource LayerFillColorDefaultBrush}, Path=Color}" />
     </Page.Resources>
 
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition/>
-			<RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
 		<Grid Background="Transparent" Name="TitleBar" Height="32">
@@ -33,7 +36,7 @@
                        Margin="{StaticResource TitleBarLeftMargin}"/>
 		</Grid>
 
-		<Image HorizontalAlignment="Stretch"
+        <Image HorizontalAlignment="Stretch"
                VerticalAlignment="Top"
                Grid.Row="1"
                Source="/Assets/Windows11Logo-dark.svg"
@@ -41,111 +44,31 @@
                MaxWidth="300"
                Name="BrandImage"/>
 
-		<StackPanel Grid.Row="2" Margin="5,5,5,0">
-			<muxc:Expander
-				ExpandDirection="Down"
-                IsExpanded="True"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Stretch">
-				<muxc:Expander.Header>
-					<Grid>
-						<TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" x:Uid="WindowsSpecifications"/>
-						<Button VerticalAlignment="Center" HorizontalAlignment="Right" Name="CopyButton" Click="CopyButton_Click" x:Uid="CopyButton"/>
-					</Grid>
-				</muxc:Expander.Header>
-                <Grid HorizontalAlignment="Stretch">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="Auto"/>
-						<ColumnDefinition/>
-					</Grid.ColumnDefinitions>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-					</Grid.RowDefinitions>
-					<TextBlock Margin="0,0,20,5" x:Uid="Edition"/>
-					<TextBlock 
-						Name="Edition"
-                        Margin="0,0,0,5"
-                        Grid.Column="1"
-                        TextWrapping="WrapWholeWords"
-                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
-					<TextBlock Margin="0,0,20,5" Grid.Row="1" x:Uid="Version"/>
-                    <TextBlock 
-						Name="Version"
-                        Margin="0,0,0,5"
-                        Grid.Column="1"
-                        TextWrapping="WrapWholeWords"
-                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-                        Grid.Row="1"/>
-                    <!--Text="{x:Bind OSInfo.Version,Mode=OneWay}"-->
-					<TextBlock Margin="0,0,20,5" Grid.Row="2" x:Uid="InstalledOn"/>
-					<TextBlock 
-						Name="InstalledOn"
-                        Margin="0,0,0,5"
-                        Grid.Column="1"
-                        TextWrapping="WrapWholeWords"
-                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-                        Grid.Row="2"/>
-					<TextBlock Margin="0,0,20,5" Grid.Row="3" x:Uid="OSBuild"/>
-					<TextBlock 
-						Name="Build"
-                        Margin="0,0,0,5"
-                        Grid.Column="1"
-                        TextWrapping="WrapWholeWords"
-                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-                        Grid.Row="3"/>
-					<TextBlock Margin="0,0,20,5" Grid.Row="4" x:Uid="Experience" Name="ExperienceLabel"/>
-					<TextBlock 
-                        Name="Experience" 
-                        Margin="0,0,0,5"
-                        Grid.Column="1"
-                        TextWrapping="WrapWholeWords"
-                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" 
-                        Grid.Row="4"/>
-				</Grid>
-			</muxc:Expander>
+        <!--<Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <muxc:TabView Margin="0,5,0,0" TabWidthMode="SizeToContent" IsAddTabButtonVisible="False">
+                <muxc:TabView.TabItems>
+                    <muxc:TabViewItem Header="Windows" IsClosable="False"/>
+                    <muxc:TabViewItem Header="Hardware" IsClosable="False"/>
+                </muxc:TabView.TabItems>
+            </muxc:TabView>
 
-			<muxc:Expander 
-				ExpandDirection="Down"
-                IsExpanded="True"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Stretch"
-                Margin="0,5,0,0">
-				<muxc:Expander.Header>
-					<Grid>
-						<TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" x:Uid="LegalLabel"/>
-					</Grid>
-				</muxc:Expander.Header>
-				<StackPanel HorizontalAlignment="Stretch">
-					<TextBlock 
-						TextWrapping="WrapWholeWords"
-                        Name="LicensingText"
-                        HorizontalAlignment="Stretch"
-                        x:Uid="Trademark"/>
-					<TextBlock Margin="0,20,0,0" TextWrapping="WrapWholeWords" x:Uid="LicenseTo"/>
-					<StackPanel Margin="0,5,0,0">
-						<TextBlock 
-							TextWrapping="Wrap"
-                            Name="OwnerText"/>
-						<TextBlock 
-							TextWrapping="Wrap"
-                            Name="OrgText"/>
-					</StackPanel>
-				</StackPanel>
-			</muxc:Expander>
-		</StackPanel>
-		<Button Style="{StaticResource AccentButtonStyle}"
-                Margin="5"
-                Grid.Row="3"
+            <Rectangle Grid.Column="1" Fill="{ThemeResource TabViewBorderBrush}" Height="1" VerticalAlignment="Bottom"/>
+        </Grid>-->
+
+        <Border Grid.Row="3" BorderThickness="0">
+            <Frame Margin="10,10,10,0" Name="frame"/>
+        </Border>
+
+        <Button Style="{StaticResource AccentButtonStyle}"
+                Margin="10"
+                Grid.Row="4"
                 HorizontalAlignment="Right"
                 Click="Button_Click"
-                x:Uid="OKButton"/>
+                x:Uid="OKButton"
+                Width="70"/>
 	</Grid>
 </Page>
