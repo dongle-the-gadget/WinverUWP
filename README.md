@@ -1,30 +1,41 @@
 # WinverUWP
 A UWP version of winver.
 
-[Discord channel](https://discord.gg/MUyRGUN4Ny) | [Privacy Policy](/PRIVACY.md)
+[Microsoft Store](https://www.microsoft.com/p/winver-uwp/9n60s2vfmb7l) | [Discord channel](https://discord.gg/MUyRGUN4Ny) | [Privacy Policy](/PRIVACY.md)
 
 ![WinverUWP on Windows 11 (Dev)](/images/WinverUWP-dark-11.png)
 
 ## System requirements
-Windows 10 October 2018 Update (1809) or newer using the x86, x64 ~~or ARM64~~ (lol) CPU architecture.
+Windows 10 October 2018 Update (1809) or newer using the x86, x64 or ARM64 CPU architecture.
 
 ## Installing
-1. Download the latest version from [GitHub Releases](https://github.com/dongle-the-gadget/WinverUWP/releases).
-2. Download the ZIP file and extract it.
+**Note:** You need to manually uninstall Release 1.x as Release 2.0 and newer will not automatically uninstall.
+### For 2.x and newer
+#### Using Microsoft Store (recommended)
+You can download WinverUWP for free in [Microsoft Store](https://www.microsoft.com/p/winver-uwp/9n60s2vfmb7l). This option allows you to get automatic updates.
+
+#### Package files
+Currently unavailable.
+
+### For Release 1.1 (last from 1.x series)
+**Note:** These builds don't support ARM64
+
+1. Download [the latest 1.x release](https://github.com/dongle-the-gadget/WinverUWP/releases/download/v1.1.0.0/WinverUWPPackage_1.1.0.0.zip).
+2. Extract the ZIP file.
 3. Run the Install.ps1 file and the application will be installed.
    
    **Note:** During installation, PowerShell may ask you about execution policies and administrator privileges. For execution scopes, select **Unrestricted**, and for administrator privileges (User Account Control), select Yes or enter in your administrator credentials.
 
+<!--
 ## Launching
 You could launch this program in one of these three ways:
 - As an app entry in Start, Search, PowerToys Run, ... (whatever has you)
 - Using the app execution alias: `winveruwp.exe`
 - Using the app protocol: `winveruwp://`
+-->
 
 ## Contributing
 ### Language translation
-**Note:** instructions below are for version 2.0 and newer, which is available on this branch.
-
 If you want to help translate, follow the steps below:
 1. Create a fork of this repository.
 2. In `WinverUWP\Strings` folder, create a new folder with your locale name (i.e. "en-us" for American English).
