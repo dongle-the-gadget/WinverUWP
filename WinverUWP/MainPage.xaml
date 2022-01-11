@@ -13,7 +13,6 @@
 
 	<Page.Resources>
 		<converters:TextToVisibilityConverter x:Key="TextToVisibilityConverter"/>
-        <SolidColorBrush x:Key="ExpanderContentBackground" Color="{Binding Source={ThemeResource LayerFillColorDefaultBrush}, Path=Color}" />
     </Page.Resources>
 
 	<Grid>

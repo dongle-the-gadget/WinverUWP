@@ -198,10 +198,9 @@ namespace WinverUWP
                 return;
             }
 
-            string userId = GetUserSid();
-            registry.GetSubKeyList(RegistryHive.HKEY_LOCAL_MACHINE, $@"SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\{userId}", out string[] subKeys);
-            string cbs = subKeys.First(f => f.StartsWith("MicrosoftWindows.Client.CBS_", StringComparison.CurrentCultureIgnoreCase) && f.EndsWith("_neutral_neutral_cw5n1h2txyewy", StringComparison.CurrentCultureIgnoreCase));
-            cbs = cbs.Replace("MicrosoftWindows.Client.CBS_", "", StringComparison.CurrentCultureIgnoreCase).Replace("_neutral_neutral_cw5n1h2txyewy", "", StringComparison.CurrentCultureIgnoreCase);
+            registry.GetSubKeyList(RegistryHive.HKEY_LOCAL_MACHINE, $@"SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\InboxApplications", out string[] subKeys);
+            string cbs = subKeys.First(f => f.StartsWith("MicrosoftWindows.Client.CBS_", StringComparison.CurrentCultureIgnoreCase));
+            cbs = cbs.Split('_')[1];
             Experience.Text = $"{resourceLoader.GetString("ExperiencePack")} {cbs}";
         }
 
@@ -239,101 +238,6 @@ namespace WinverUWP
             DateTime startDate = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             DateTime installDate = startDate.AddSeconds(seconds);
             return installDate;
-        }
-
-        enum TOKEN_INFORMATION_CLASS
-        {
-            TokenUser = 1,
-            TokenAppContainerSid = 31
-        }
-
-        [DllImport("api-ms-win-core-processthreads-l1-1-0.dll", SetLastError = true), SuppressUnmanagedCodeSecurityAttribute]
-        static extern int OpenProcessToken(IntPtr processHandle, int desiredAccess, ref IntPtr tokenHandle);
-        const int OpenProcessTokenFail = 0;
-
-        [DllImport("api-ms-win-security-base-l1-1-0.dll", SetLastError = true)]
-        static extern bool GetTokenInformation(IntPtr tokenHandle, TOKEN_INFORMATION_CLASS tokenInformationClass, byte[] tokenInformation, int tokenInformationLength, out int returnLength);
-        const int GetTokenInformationFail = 0;
-
-        [DllImport("api-ms-win-security-sddl-l1-1-0.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        static extern bool ConvertSidToStringSidW(IntPtr securityIdentifier, out IntPtr securityIdentifierName);
-
-        [DllImport("api-ms-win-core-heap-l2-1-0.dll")]
-        static extern IntPtr LocalFree(IntPtr hMem);
-
-        [StructLayout(LayoutKind.Sequential)]
-        struct TokenAppContainerInfo
-        {
-            public IntPtr psid;
-        }
-
-        static int GetTokenInformationLength(IntPtr token, TOKEN_INFORMATION_CLASS tic)
-        {
-            int lengthNeeded;
-            bool success = GetTokenInformation(token, tic, null, 0, out lengthNeeded);
-            if (!success)
-            {
-                int error = Marshal.GetLastWin32Error();
-                if (error != 122)
-                {
-                    throw new Win32Exception(error);
-                }
-            }
-
-            return lengthNeeded;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        struct SidAndAttributes
-        {
-            public IntPtr Sid;
-            public int Attributes;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        struct TokenUser
-        {
-            public SidAndAttributes User;
-        }
-
-        static unsafe string GetUserSid()
-        {
-            var processHandle = Process.GetCurrentProcess().Handle;
-            IntPtr tokenHandle = IntPtr.Zero;
-            const int TOKEN_READ = 0x20008;
-
-            if (OpenProcessToken(processHandle, TOKEN_READ, ref tokenHandle) != OpenProcessTokenFail)
-            {
-
-                // Get length of buffer needed for sid.
-                int returnLength = GetTokenInformationLength(tokenHandle, TOKEN_INFORMATION_CLASS.TokenAppContainerSid);
-
-                byte[] tokenInformation = new byte[returnLength];
-                fixed (byte* pTokenInformation = tokenInformation)
-                {
-                    if (!GetTokenInformation(
-                                                    tokenHandle,
-                                                    TOKEN_INFORMATION_CLASS.TokenUser,
-                                                    tokenInformation,
-                                                    returnLength,
-                                                    out returnLength))
-                    {
-                        int errorCode = Marshal.GetLastWin32Error();
-                        throw new Win32Exception(errorCode);
-                    }
-
-                    TokenUser* ptg = (TokenUser*)pTokenInformation;
-
-                    IntPtr pstr = IntPtr.Zero;
-                    ConvertSidToStringSidW(ptg->User.Sid, out pstr);
-                    string retVal = Marshal.PtrToStringAuto(pstr);
-                    LocalFree(pstr);
-
-                    return retVal;
-                }
-            }
-
-            throw new Win32Exception(Marshal.GetLastWin32Error());
         }
     }
 }
