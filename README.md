@@ -10,17 +10,17 @@ Windows 10 October 2018 Update (1809) or newer using the x86, x64 or ARM64 CPU a
 
 ## Installing
 **Note:** You need to manually uninstall Release 1.x as Release 2.0 and newer will not automatically uninstall.
-### For 2.x and newer
+### For Release 2 and newer
 #### Using Microsoft Store (recommended)
 You can download WinverUWP for free in [Microsoft Store](https://www.microsoft.com/p/winver-uwp/9n60s2vfmb7l). This option allows you to get automatic updates.
 
 #### Package files
 Currently unavailable.
 
-### For Release 1.1 (last from 1.x series)
-**Note:** These builds don't support ARM64
+### For Release 1.x
+**Note:** These builds don't support ARM64 and has been officially deprecated.
 
-1. Download [the latest 1.x release](https://github.com/dongle-the-gadget/WinverUWP/releases/download/v1.1.0.0/WinverUWPPackage_1.1.0.0.zip).
+1. Download [Release 1.1](https://github.com/dongle-the-gadget/WinverUWP/releases/download/v1.1.0.0/WinverUWPPackage_1.1.0.0.zip).
 2. Extract the ZIP file.
 3. Run the Install.ps1 file and the application will be installed.
    
