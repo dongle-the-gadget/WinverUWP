@@ -11,12 +11,12 @@
 	<Identity
 	  Name="fda0e24a-1e63-4f79-8739-72fd5d68db9c"
 	  Publisher="CN=Dongle"
-	  Version="2.0.1.0" />
+	  Version="2.0.9.0" />
 
 	<mp:PhoneIdentity PhoneProductId="fda0e24a-1e63-4f79-8739-72fd5d68db9c" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
 	<Properties>
-		<DisplayName>WinverUWP</DisplayName>
+		<DisplayName>WinverUWP (Dev)</DisplayName>
 		<PublisherDisplayName>Dongle</PublisherDisplayName>
 		<Logo>Assets\StoreLogo.png</Logo>
 	</Properties>
@@ -49,7 +49,7 @@
 					 EntryPoint="WinverUWP.App"
 					 desktop4:Subsystem="windows">
 			<uap:VisualElements
-			  DisplayName="WinverUWP"
+			  DisplayName="WinverUWP (Dev)"
 			  Square150x150Logo="Assets\Square150x150Logo.png"
 			  Square44x44Logo="Assets\Square44x44Logo.png"
 			  Description="WinverUWP"
