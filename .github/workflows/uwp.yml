@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-2022
     strategy:
       matrix:
         architecture: [x86, x64, arm64]
