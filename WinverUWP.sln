@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinverUWP", "WinverUWP\Winv
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RegistryRT", "RegistryRT\RegistryRT.vcxproj", "{84A7225C-2DAF-410D-AB85-282AB220A89F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinverNative", "WinverNative\WinverNative.vcxproj", "{60EAF77F-6FE9-4394-B61C-F2E7604AB471}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM64 = Debug|ARM64
@@ -47,6 +49,18 @@ Global
 		{84A7225C-2DAF-410D-AB85-282AB220A89F}.Release|x64.Build.0 = Release|x64
 		{84A7225C-2DAF-410D-AB85-282AB220A89F}.Release|x86.ActiveCfg = Release|Win32
 		{84A7225C-2DAF-410D-AB85-282AB220A89F}.Release|x86.Build.0 = Release|Win32
+		{60EAF77F-6FE9-4394-B61C-F2E7604AB471}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{60EAF77F-6FE9-4394-B61C-F2E7604AB471}.Debug|ARM64.Build.0 = Debug|ARM64
+		{60EAF77F-6FE9-4394-B61C-F2E7604AB471}.Debug|x64.ActiveCfg = Debug|x64
+		{60EAF77F-6FE9-4394-B61C-F2E7604AB471}.Debug|x64.Build.0 = Debug|x64
+		{60EAF77F-6FE9-4394-B61C-F2E7604AB471}.Debug|x86.ActiveCfg = Debug|Win32
+		{60EAF77F-6FE9-4394-B61C-F2E7604AB471}.Debug|x86.Build.0 = Debug|Win32
+		{60EAF77F-6FE9-4394-B61C-F2E7604AB471}.Release|ARM64.ActiveCfg = Release|ARM64
+		{60EAF77F-6FE9-4394-B61C-F2E7604AB471}.Release|ARM64.Build.0 = Release|ARM64
+		{60EAF77F-6FE9-4394-B61C-F2E7604AB471}.Release|x64.ActiveCfg = Release|x64
+		{60EAF77F-6FE9-4394-B61C-F2E7604AB471}.Release|x64.Build.0 = Release|x64
+		{60EAF77F-6FE9-4394-B61C-F2E7604AB471}.Release|x86.ActiveCfg = Release|Win32
+		{60EAF77F-6FE9-4394-B61C-F2E7604AB471}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -168,7 +168,7 @@ namespace WinverUWP
                 Build.Text += $".{revision}";
 
             registry.InitNTDLLEntryPoints();
-            var productName = ReturnValueFromRegistry(RegistryHive.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "ProductName");
+            var productName = WinverNative.Winbrand.BrandingFormatString("%WINDOWS_LONG%");
 
             if (build >= 21996)
                 productName = productName.Replace("Windows 10", "Windows 11");
