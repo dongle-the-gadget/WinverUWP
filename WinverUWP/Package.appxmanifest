@@ -64,6 +64,9 @@
 						<uap5:ExecutionAlias Alias="winveruwp.exe" />
 					</uap5:AppExecutionAlias>
 				</uap5:Extension>
+				<uap:Extension Category="windows.protocol">
+					<uap:Protocol Name="winveruwp"/>
+				</uap:Extension>
 			</Extensions>
 		</Application>
 	</Applications>
