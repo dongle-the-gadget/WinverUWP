@@ -5,15 +5,10 @@
     xmlns:local="using:WinverUWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:converters="using:WinverUWP.Converters"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
     muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
     Loaded="Page_Loaded">
-
-	<Page.Resources>
-		<converters:TextToVisibilityConverter x:Key="TextToVisibilityConverter"/>
-    </Page.Resources>
 
 	<Grid>
 		<Grid.RowDefinitions>
