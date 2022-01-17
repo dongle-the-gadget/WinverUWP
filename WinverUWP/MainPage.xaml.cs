@@ -202,6 +202,8 @@ namespace WinverUWP
             LicensingText.Text = resourceLoader.GetString("Trademark/Text").Replace("Windows", productName);
 
             var displayVersion = ReturnValueFromRegistry(RegistryHive.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "DisplayVersion");
+            if (string.IsNullOrEmpty(displayVersion))
+                displayVersion = ReturnValueFromRegistry(RegistryHive.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "ReleaseId");
             Version.Text = displayVersion;
 
             var date = GetWindowsInstallationDateTime().ToLocalTime();
