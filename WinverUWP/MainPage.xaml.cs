@@ -1,5 +1,6 @@
 ﻿using RegistryRT;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -8,11 +9,14 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources;
+using Windows.Foundation.Metadata;
 using Windows.System.Profile;
 using Windows.UI;
+using Windows.UI.Composition;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -31,27 +35,46 @@ namespace WinverUWP
         private Registry registry = new Registry();
         private string OSName = "";
         private ResourceLoader resourceLoader;
+        private UISettings _uiSettings;
+        private BackdropBrushXaml Backdrop;
 
         public MainPage()
         {
             this.InitializeComponent();
 
+            _uiSettings = new UISettings();
+
             resourceLoader = ResourceLoader.GetForCurrentView();
 
-            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            titleBar.ButtonBackgroundColor = Colors.Transparent;
-            titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+            if (!ApiInformation.IsTypePresent("Windows.UI.WindowManagement.AppWindow"))
+            {
+                CloseButton.Visibility = Visibility.Collapsed;
+                ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+                titleBar.ButtonBackgroundColor = Colors.Transparent;
+                titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
 
-            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-            coreTitleBar.ExtendViewIntoTitleBar = true;
+                var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+                coreTitleBar.ExtendViewIntoTitleBar = true;
 
-            UpdateTitleBarLayout(coreTitleBar);
-            coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
-            coreTitleBar.IsVisibleChanged += CoreTitleBar_IsVisibleChanged;
+                UpdateTitleBarLayout(coreTitleBar);
+                coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
+                coreTitleBar.IsVisibleChanged += CoreTitleBar_IsVisibleChanged;
 
-            Window.Current.SetTitleBar(TitleBar);
+                Window.Current.SetTitleBar(TitleBar);
 
-            Window.Current.Activated += Current_Activated;
+                Window.Current.Activated += Current_Activated;
+            }
+            else
+            {
+                Backdrop = new BackdropBrushXaml();
+                Backdrop.SetAppWindow(App.AppWindow);
+                Background = Backdrop;
+                var token = FeatureTokenGenerator.GenerateTokenFromFeatureId("com.microsoft.windows.windowdecorations");
+                var attestation = FeatureTokenGenerator.GenerateAttestation("com.microsoft.windows.windowdecorations");
+                LimitedAccessFeatures.TryUnlockFeature("com.microsoft.windows.windowdecorations", token, attestation);
+                App.AppWindow.TitleBar.SetPreferredVisibility(Windows.UI.WindowManagement.AppWindowTitleBarVisibility.AlwaysHidden);
+                App.AppWindow.Frame.DragRegionVisuals.Add(TitleBar);
+            }
         }
 
         private void CoreTitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args)
@@ -157,9 +180,9 @@ namespace WinverUWP
             OSName = build >= 21996 ? "Windows11Logo" : "Windows10Logo";
             UpdateWindowsBrand();
 
-            ActualThemeChanged += (a, b) =>
+            _uiSettings.ColorValuesChanged += async (a, b) =>
             {
-                UpdateWindowsBrand();
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => UpdateWindowsBrand());
             };
 
             Build.Text = build.ToString();
@@ -168,7 +191,12 @@ namespace WinverUWP
                 Build.Text += $".{revision}";
 
             registry.InitNTDLLEntryPoints();
-            string productName = WinverNative.Winbrand.BrandingFormatString("%WINDOWS_LONG%");
+            string productName = "";
+
+            if (AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop")
+                productName = WinverNative.Winbrand.BrandingFormatString("%WINDOWS_LONG%");
+            else
+                productName = ReturnValueFromRegistry(RegistryHive.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "ProductName");
 
             Edition.Text = productName;
             LicensingText.Text = resourceLoader.GetString("Trademark/Text").Replace("Windows", productName);
@@ -208,13 +236,18 @@ namespace WinverUWP
                     "ms-appx:///Assets/"
                     + OSName
                     + "-"
-                    + (ActualTheme == ElementTheme.Dark ? "light" : "dark")
+                    + (Application.Current.RequestedTheme == ApplicationTheme.Dark ? "light" : "dark")
                     + ".svg"));
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Exit();
+            if (App.AppWindow == null)
+                Application.Current.Exit();
+            else
+#pragma warning disable CS4014
+                App.AppWindow.CloseAsync();
+#pragma warning restore CS4014
         }
 
         private string ReturnValueFromRegistry(RegistryHive hive, string key, string value)
