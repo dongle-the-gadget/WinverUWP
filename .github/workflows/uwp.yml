@@ -12,7 +12,7 @@ jobs:
     runs-on: windows-2022
     strategy:
       matrix:
-        architecture: [x86, x64, arm64]
+        architecture: [x86, x64, arm, arm64]
     steps:
       - name: Configure Pagefile
         uses: al-cheb/configure-pagefile-action@v1.2
