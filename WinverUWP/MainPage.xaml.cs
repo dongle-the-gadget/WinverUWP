@@ -218,7 +218,8 @@ namespace WinverUWP
             OrgText.Text = ownerOrg;
             OrgText.Visibility = string.IsNullOrEmpty(ownerOrg) ? Visibility.Collapsed : Visibility.Visible;
 
-            if (build < 19041)
+            // TODO: Add Experience for non-Desktop.
+            if (build < 19041 || AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Desktop")
             {
                 ExperienceLabel.Visibility = Visibility.Collapsed;
                 Experience.Visibility = Visibility.Collapsed;
