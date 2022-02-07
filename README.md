@@ -6,7 +6,7 @@ A UWP version of winver.
 ![WinverUWP on Windows 11 (Dev)](/images/WinverUWP-dark-11.png)
 
 ## System requirements
-Windows 10 October 2018 Update (1809) or newer using the x86, x64 or ARM64 CPU architecture.
+Windows 10 Creators Update (1703) or newer using the x86, x64, ARM32 or ARM64 CPU architecture.
 
 ## Installing
 **Note:** You need to manually uninstall Release 1.x as Release 2.0 and newer will not automatically uninstall.
@@ -15,7 +15,12 @@ Windows 10 October 2018 Update (1809) or newer using the x86, x64 or ARM64 CPU a
 You can download WinverUWP for free in [Microsoft Store](https://www.microsoft.com/p/winver-uwp/9n60s2vfmb7l). This option allows you to get automatic updates.
 
 #### Package files
-Currently unavailable.
+1. Go to the [Releases](https://github.com/dongle-the-gadget/WinverUWP/releases) page.
+2. Look for the latest release (usually at the top of the page).
+3. Download the correct architecture (x86, x64, arm32 or arm64).
+4. Open the downloaded `appx` file and choose **Install** or **Update**.
+
+**Note:** Choosing the correct architecture is critical, otherwise the app would fail to read the registry and crashes on launch.
 
 ### For Release 1.x
 **Note:** These builds don't support ARM64 and has been officially deprecated.
