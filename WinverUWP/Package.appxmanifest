@@ -26,8 +26,8 @@
 	</Dependencies>
 
 	<Resources>
-		<Resource Language="ko-kr"/>
 		<Resource Language="en-us"/>
+		<Resource Language="ko-kr"/>
 		<Resource Language="it-it"/>
 		<Resource Language="pt-br"/>
 		<Resource Language="pt-pt"/>
