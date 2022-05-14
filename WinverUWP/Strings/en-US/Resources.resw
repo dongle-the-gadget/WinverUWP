@@ -120,6 +120,9 @@
   <data name="AboutWindows.Text" xml:space="preserve">
     <value>About Windows</value>
   </data>
+  <data name="CloseButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Close</value>
+  </data>
   <data name="Copied" xml:space="preserve">
     <value>Copied!</value>
   </data>

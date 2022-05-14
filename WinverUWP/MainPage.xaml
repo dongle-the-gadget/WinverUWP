@@ -37,7 +37,7 @@
             Height="32"
             Background="Transparent"
             BorderThickness="0"
-            ToolTipService.ToolTip="Close"
+            x:Uid="CloseButton"
             Windows10version1809:CornerRadius="0"
             Click="Button_Click"
             Name="CloseButton">
