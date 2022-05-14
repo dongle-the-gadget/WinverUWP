@@ -124,8 +124,8 @@ namespace WinverUWP
 
         private void UpdateBrush()
         {
-            FrameworkElement root = _root;
-
+            FrameworkElement root = null;
+            
             if (_window != null)
             {
                 root = ElementCompositionPreview.GetAppWindowContent(_window) as FrameworkElement;
@@ -327,6 +327,5 @@ namespace WinverUWP
         private bool _windowActivated;
         private AppWindow _window;
         private InputActivationListener _appWindowActivationListener;
-        private FrameworkElement _root;
     }
 }

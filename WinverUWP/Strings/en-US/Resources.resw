@@ -135,6 +135,9 @@
   <data name="ExperiencePack" xml:space="preserve">
     <value>Windows Feature Experience Pack</value>
   </data>
+  <data name="Expiration.Text" xml:space="preserve">
+    <value>Expiration</value>
+  </data>
   <data name="InstalledOn.Text" xml:space="preserve">
     <value>Installed on</value>
   </data>

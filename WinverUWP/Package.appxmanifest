@@ -11,7 +11,7 @@
 	<Identity
 	  Name="fda0e24a-1e63-4f79-8739-72fd5d68db9c"
 	  Publisher="CN=Dongle"
-	  Version="2.0.1.0" />
+	  Version="2.1.0.0" />
 
 	<mp:PhoneIdentity PhoneProductId="fda0e24a-1e63-4f79-8739-72fd5d68db9c" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -26,21 +26,7 @@
 	</Dependencies>
 
 	<Resources>
-		<Resource Language="ko-kr"/>
-		<Resource Language="en-us"/>
-		<Resource Language="it-it"/>
-		<Resource Language="pt-br"/>
-		<Resource Language="pt-pt"/>
-		<Resource Language="qps-ploc"/>
-		<Resource Language="pl-pl"/>
-		<Resource Language="es-es"/>
-		<Resource Language="vi-vn"/>
-		<Resource Language="es-mx"/>
-		<Resource Language="id-id"/>
-		<Resource Language="nl-nl"/>
-		<Resource Language="zh-cn"/>
-		<Resource Language="ro-ro"/>
-		<Resource Language="si-lk"/>
+		<Resource Language="x-generate"/>
 	</Resources>
 
 	<Applications>

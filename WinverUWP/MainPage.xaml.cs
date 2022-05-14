@@ -1,12 +1,8 @@
 ﻿using RegistryRT;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -16,7 +12,6 @@ using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Metadata;
 using Windows.System.Profile;
 using Windows.UI;
-using Windows.UI.Composition;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -40,7 +35,7 @@ namespace WinverUWP
 
         public MainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
             _uiSettings = new UISettings();
 
@@ -170,7 +165,7 @@ namespace WinverUWP
             CopyButton.Content = resourceLoader.GetString("CopyButton/Content");
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             string deviceFamilyVersion = AnalyticsInfo.VersionInfo.DeviceFamilyVersion;
             ulong version = ulong.Parse(deviceFamilyVersion);
@@ -209,6 +204,18 @@ namespace WinverUWP
             var date = GetWindowsInstallationDateTime().ToLocalTime();
             var userCulture = CultureInfoHelper.GetCurrentCulture();
             InstalledOn.Text = date.ToString("d", userCulture);
+
+            using (X509Certificate2 cert = new X509Certificate2("C:\\Windows\\System32\\ntdll.dll"))
+            {
+                var dat = cert.Issuer;
+                if (dat.Contains("Development"))
+                    Expiration.Text = cert.NotAfter.ToString("g", userCulture);
+                else
+                {
+                    Expiration.Visibility = Visibility.Collapsed;
+                    ExpirationLabel.Visibility = Visibility.Collapsed;
+                }
+            }
 
             var ownerName = ReturnValueFromRegistry(RegistryHive.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "RegisteredOwner");
             OwnerText.Text = ownerName;

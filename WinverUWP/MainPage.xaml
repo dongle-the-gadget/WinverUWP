@@ -5,18 +5,19 @@
     xmlns:local="using:WinverUWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:muxc="using:Microsoft.UI.Xaml.Controls" xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls" 
+    xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
     mc:Ignorable="d"
     Loaded="Page_Loaded">
 
-	<Grid>
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        
+
         <Grid Background="Transparent" Name="TitleBar" Height="32">
             <TextBlock VerticalAlignment="Center"
                        HorizontalAlignment="Left"
@@ -27,6 +28,7 @@
         </Grid>
 
         <Button 
+            IsTabStop="False"
             Width="45" 
             VerticalAlignment="Stretch" 
             HorizontalAlignment="Right"
@@ -35,6 +37,7 @@
             Height="32"
             Background="Transparent"
             BorderThickness="0"
+            ToolTipService.ToolTip="Close"
             Windows10version1809:CornerRadius="0"
             Click="Button_Click"
             Name="CloseButton">
@@ -71,7 +74,7 @@
             <Ellipse Fill="#ff5f55" Height="18" Width="18" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="7,0,0,0"/>
         </Grid>-->
 
-		<Image HorizontalAlignment="Stretch"
+        <Image HorizontalAlignment="Stretch"
                VerticalAlignment="Top"
                Grid.Row="1"
                Source="/Assets/Windows11Logo-dark.svg"
@@ -105,47 +108,68 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <TextBlock Margin="0,0,20,5" x:Uid="Edition"/>
                         <TextBlock 
-						Name="Edition"
-                        Margin="0,0,0,5"
-                        Grid.Column="1"
-                        TextWrapping="WrapWholeWords"
-                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+						    Name="Edition"
+                            Margin="0,0,0,5"
+                            Grid.Column="1"
+                            TextWrapping="WrapWholeWords"
+                            IsTextSelectionEnabled="True"
+                            HorizontalAlignment="Left"
+                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                         <TextBlock Margin="0,0,20,5" Grid.Row="1" x:Uid="Version"/>
                         <TextBlock 
-						Name="Version"
-                        Margin="0,0,0,5"
-                        Grid.Column="1"
-                        TextWrapping="WrapWholeWords"
-                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-                        Grid.Row="1"/>
+						    Name="Version"
+                            Margin="0,0,0,5"
+                            Grid.Column="1"
+                            TextWrapping="WrapWholeWords"
+                            IsTextSelectionEnabled="True"
+                            HorizontalAlignment="Left"
+                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                            Grid.Row="1"/>
                         <!--Text="{x:Bind OSInfo.Version,Mode=OneWay}"-->
                         <TextBlock Margin="0,0,20,5" Grid.Row="2" x:Uid="InstalledOn"/>
                         <TextBlock 
-						Name="InstalledOn"
-                        Margin="0,0,0,5"
-                        Grid.Column="1"
-                        TextWrapping="WrapWholeWords"
-                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-                        Grid.Row="2"/>
+						    Name="InstalledOn"
+                            Margin="0,0,0,5"
+                            Grid.Column="1"
+                            TextWrapping="WrapWholeWords"
+                            IsTextSelectionEnabled="True"
+                            HorizontalAlignment="Left"
+                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                            Grid.Row="2"/>
                         <TextBlock Margin="0,0,20,5" Grid.Row="3" x:Uid="OSBuild"/>
                         <TextBlock 
-						Name="Build"
-                        Margin="0,0,0,5"
-                        Grid.Column="1"
-                        TextWrapping="WrapWholeWords"
-                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-                        Grid.Row="3"/>
+						    Name="Build"
+                            Margin="0,0,0,5"
+                            Grid.Column="1"
+                            TextWrapping="WrapWholeWords"
+                            IsTextSelectionEnabled="True"
+                            HorizontalAlignment="Left"
+                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                            Grid.Row="3"/>
                         <TextBlock Margin="0,0,20,5" Grid.Row="4" x:Uid="Experience" Name="ExperienceLabel"/>
                         <TextBlock 
-                        Name="Experience" 
-                        Margin="0,0,0,5"
-                        Grid.Column="1"
-                        TextWrapping="WrapWholeWords"
-                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" 
-                        Grid.Row="4"/>
+                            Name="Experience" 
+                            Margin="0,0,0,5"
+                            Grid.Column="1"
+                            TextWrapping="WrapWholeWords"
+                            IsTextSelectionEnabled="True"
+                            HorizontalAlignment="Left"
+                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" 
+                            Grid.Row="4"/>
+                        <TextBlock Margin="0,0,20,5" Grid.Row="5" x:Uid="Expiration" Name="ExpirationLabel"/>
+                        <TextBlock 
+                            Name="Expiration" 
+                            Margin="0,0,0,5"
+                            Grid.Column="1"
+                            TextWrapping="WrapWholeWords"
+                            IsTextSelectionEnabled="True"
+                            HorizontalAlignment="Left"
+                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" 
+                            Grid.Row="5"/>
                     </Grid>
                 </muxc:Expander>
 
@@ -171,22 +195,26 @@
                         <TextBlock Margin="0,20,0,0" TextWrapping="WrapWholeWords" x:Uid="LicenseTo"/>
                         <StackPanel Margin="0,5,0,0">
                             <TextBlock 
-							TextWrapping="Wrap"
-                            Name="OwnerText"/>
+							    TextWrapping="Wrap"
+                                Name="OwnerText"
+                                IsTextSelectionEnabled="True"
+                                HorizontalAlignment="Left"/>
                             <TextBlock 
-							TextWrapping="Wrap"
-                            Name="OrgText"/>
+							    TextWrapping="Wrap"
+                                Name="OrgText"
+                                IsTextSelectionEnabled="True"
+                                HorizontalAlignment="Left"/>
                         </StackPanel>
                     </StackPanel>
                 </muxc:Expander>
             </StackPanel>
         </ScrollViewer>
-		<Button Style="{StaticResource AccentButtonStyle}"
+        <Button Style="{StaticResource AccentButtonStyle}"
                 Margin="10"
                 Width="60"
                 Grid.Row="3"
                 HorizontalAlignment="Right"
                 Click="Button_Click"
                 x:Uid="OKButton"/>
-	</Grid>
+    </Grid>
 </Page>
