@@ -94,7 +94,14 @@
                     <muxc:Expander.Header>
                         <Grid>
                             <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" x:Uid="WindowsSpecifications"/>
-                            <Button VerticalAlignment="Center" HorizontalAlignment="Right" Name="CopyButton" Click="CopyButton_Click" x:Uid="CopyButton"/>
+                            <Button Width="80" VerticalAlignment="Center" HorizontalAlignment="Right" Name="CopyButton" Click="CopyButton_Click">
+                                <TextBlock x:Uid="CopyButton" HorizontalAlignment="Stretch" x:Name="CopyButtonLabel">
+                                    <Windows10version1809:TextBlock.OpacityTransition>
+                                        <ScalarTransition />
+                                    </Windows10version1809:TextBlock.OpacityTransition>
+
+                                </TextBlock>
+                            </Button>
                         </Grid>
                     </muxc:Expander.Header>
                     <Grid HorizontalAlignment="Stretch">

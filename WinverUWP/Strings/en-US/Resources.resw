@@ -126,7 +126,7 @@
   <data name="Copied" xml:space="preserve">
     <value>Copied!</value>
   </data>
-  <data name="CopyButton.Content" xml:space="preserve">
+  <data name="CopyButton.Text" xml:space="preserve">
     <value>Copy</value>
   </data>
   <data name="Edition.Text" xml:space="preserve">

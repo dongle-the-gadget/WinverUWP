@@ -1,6 +1,8 @@
 ﻿using RegistryRT;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -12,10 +14,12 @@ using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Metadata;
 using Windows.System.Profile;
 using Windows.UI;
+using Windows.UI.Composition;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -32,6 +36,7 @@ namespace WinverUWP
         private ResourceLoader resourceLoader;
         private UISettings _uiSettings;
         private BackdropBrushXaml Backdrop;
+        private bool isCopying;
 
         public MainPage()
         {
@@ -109,63 +114,80 @@ namespace WinverUWP
 
         private async void CopyButton_Click(object sender, RoutedEventArgs e)
         {
+            if (isCopying)
+                return;
+
+            isCopying = true;
             DataPackage package = new DataPackage();
-            string targetText = "";
-            string deviceFamilyVersion = AnalyticsInfo.VersionInfo.DeviceFamilyVersion;
-            ulong version = ulong.Parse(deviceFamilyVersion);
-            ulong build = (version & 0x00000000FFFF0000L) >> 16;
-            if (build >= 19041)
+
+            Dictionary<string, string> data = new Dictionary<string, string>()
             {
-                string[] labels = new[]
+                { resourceLoader.GetString("Edition/Text"), Edition.Text },
+                { resourceLoader.GetString("Version/Text"), Version.Text },
+                { resourceLoader.GetString("InstalledOn/Text"), InstalledOn.Text },
+                { resourceLoader.GetString("OSBuild/Text"), Build.Text },
+            };
+
+            if (Experience.Visibility == Visibility.Visible)
+                data.Add(resourceLoader.GetString("Experience/Text"), Experience.Text);
+
+            if (Expiration.Visibility == Visibility.Visible)
+                data.Add(resourceLoader.GetString("Expiration/Text"), Expiration.Text);
+
+            int maxLength = data.Keys.Max(f => f.Length + 5);
+
+            var lines = data.Select(f => string.Format($"{{0,-{maxLength}}}", f.Key) + f.Value);
+
+            string targetText = string.Join(Environment.NewLine, lines);
+
+            package.SetText(targetText);
+            Clipboard.SetContent(package);
+
+            bool center = ApiInformation.IsPropertyPresent("Windows.UI.Xaml.UIElement", "CenterPoint");
+            bool vectorkey = ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "CreateVector3KeyFrameAnimation");
+            bool spring = ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "CreateSpringVector3Animation");
+            bool scalar = ApiInformation.IsTypePresent("Windows.UI.Xaml.ScalarTransition");
+
+            if (center && vectorkey && spring && scalar)
+            {
+                CopyButtonLabel.CenterPoint = new Vector3((float)CopyButtonLabel.ActualWidth / 2, (float)CopyButtonLabel.ActualHeight / 2, (float)CopyButtonLabel.ActualWidth / 2);
+                var _springAnimation = Window.Current.Compositor.CreateVector3KeyFrameAnimation();
+                _springAnimation.Target = "Scale";
+                _springAnimation.InsertKeyFrame(1f, new Vector3(0f));
+                _springAnimation.Duration = TimeSpan.FromMilliseconds(100);
+                var test = Window.Current.Compositor.CreateScopedBatch(CompositionBatchTypes.Animation);
+                CopyButtonLabel.StartAnimation(_springAnimation);
+                test.End();
+                test.Completed += async (s1, e1) =>
                 {
-                    $"{resourceLoader.GetString("Edition/Text")}",
-                    $"{resourceLoader.GetString("Version/Text")}",
-                    $"{resourceLoader.GetString("InstalledOn/Text")}",
-                    $"{resourceLoader.GetString("OSBuild/Text")}",
-                    $"{resourceLoader.GetString("Experience/Text")}",
+                    CopyButtonLabel.Text = resourceLoader.GetString("Copied");
+                    CopyButtonLabel.CenterPoint = new Vector3((float)CopyButtonLabel.ActualWidth / 2, (float)CopyButtonLabel.ActualHeight / 2, (float)CopyButtonLabel.ActualWidth / 2);
+
+                    var springAnimation = Window.Current.Compositor.CreateSpringVector3Animation();
+                    springAnimation.Target = "Scale";
+                    springAnimation.FinalValue = new Vector3(1f);
+                    springAnimation.DampingRatio = 0.4f;
+                    springAnimation.Period = TimeSpan.FromMilliseconds(20);
+                    CopyButtonLabel.StartAnimation(springAnimation);
+                    await Task.Delay(1020);
+                    CopyButtonLabel.Opacity = 0;
+                    await Task.Delay(200);
+                    CopyButtonLabel.Text = resourceLoader.GetString("CopyButton/Text");
+                    CopyButtonLabel.Opacity = 1;
+                    await Task.Delay(200);
+                    isCopying = false;
                 };
-
-                int length = labels.Max(f => f.Length) + 4;
-
-                labels = labels.Select(f => string.Format($"{{0,-{length}}}", f)).ToArray();
-
-                targetText =
-                    $@"{labels[0]}{Edition.Text}
-{labels[1]}{Version.Text}
-{labels[2]}{InstalledOn.Text}
-{labels[3]}{Build.Text}
-{labels[4]}{Experience.Text}";
             }
             else
             {
-                string[] labels = new[]
-                {
-                    resourceLoader.GetString("Edition/Text"),
-                    resourceLoader.GetString("Version/Text"),
-                    resourceLoader.GetString("InstalledOn/Text"),
-                    resourceLoader.GetString("OSBuild/Text")
-                };
-
-                int length = labels.Max(f => f.Length) + 4;
-
-                labels = labels.Select(f => string.Format($"{{0,-{length}}}", f)).ToArray();
-
-                targetText =
-                    $@"{labels[0]}{Edition.Text}
-{labels[1]}{Version.Text}
-{labels[2]}{InstalledOn.Text}
-{labels[3]}{Build.Text}";
+                CopyButtonLabel.Text = resourceLoader.GetString("Copied");
+                await Task.Delay(1000);
+                CopyButtonLabel.Text = resourceLoader.GetString("CopyButton/Text");
+                isCopying = false;
             }
-
-            package.SetText(targetText);
-
-            Clipboard.SetContent(package);
-            CopyButton.Content = resourceLoader.GetString("Copied");
-            await Task.Delay(1000);
-            CopyButton.Content = resourceLoader.GetString("CopyButton/Content");
         }
 
-        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             string deviceFamilyVersion = AnalyticsInfo.VersionInfo.DeviceFamilyVersion;
             ulong version = ulong.Parse(deviceFamilyVersion);

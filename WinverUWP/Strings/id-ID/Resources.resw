@@ -123,7 +123,7 @@
   <data name="Copied" xml:space="preserve">
     <value>Disalin!</value>
   </data>
-  <data name="CopyButton.Content" xml:space="preserve">
+  <data name="CopyButton.Text" xml:space="preserve">
     <value>Salin</value>
   </data>
   <data name="Edition.Text" xml:space="preserve">
