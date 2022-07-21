@@ -8,7 +8,8 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls" 
     xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
     mc:Ignorable="d"
-    Loaded="Page_Loaded">
+    Loaded="Page_Loaded"
+    muxc:BackdropMaterial.ApplyToRootOrPageBackground="True">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -27,53 +28,6 @@
                        Margin="{StaticResource TitleBarLeftMargin}"/>
         </Grid>
 
-        <Button 
-            IsTabStop="False"
-            Width="45" 
-            VerticalAlignment="Stretch" 
-            HorizontalAlignment="Right"
-            HorizontalContentAlignment="Center"
-            VerticalContentAlignment="Center"
-            Height="32"
-            Background="Transparent"
-            BorderThickness="0"
-            x:Uid="CloseButton"
-            Windows10version1809:CornerRadius="0"
-            Click="Button_Click"
-            Name="CloseButton">
-            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE711;" FontSize="14" />
-            <Button.Resources>
-                <ResourceDictionary>
-                    <ResourceDictionary.ThemeDictionaries>
-                        <ResourceDictionary x:Key="Light">
-                            <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White"/>
-                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#c42b1c"/>
-                            <SolidColorBrush x:Key="ButtonForegroundPressed" Color="#e9afab"/>
-                            <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#c73c31"/>
-                        </ResourceDictionary>
-                        <ResourceDictionary x:Key="Dark">
-                            <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White"/>
-                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#C42B1C"/>
-                            <SolidColorBrush x:Key="ButtonForegroundPressed" Color="#EDBEBB"/>
-                            <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#B2271D"/>
-                        </ResourceDictionary>
-                    </ResourceDictionary.ThemeDictionaries>
-                </ResourceDictionary>
-            </Button.Resources>
-        </Button>
-
-        <!--<Grid Background="White" Name="TitleBar" Height="32">
-            <TextBlock Style="{StaticResource CaptionTextBlockStyle}"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center"
-                       FontFamily="Helvetica"
-                       FontWeight="Bold"
-                       Text="About Windows"
-                       Name="AppTitle"/>
-
-            <Ellipse Fill="#ff5f55" Height="18" Width="18" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="7,0,0,0"/>
-        </Grid>-->
-
         <Image HorizontalAlignment="Stretch"
                VerticalAlignment="Top"
                Grid.Row="1"
@@ -85,8 +39,10 @@
         <ScrollViewer Grid.Row="2" Margin="10,10,10,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <StackPanel>
                 <muxc:Expander
+                    Collapsed="Expander_Collapsed"
+                    Expanding="Expander_Expanding"
+                Name="SpecExpander"
 				ExpandDirection="Down"
-                IsExpanded="True"
                 VerticalAlignment="Top"
                 HorizontalAlignment="Stretch"
                 HorizontalContentAlignment="Stretch"
@@ -181,8 +137,10 @@
                 </muxc:Expander>
 
                 <muxc:Expander 
+                Name="LegalExpander"
+                    Collapsed="Expander_Collapsed"
+                    Expanding="Expander_Expanding"
 				ExpandDirection="Down"
-                IsExpanded="True"
                 VerticalAlignment="Top"
                 HorizontalAlignment="Stretch"
                 HorizontalContentAlignment="Stretch"

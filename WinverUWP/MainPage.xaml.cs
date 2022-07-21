@@ -3,15 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Metadata;
+using Windows.Storage;
 using Windows.System.Profile;
 using Windows.UI;
 using Windows.UI.Composition;
@@ -19,7 +18,6 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -35,7 +33,6 @@ namespace WinverUWP
         private string OSName = "";
         private ResourceLoader resourceLoader;
         private UISettings _uiSettings;
-        private BackdropBrushXaml Backdrop;
         private bool isCopying;
 
         public MainPage()
@@ -46,35 +43,28 @@ namespace WinverUWP
 
             resourceLoader = ResourceLoader.GetForCurrentView();
 
-            if (!ApiInformation.IsTypePresent("Windows.UI.WindowManagement.AppWindow"))
-            {
-                CloseButton.Visibility = Visibility.Collapsed;
-                ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-                titleBar.ButtonBackgroundColor = Colors.Transparent;
-                titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+            var appdata = ApplicationData.Current.LocalSettings.Values.Where(f => f.Key.EndsWith("Expander"));
 
-                var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-                coreTitleBar.ExtendViewIntoTitleBar = true;
-
-                UpdateTitleBarLayout(coreTitleBar);
-                coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
-                coreTitleBar.IsVisibleChanged += CoreTitleBar_IsVisibleChanged;
-
-                Window.Current.SetTitleBar(TitleBar);
-
-                Window.Current.Activated += Current_Activated;
-            }
+            if (appdata.Count() == 0)
+                SpecExpander.IsExpanded = LegalExpander.IsExpanded = true;
             else
-            {
-                Backdrop = new BackdropBrushXaml();
-                Backdrop.SetAppWindow(App.AppWindow);
-                Background = Backdrop;
-                var token = FeatureTokenGenerator.GenerateTokenFromFeatureId("com.microsoft.windows.windowdecorations");
-                var attestation = FeatureTokenGenerator.GenerateAttestation("com.microsoft.windows.windowdecorations");
-                LimitedAccessFeatures.TryUnlockFeature("com.microsoft.windows.windowdecorations", token, attestation);
-                App.AppWindow.TitleBar.SetPreferredVisibility(Windows.UI.WindowManagement.AppWindowTitleBarVisibility.AlwaysHidden);
-                App.AppWindow.Frame.DragRegionVisuals.Add(TitleBar);
-            }
+                foreach(var value in appdata)
+                    ((Microsoft.UI.Xaml.Controls.Expander)FindName(value.Key)).IsExpanded = (bool)value.Value;
+
+            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            titleBar.ButtonBackgroundColor = Colors.Transparent;
+            titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+
+            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = true;
+
+            UpdateTitleBarLayout(coreTitleBar);
+            coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
+            coreTitleBar.IsVisibleChanged += CoreTitleBar_IsVisibleChanged;
+
+            Window.Current.SetTitleBar(TitleBar);
+
+            Window.Current.Activated += Current_Activated;
         }
 
         private void CoreTitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args)
@@ -274,11 +264,8 @@ namespace WinverUWP
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (App.AppWindow == null)
-                Application.Current.Exit();
-            else
 #pragma warning disable CS4014
-                App.AppWindow.CloseAsync();
+            ApplicationView.GetForCurrentView().TryConsolidateAsync();
 #pragma warning restore CS4014
         }
 
@@ -301,5 +288,11 @@ namespace WinverUWP
             DateTime installDate = startDate.AddSeconds(seconds);
             return installDate;
         }
+
+        private void Expander_Collapsed(Microsoft.UI.Xaml.Controls.Expander sender, Microsoft.UI.Xaml.Controls.ExpanderCollapsedEventArgs args)
+            => ApplicationData.Current.LocalSettings.Values[sender.Name] = false;
+
+        private void Expander_Expanding(Microsoft.UI.Xaml.Controls.Expander sender, Microsoft.UI.Xaml.Controls.ExpanderExpandingEventArgs args)
+            => ApplicationData.Current.LocalSettings.Values[sender.Name] = true;
     }
 }
