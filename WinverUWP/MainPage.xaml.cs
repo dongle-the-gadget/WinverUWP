@@ -118,9 +118,6 @@ namespace WinverUWP
                 { resourceLoader.GetString("OSBuild/Text"), Build.Text },
             };
 
-            if (Experience.Visibility == Visibility.Visible)
-                data.Add(resourceLoader.GetString("Experience/Text"), Experience.Text);
-
             if (Expiration.Visibility == Visibility.Visible)
                 data.Add(resourceLoader.GetString("Expiration/Text"), Expiration.Text);
 
@@ -237,18 +234,8 @@ namespace WinverUWP
             OrgText.Text = ownerOrg;
             OrgText.Visibility = string.IsNullOrEmpty(ownerOrg) ? Visibility.Collapsed : Visibility.Visible;
 
-            // TODO: Add Experience for non-Desktop.
-            if (build < 19041 || AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Desktop")
-            {
-                ExperienceLabel.Visibility = Visibility.Collapsed;
-                Experience.Visibility = Visibility.Collapsed;
-                return;
-            }
-
-            registry.GetSubKeyList(RegistryHive.HKEY_LOCAL_MACHINE, $@"SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\InboxApplications", out string[] subKeys);
-            string cbs = subKeys.First(f => f.StartsWith("MicrosoftWindows.Client.CBS_", StringComparison.CurrentCultureIgnoreCase));
-            cbs = cbs.Split('_')[1];
-            Experience.Text = $"{resourceLoader.GetString("ExperiencePack")} {cbs}";
+            if (string.IsNullOrEmpty(ownerName) && string.IsNullOrEmpty(ownerOrg))
+                LicenseTo.Visibility = Visibility.Collapsed;
         }
 
         private void UpdateWindowsBrand()

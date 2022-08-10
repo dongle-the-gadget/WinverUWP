@@ -31,7 +31,7 @@
         <Image HorizontalAlignment="Stretch"
                VerticalAlignment="Top"
                Grid.Row="1"
-               Source="/Assets/Windows11Logo-dark.svg"
+               d:Source="/Assets/Windows11Logo-dark.svg"
                Margin="100,20"
                MaxWidth="300"
                Name="BrandImage"/>
@@ -39,23 +39,23 @@
         <ScrollViewer Grid.Row="2" Margin="10,10,10,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <StackPanel>
                 <muxc:Expander
+                    d:IsExpanded="True"
                     Collapsed="Expander_Collapsed"
                     Expanding="Expander_Expanding"
-                Name="SpecExpander"
-				ExpandDirection="Down"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Stretch">
+                    Name="SpecExpander"
+				    ExpandDirection="Down"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"
+                    VerticalContentAlignment="Stretch">
                     <muxc:Expander.Header>
                         <Grid>
                             <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" x:Uid="WindowsSpecifications"/>
                             <Button Width="80" VerticalAlignment="Center" HorizontalAlignment="Right" Name="CopyButton" Click="CopyButton_Click">
                                 <TextBlock x:Uid="CopyButton" HorizontalAlignment="Stretch" x:Name="CopyButtonLabel">
                                     <Windows10version1809:TextBlock.OpacityTransition>
-                                        <ScalarTransition />
+                                        <Windows10version1809:ScalarTransition />
                                     </Windows10version1809:TextBlock.OpacityTransition>
-
                                 </TextBlock>
                             </Button>
                         </Grid>
@@ -71,13 +71,13 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <TextBlock Margin="0,0,20,5" x:Uid="Edition"/>
                         <TextBlock 
 						    Name="Edition"
                             Margin="0,0,0,5"
                             Grid.Column="1"
+                            d:Text="Windows 11 Pro"
                             TextWrapping="WrapWholeWords"
                             IsTextSelectionEnabled="True"
                             HorizontalAlignment="Left"
@@ -87,6 +87,7 @@
 						    Name="Version"
                             Margin="0,0,0,5"
                             Grid.Column="1"
+                            d:Text="21H2"
                             TextWrapping="WrapWholeWords"
                             IsTextSelectionEnabled="True"
                             HorizontalAlignment="Left"
@@ -98,6 +99,7 @@
 						    Name="InstalledOn"
                             Margin="0,0,0,5"
                             Grid.Column="1"
+                            d:Text="01/01/1970"
                             TextWrapping="WrapWholeWords"
                             IsTextSelectionEnabled="True"
                             HorizontalAlignment="Left"
@@ -108,36 +110,29 @@
 						    Name="Build"
                             Margin="0,0,0,5"
                             Grid.Column="1"
+                            d:Text="22000.1"
                             TextWrapping="WrapWholeWords"
                             IsTextSelectionEnabled="True"
                             HorizontalAlignment="Left"
                             Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
                             Grid.Row="3"/>
-                        <TextBlock Margin="0,0,20,5" Grid.Row="4" x:Uid="Experience" Name="ExperienceLabel"/>
+                        <TextBlock Margin="0,0,20,5" Grid.Row="4" x:Uid="Expiration" Name="ExpirationLabel"/>
                         <TextBlock 
-                            Name="Experience" 
+                            Name="Expiration" 
                             Margin="0,0,0,5"
                             Grid.Column="1"
+                            d:Text="01/01/1970"
                             TextWrapping="WrapWholeWords"
                             IsTextSelectionEnabled="True"
                             HorizontalAlignment="Left"
                             Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" 
                             Grid.Row="4"/>
-                        <TextBlock Margin="0,0,20,5" Grid.Row="5" x:Uid="Expiration" Name="ExpirationLabel"/>
-                        <TextBlock 
-                            Name="Expiration" 
-                            Margin="0,0,0,5"
-                            Grid.Column="1"
-                            TextWrapping="WrapWholeWords"
-                            IsTextSelectionEnabled="True"
-                            HorizontalAlignment="Left"
-                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" 
-                            Grid.Row="5"/>
                     </Grid>
                 </muxc:Expander>
 
                 <muxc:Expander 
                 Name="LegalExpander"
+                    d:IsExpanded="True"
                     Collapsed="Expander_Collapsed"
                     Expanding="Expander_Expanding"
 				ExpandDirection="Down"
@@ -157,18 +152,20 @@
                         Name="LicensingText"
                         HorizontalAlignment="Stretch"
                         x:Uid="Trademark"/>
-                        <TextBlock Margin="0,20,0,0" TextWrapping="WrapWholeWords" x:Uid="LicenseTo"/>
+                        <TextBlock Name="LicenseTo" Margin="0,20,0,0" TextWrapping="WrapWholeWords" x:Uid="LicenseTo"/>
                         <StackPanel Margin="0,5,0,0">
                             <TextBlock 
 							    TextWrapping="Wrap"
                                 Name="OwnerText"
                                 IsTextSelectionEnabled="True"
-                                HorizontalAlignment="Left"/>
+                                HorizontalAlignment="Left"
+                                d:Text="Windows User"/>
                             <TextBlock 
 							    TextWrapping="Wrap"
                                 Name="OrgText"
                                 IsTextSelectionEnabled="True"
-                                HorizontalAlignment="Left"/>
+                                HorizontalAlignment="Left"
+                                d:Text="Windows User"/>
                         </StackPanel>
                     </StackPanel>
                 </muxc:Expander>
