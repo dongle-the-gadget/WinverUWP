@@ -39,6 +39,9 @@ namespace WinverUWP
         {
             InitializeComponent();
 
+            if (!ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "TryCreateBlurredWallpaperBackdropBrush"))
+                ((Grid)Content).Style = (Style)Application.Current.Resources["AcrylicBackgroundGrid"];
+                
             _uiSettings = new UISettings();
 
             resourceLoader = ResourceLoader.GetForCurrentView();
@@ -79,17 +82,10 @@ namespace WinverUWP
 
         private void Current_Activated(object sender, Windows.UI.Core.WindowActivatedEventArgs e)
         {
-            SolidColorBrush defaultForegroundBrush = (SolidColorBrush)Application.Current.Resources["TextFillColorPrimaryBrush"];
-            SolidColorBrush inactiveForegroundBrush = (SolidColorBrush)Application.Current.Resources["TextFillColorDisabledBrush"];
-
             if (e.WindowActivationState == Windows.UI.Core.CoreWindowActivationState.Deactivated)
-            {
-                AppTitle.Foreground = inactiveForegroundBrush;
-            }
+                AppTitle.Style = (Style)Application.Current.Resources["InactivatedAppTitle"];
             else
-            {
-                AppTitle.Foreground = defaultForegroundBrush;
-            }
+                AppTitle.Style = (Style)Application.Current.Resources["ActivatedAppTitle"];
         }
 
         private void UpdateTitleBarLayout(CoreApplicationViewTitleBar coreTitleBar)

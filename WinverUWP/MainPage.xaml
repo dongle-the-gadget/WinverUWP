@@ -24,7 +24,6 @@
                        HorizontalAlignment="Left"
                        x:Uid="AboutWindows"
                        Name="AppTitle"
-                       Style="{StaticResource CaptionTextBlockStyle}"
                        Margin="{StaticResource TitleBarLeftMargin}"/>
         </Grid>
 
