@@ -120,7 +120,7 @@
   <data name="AboutWindows.Text" xml:space="preserve">
     <value>Tentang Windows</value>
   </data>
-  <data name="Copied" xml:space="preserve">
+  <data name="CopiedButton.Text" xml:space="preserve">
     <value>Disalin!</value>
   </data>
   <data name="CopyButton.Text" xml:space="preserve">

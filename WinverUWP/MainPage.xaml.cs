@@ -38,9 +38,6 @@ namespace WinverUWP
         public MainPage()
         {
             InitializeComponent();
-
-            if (!ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "TryCreateBlurredWallpaperBackdropBrush"))
-                ((Grid)Content).Style = (Style)Application.Current.Resources["AcrylicBackgroundGrid"];
                 
             _uiSettings = new UISettings();
 
@@ -98,7 +95,7 @@ namespace WinverUWP
             TitleBar.Margin = new Thickness(currMargin.Left, currMargin.Top, coreTitleBar.SystemOverlayRightInset, currMargin.Bottom);
         }
 
-        private async void CopyButton_Click(object sender, RoutedEventArgs e)
+        private void CopyButton_Click(object sender, RoutedEventArgs e)
         {
             if (isCopying)
                 return;
@@ -125,53 +122,21 @@ namespace WinverUWP
 
             package.SetText(targetText);
             Clipboard.SetContent(package);
+            CopyToClipboardSuccessAnimation.Begin();
+            CopyToClipboardSuccessAnimation.Completed += CopyToClipboardSuccessAnimation_Completed;
+        }
 
-            bool center = ApiInformation.IsPropertyPresent("Windows.UI.Xaml.UIElement", "CenterPoint");
-            bool vectorkey = ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "CreateVector3KeyFrameAnimation");
-            bool spring = ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "CreateSpringVector3Animation");
-            bool scalar = ApiInformation.IsTypePresent("Windows.UI.Xaml.ScalarTransition");
-
-            if (center && vectorkey && spring && scalar)
-            {
-                CopyButtonLabel.CenterPoint = new Vector3((float)CopyButtonLabel.ActualWidth / 2, (float)CopyButtonLabel.ActualHeight / 2, (float)CopyButtonLabel.ActualWidth / 2);
-                var _springAnimation = Window.Current.Compositor.CreateVector3KeyFrameAnimation();
-                _springAnimation.Target = "Scale";
-                _springAnimation.InsertKeyFrame(1f, new Vector3(0f));
-                _springAnimation.Duration = TimeSpan.FromMilliseconds(100);
-                var test = Window.Current.Compositor.CreateScopedBatch(CompositionBatchTypes.Animation);
-                CopyButtonLabel.StartAnimation(_springAnimation);
-                test.End();
-                test.Completed += async (s1, e1) =>
-                {
-                    CopyButtonLabel.Text = resourceLoader.GetString("Copied");
-                    CopyButtonLabel.CenterPoint = new Vector3((float)CopyButtonLabel.ActualWidth / 2, (float)CopyButtonLabel.ActualHeight / 2, (float)CopyButtonLabel.ActualWidth / 2);
-
-                    var springAnimation = Window.Current.Compositor.CreateSpringVector3Animation();
-                    springAnimation.Target = "Scale";
-                    springAnimation.FinalValue = new Vector3(1f);
-                    springAnimation.DampingRatio = 0.4f;
-                    springAnimation.Period = TimeSpan.FromMilliseconds(20);
-                    CopyButtonLabel.StartAnimation(springAnimation);
-                    await Task.Delay(1020);
-                    CopyButtonLabel.Opacity = 0;
-                    await Task.Delay(200);
-                    CopyButtonLabel.Text = resourceLoader.GetString("CopyButton/Text");
-                    CopyButtonLabel.Opacity = 1;
-                    await Task.Delay(200);
-                    isCopying = false;
-                };
-            }
-            else
-            {
-                CopyButtonLabel.Text = resourceLoader.GetString("Copied");
-                await Task.Delay(1000);
-                CopyButtonLabel.Text = resourceLoader.GetString("CopyButton/Text");
-                isCopying = false;
-            }
+        private void CopyToClipboardSuccessAnimation_Completed(object sender, object e)
+        {
+            isCopying = false;
+            CopyToClipboardSuccessAnimation.Completed -= CopyToClipboardSuccessAnimation_Completed;
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            // Interop.RoGetActivationFactory("Windows.Internal.StateRepository.Package", typeof(IPackageStatics_StateRepository).GUID, out object instance);
+            // bool test = ((IPackageStatics_StateRepository)instance).ExistsByPackageFamilyName("47827AhmedWalid.FlairMaxBeta_hhm185gzkv8e8");
+
             string deviceFamilyVersion = AnalyticsInfo.VersionInfo.DeviceFamilyVersion;
             ulong version = ulong.Parse(deviceFamilyVersion);
             ulong build = (version & 0x00000000FFFF0000L) >> 16;
@@ -212,8 +177,7 @@ namespace WinverUWP
 
             using (X509Certificate2 cert = new X509Certificate2("C:\\Windows\\System32\\ntdll.dll"))
             {
-                var dat = cert.Issuer;
-                if (dat.Contains("Development"))
+                if (cert.Issuer.Contains("Development"))
                     Expiration.Text = cert.NotAfter.ToString("g", userCulture);
                 else
                 {
@@ -247,9 +211,7 @@ namespace WinverUWP
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-#pragma warning disable CS4014
-            ApplicationView.GetForCurrentView().TryConsolidateAsync();
-#pragma warning restore CS4014
+            _ = ApplicationView.GetForCurrentView().TryConsolidateAsync();
         }
 
         private string ReturnValueFromRegistry(RegistryHive hive, string key, string value)
