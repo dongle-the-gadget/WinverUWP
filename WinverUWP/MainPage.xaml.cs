@@ -170,7 +170,11 @@ namespace WinverUWP
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
 #if DEBUG
-            Test();
+            try
+            {
+                Test();
+            }
+            catch { }
 #endif
             string deviceFamilyVersion = AnalyticsInfo.VersionInfo.DeviceFamilyVersion;
             ulong version = ulong.Parse(deviceFamilyVersion);
@@ -208,11 +212,13 @@ namespace WinverUWP
             var displayVersion = RegistryHelper.GetInfoString("DisplayVersion");
             if (string.IsNullOrEmpty(displayVersion))
                 displayVersion = RegistryHelper.GetInfoString("ReleaseId");
+
             Version.Text = displayVersion;
 
             var date = GetWindowsInstallationDateTime().ToLocalTime();
             var userCulture = CultureInfoHelper.GetCurrentCulture();
             InstalledOn.Text = date.ToString("d", userCulture);
+
 
             using (X509Certificate2 cert = new X509Certificate2("C:\\Windows\\System32\\ntdll.dll"))
             {

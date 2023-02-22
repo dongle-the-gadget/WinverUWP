@@ -58,14 +58,18 @@ namespace WinverUWP.Helpers
         }
 
         private delegate void RtlInitUnicodeString(UNICODE_STRING* DestinationString, ushort* SourceString);
-        private delegate void RtlFreeUnicodeString(UNICODE_STRING* UnicodeString);
 
         private static Win32Headers.HMODULE _ntdll;
         private static NtClose? _NtClose;
         private static NtOpenKey? _NtOpenKey;
         private static NtQueryValueKey? _NtQueryValueKey;
         private static RtlInitUnicodeString? _RtlInitUnicodeString;
-        private static RtlFreeUnicodeString? _RtlFreeUnicodeString;
+
+        [DllImport("kernel32", ExactSpelling = true)]
+        private static extern Win32Headers.HANDLE GetProcessHeap();
+
+        [DllImport("kernel32", ExactSpelling = true)]
+        private static extern void* HeapAlloc(Win32Headers.HANDLE hHeap, uint dwFlags, nuint dwBytes);
 
         private static void Initialize()
         {
@@ -105,6 +109,7 @@ namespace WinverUWP.Helpers
                     _RtlInitUnicodeString = Marshal.GetDelegateForFunctionPointer<RtlInitUnicodeString>(Win32Headers.GetProcAddress(_ntdll, (sbyte*)test));
                 }
             }
+            /*
             if (_RtlFreeUnicodeString == null)
             {
                 fixed (byte* test = Encoding.ASCII.GetBytes("RtlFreeUnicodeString"))
@@ -112,6 +117,7 @@ namespace WinverUWP.Helpers
                     _RtlFreeUnicodeString = Marshal.GetDelegateForFunctionPointer<RtlFreeUnicodeString>(Win32Headers.GetProcAddress(_ntdll, (sbyte*)test));
                 }
             }
+            */
         }
 
         private static byte[]? ReadInfo(string valueName)
@@ -137,24 +143,32 @@ namespace WinverUWP.Helpers
                 {
                     UNICODE_STRING uValueName;
                     _RtlInitUnicodeString(&uValueName, (ushort*)pValue);
-                    _KEY_VALUE_PARTIAL_INFORMATION partialInfo;
+                    void* buffer = null;
                     uint resultLength;
                     int error = _NtQueryValueKey!(hKey, &uValueName, 2, null, 0, &resultLength);
                     if (error == -1073741772)
+                    {
+                        _NtClose!(hKey);
                         return null;
-                    else if (error == -2147483643)
+                    }
+                    else if (error == -1073741571)
                     {
                         do
                         {
-                            error = _NtQueryValueKey(hKey, &uValueName, 2, &partialInfo, resultLength + 1024 + sizeof(ushort), &resultLength);
-                        }
-                        while (error == -2147483643);
+                            buffer = HeapAlloc(GetProcessHeap(), 0, resultLength + 1024 + sizeof(ushort));
+                            error = _NtQueryValueKey(hKey, &uValueName, 2, buffer, resultLength, &resultLength);
+                        } while (error == -1073741571);
                     }
                     else
-                        _NtQueryValueKey(hKey, &uValueName, 2, &partialInfo, resultLength, &resultLength);
+                    {
+                        buffer = HeapAlloc(GetProcessHeap(), 0, resultLength + 1024);
+                        _NtQueryValueKey(hKey, &uValueName, 2, buffer, resultLength, &resultLength);
+                    }
                     _NtClose!(hKey);
-                    byte[] test = new byte[partialInfo.DataLength];
-                    Marshal.Copy((IntPtr)partialInfo.Data, test, 0, (int)partialInfo.DataLength);
+                    _KEY_VALUE_PARTIAL_INFORMATION* partialInfo = (_KEY_VALUE_PARTIAL_INFORMATION*)buffer;
+                    byte[] test = new byte[partialInfo->DataLength];
+                    byte* infoData = partialInfo->Data;
+                    Unsafe.CopyBlock(ref test[0], ref *infoData, partialInfo->DataLength);
                     return test;
                 }
             }
