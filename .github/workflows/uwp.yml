@@ -15,7 +15,7 @@ jobs:
         architecture: [x86, x64, arm, arm64]
     steps:
       - name: Configure Pagefile
-        uses: al-cheb/configure-pagefile-action@v1
+        uses: al-cheb/configure-pagefile-action@v1.3
         with:
           minimum-size: 32GB
           maximum-size: 32GB
