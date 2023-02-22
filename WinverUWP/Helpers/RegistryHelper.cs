@@ -65,12 +65,6 @@ namespace WinverUWP.Helpers
         private static NtQueryValueKey? _NtQueryValueKey;
         private static RtlInitUnicodeString? _RtlInitUnicodeString;
 
-        [DllImport("kernel32", ExactSpelling = true)]
-        private static extern Win32Headers.HANDLE GetProcessHeap();
-
-        [DllImport("kernel32", ExactSpelling = true)]
-        private static extern void* HeapAlloc(Win32Headers.HANDLE hHeap, uint dwFlags, nuint dwBytes);
-
         private static void Initialize()
         {
             if (_ntdll == Win32Headers.HMODULE.NULL)
@@ -109,15 +103,6 @@ namespace WinverUWP.Helpers
                     _RtlInitUnicodeString = Marshal.GetDelegateForFunctionPointer<RtlInitUnicodeString>(Win32Headers.GetProcAddress(_ntdll, (sbyte*)test));
                 }
             }
-            /*
-            if (_RtlFreeUnicodeString == null)
-            {
-                fixed (byte* test = Encoding.ASCII.GetBytes("RtlFreeUnicodeString"))
-                {
-                    _RtlFreeUnicodeString = Marshal.GetDelegateForFunctionPointer<RtlFreeUnicodeString>(Win32Headers.GetProcAddress(_ntdll, (sbyte*)test));
-                }
-            }
-            */
         }
 
         private static byte[]? ReadInfo(string valueName)
@@ -125,12 +110,12 @@ namespace WinverUWP.Helpers
             Initialize();
             fixed (char* key = @"\Registry\Machine\SOFTWARE\Microsoft\Windows NT\CurrentVersion")
             {
-                UNICODE_STRING uKeyName;
-                _RtlInitUnicodeString!(&uKeyName, (ushort*)key);
+                UNICODE_STRING* uKeyName = (UNICODE_STRING*)Marshal.AllocHGlobal(sizeof(UNICODE_STRING));
+                _RtlInitUnicodeString!(uKeyName, (ushort*)key);
                 OBJECT_ATTRIBUTES objectAttributes = new OBJECT_ATTRIBUTES
                 {
                     Length = (uint)sizeof(OBJECT_ATTRIBUTES),
-                    ObjectName = &uKeyName,
+                    ObjectName = uKeyName,
                     Attributes = 0x00000040,
                     SecurityDescriptor = null,
                     SecurityQualityOfService = null,
@@ -141,34 +126,26 @@ namespace WinverUWP.Helpers
 
                 fixed (char* pValue = valueName)
                 {
-                    UNICODE_STRING uValueName;
-                    _RtlInitUnicodeString(&uValueName, (ushort*)pValue);
-                    void* buffer = null;
+                    UNICODE_STRING* uValueName = (UNICODE_STRING*)Marshal.AllocHGlobal(sizeof(UNICODE_STRING));
+                    _RtlInitUnicodeString(uValueName, (ushort*)pValue);
                     uint resultLength;
-                    int error = _NtQueryValueKey!(hKey, &uValueName, 2, null, 0, &resultLength);
+                    int error = _NtQueryValueKey!(hKey, uValueName, 2, null, 0, &resultLength);
                     if (error == -1073741772)
                     {
                         _NtClose!(hKey);
+                        Marshal.FreeHGlobal((IntPtr)uValueName);
+                        Marshal.FreeHGlobal((IntPtr)uKeyName);
                         return null;
                     }
-                    else if (error == -1073741571)
-                    {
-                        do
-                        {
-                            buffer = HeapAlloc(GetProcessHeap(), 0, resultLength + 1024 + sizeof(ushort));
-                            error = _NtQueryValueKey(hKey, &uValueName, 2, buffer, resultLength, &resultLength);
-                        } while (error == -1073741571);
-                    }
-                    else
-                    {
-                        buffer = HeapAlloc(GetProcessHeap(), 0, resultLength + 1024);
-                        _NtQueryValueKey(hKey, &uValueName, 2, buffer, resultLength, &resultLength);
-                    }
+                    _KEY_VALUE_PARTIAL_INFORMATION* partialInfo = (_KEY_VALUE_PARTIAL_INFORMATION*)Marshal.AllocHGlobal((int)resultLength);
+                    _NtQueryValueKey!(hKey, uValueName, 2, partialInfo, resultLength, &resultLength);
                     _NtClose!(hKey);
-                    _KEY_VALUE_PARTIAL_INFORMATION* partialInfo = (_KEY_VALUE_PARTIAL_INFORMATION*)buffer;
                     byte[] test = new byte[partialInfo->DataLength];
                     byte* infoData = partialInfo->Data;
                     Unsafe.CopyBlock(ref test[0], ref *infoData, partialInfo->DataLength);
+                    Marshal.FreeHGlobal((IntPtr)partialInfo);
+                    Marshal.FreeHGlobal((IntPtr)uValueName);
+                    Marshal.FreeHGlobal((IntPtr)uKeyName);
                     return test;
                 }
             }
