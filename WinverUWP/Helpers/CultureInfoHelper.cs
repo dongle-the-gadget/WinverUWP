@@ -2,12 +2,12 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace WinverUWP
+namespace WinverUWP.Helpers
 {
-    public class CultureInfoHelper
+    public unsafe class CultureInfoHelper
     {
         [DllImport("api-ms-win-core-localization-l1-2-1.dll", CharSet = CharSet.Unicode)]
-        private static extern int GetLocaleInfoEx(string lpLocaleName, uint LCType, StringBuilder lpLCData, int cchData);
+        private static extern int GetLocaleInfoEx(ushort* lpLocaleName, uint LCType, ushort* lpLCData, int cchData);
 
 
         private const uint LOCALE_SNAME = 0x0000005c;
@@ -29,10 +29,7 @@ namespace WinverUWP
 
 
                 if (name == null)
-                {
-                    // If system default doesn't work, use invariant
                     return CultureInfo.InvariantCulture;
-                }
             }
 
 
@@ -42,19 +39,12 @@ namespace WinverUWP
 
         private static string InvokeGetLocaleInfoEx(string lpLocaleName, uint LCType)
         {
-            var buffer = new StringBuilder(BUFFER_SIZE);
-
-
-            var resultCode = GetLocaleInfoEx(lpLocaleName, LCType, buffer, BUFFER_SIZE);
-
-
-            if (resultCode > 0)
+            fixed(char* locale = lpLocaleName)
             {
-                return buffer.ToString();
+                char* test = stackalloc char[BUFFER_SIZE];
+                int result = GetLocaleInfoEx((ushort*)locale, LCType, (ushort*)test, BUFFER_SIZE);
+                return new(test);
             }
-
-
-            return null;
         }
     }
 }

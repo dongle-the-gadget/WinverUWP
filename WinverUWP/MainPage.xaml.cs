@@ -1,8 +1,8 @@
-﻿using RegistryRT;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +19,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+using WinverUWP.Helpers;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -29,7 +30,6 @@ namespace WinverUWP
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private Registry registry = new Registry();
         private string OSName = "";
         private ResourceLoader resourceLoader;
         private UISettings _uiSettings;
@@ -132,11 +132,46 @@ namespace WinverUWP
             CopyToClipboardSuccessAnimation.Completed -= CopyToClipboardSuccessAnimation_Completed;
         }
 
+        private void SetTitleBarBackground()
+        {
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            titleBar.ButtonHoverBackgroundColor = (Color)Application.Current.Resources["SubtleFillColorSecondary"];
+            titleBar.ButtonPressedBackgroundColor = (Color)Application.Current.Resources["SubtleFillColorTertiary"];
+        }
+
+#if DEBUG
+        unsafe void Test()
+        {
+            const string activatableClassId = "Windows.Internal.StateRepository.Package";
+            fixed (char* pActivatableClassId = activatableClassId)
+            {
+                Interop.HSTRING hStringActivatableClass;
+                Interop.WindowsCreateString((ushort*)pActivatableClassId, (uint)activatableClassId.Length, &hStringActivatableClass);
+
+                using Interop.ComPtr<IPackageStatics_StateRepository> packageStatics = default;
+
+                Interop.RoGetActivationFactory(hStringActivatableClass, Interop.__uuidof<IPackageStatics_StateRepository>(), packageStatics.GetVoidAddressOf());
+
+
+                // Microsoft.WindowsStore_8wekyb3d8bbwe
+                const string packageName = "MicrosoftWindows.Client.CBS_cw5n1h2txyewy";
+                fixed (char* pPackageName = packageName)
+                {
+                    Interop.HSTRING hStringPackageName;
+                    Interop.WindowsCreateString((ushort*)pPackageName, (uint)packageName.Length, &hStringPackageName);
+                    
+                    bool exists = false;
+                    Interop.HRESULT success = packageStatics.Get()->ExistsByPackageFamilyName(hStringPackageName, &exists);
+                }
+            }
+        }
+#endif
+
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            // Interop.RoGetActivationFactory("Windows.Internal.StateRepository.Package", typeof(IPackageStatics_StateRepository).GUID, out object instance);
-            // bool test = ((IPackageStatics_StateRepository)instance).ExistsByPackageFamilyName("47827AhmedWalid.FlairMaxBeta_hhm185gzkv8e8");
-
+#if DEBUG
+            Test();
+#endif
             string deviceFamilyVersion = AnalyticsInfo.VersionInfo.DeviceFamilyVersion;
             ulong version = ulong.Parse(deviceFamilyVersion);
             ulong build = (version & 0x00000000FFFF0000L) >> 16;
@@ -144,10 +179,15 @@ namespace WinverUWP
 
             OSName = build >= 21996 ? "Windows11Logo" : "Windows10Logo";
             UpdateWindowsBrand();
+            SetTitleBarBackground();
 
             _uiSettings.ColorValuesChanged += async (a, b) =>
             {
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => UpdateWindowsBrand());
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    UpdateWindowsBrand();
+                    SetTitleBarBackground();
+                });
             };
 
             Build.Text = build.ToString();
@@ -155,20 +195,19 @@ namespace WinverUWP
             if (revision != 0)
                 Build.Text += $".{revision}";
 
-            registry.InitNTDLLEntryPoints();
             string productName = "";
 
             if (AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop")
-                productName = WinverNative.Winbrand.BrandingFormatString("%WINDOWS_LONG%");
+                productName = WinbrandHelper.GetWinbrand();
             else
-                productName = ReturnValueFromRegistry(RegistryHive.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "ProductName");
+                productName = RegistryHelper.GetInfoString("ProductName");
 
             Edition.Text = productName;
             LicensingText.Text = resourceLoader.GetString("Trademark/Text").Replace("Windows", productName);
 
-            var displayVersion = ReturnValueFromRegistry(RegistryHive.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "DisplayVersion");
+            var displayVersion = RegistryHelper.GetInfoString("DisplayVersion");
             if (string.IsNullOrEmpty(displayVersion))
-                displayVersion = ReturnValueFromRegistry(RegistryHive.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "ReleaseId");
+                displayVersion = RegistryHelper.GetInfoString("ReleaseId");
             Version.Text = displayVersion;
 
             var date = GetWindowsInstallationDateTime().ToLocalTime();
@@ -186,12 +225,14 @@ namespace WinverUWP
                 }
             }
 
-            var ownerName = ReturnValueFromRegistry(RegistryHive.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "RegisteredOwner");
-            OwnerText.Text = ownerName;
+            var ownerName = RegistryHelper.GetInfoString("RegisteredOwner");
+            if (ownerName != null)
+                OwnerText.Text = ownerName;
             OwnerText.Visibility = string.IsNullOrEmpty(ownerName) ? Visibility.Collapsed : Visibility.Visible;
 
-            var ownerOrg = ReturnValueFromRegistry(RegistryHive.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "RegisteredOrganization");
-            OrgText.Text = ownerOrg;
+            var ownerOrg = RegistryHelper.GetInfoString("RegisteredOrganization");
+            if (ownerOrg != null)
+                OrgText.Text = ownerOrg;
             OrgText.Visibility = string.IsNullOrEmpty(ownerOrg) ? Visibility.Collapsed : Visibility.Visible;
 
             if (string.IsNullOrEmpty(ownerName) && string.IsNullOrEmpty(ownerOrg))
@@ -214,23 +255,11 @@ namespace WinverUWP
             _ = ApplicationView.GetForCurrentView().TryConsolidateAsync();
         }
 
-        private string ReturnValueFromRegistry(RegistryHive hive, string key, string value)
-        {
-            var success = registry.QueryValue(hive, key, value, out RegistryType _, out byte[] rawData);
-            if (!success)
-                return "";
-            return Encoding.Unicode.GetString(rawData).Replace("\0", "");
-        }
-
         private DateTime GetWindowsInstallationDateTime()
         {
-            bool success = registry.QueryValue(RegistryHive.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "InstallDate", out RegistryType _, out byte[] buffer);
-            if (!success)
-                throw new Exception();
-
-            var seconds = BitConverter.ToInt32(buffer, 0);
+            var seconds = RegistryHelper.GetInfoDWord("InstallDate");
             DateTime startDate = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            DateTime installDate = startDate.AddSeconds(seconds);
+            DateTime installDate = startDate.AddSeconds(seconds.Value);
             return installDate;
         }
 
