@@ -3,103 +3,168 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:muxc="using:Microsoft.UI.Xaml.Controls" 
     xmlns:isMicaIncompatible="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsTypeNotPresent(Windows.UI.Composition.ICompositionSupportsSystemBackdrop)"
-    mc:Ignorable="d"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
     Loaded="Page_Loaded"
-    muxc:BackdropMaterial.ApplyToRootOrPageBackground="True">
+    mc:Ignorable="d">
 
     <Grid isMicaIncompatible:Background="{ThemeResource SystemControlAcrylicWindowBrush}">
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid Background="Transparent" Name="TitleBar" Height="32">
-            <TextBlock VerticalAlignment="Center"
-                       HorizontalAlignment="Left"
-                       x:Uid="AboutWindows"
-                       Name="AppTitle"
-                       Margin="{StaticResource TitleBarLeftMargin}"/>
+        <Grid
+            Name="TitleBar"
+            Height="32"
+            Background="Transparent">
+            <TextBlock
+                Name="AppTitle"
+                x:Uid="AboutWindows"
+                Margin="{StaticResource TitleBarLeftMargin}"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center" />
         </Grid>
 
-        <Image HorizontalAlignment="Stretch"
-               VerticalAlignment="Top"
-               Grid.Row="1"
-               d:Source="/Assets/Windows11Logo-dark.svg"
-               Margin="100,20"
-               MaxWidth="300"
-               Name="BrandImage"/>
+        <Image
+            Name="BrandImage"
+            Grid.Row="1"
+            MaxWidth="300"
+            Margin="100,20"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top"
+            d:Source="/Assets/Windows11Logo-dark.svg" />
 
-        <ScrollViewer Grid.Row="2" Margin="10,10,10,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <ScrollViewer
+            Grid.Row="2"
+            Margin="10,10,10,0"
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Auto">
             <StackPanel Spacing="10">
                 <StackPanel.ChildrenTransitions>
                     <RepositionThemeTransition />
                 </StackPanel.ChildrenTransitions>
                 <muxc:Expander
+                    x:Name="SpecExpander"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Top"
+                    HorizontalContentAlignment="Stretch"
+                    VerticalContentAlignment="Stretch"
                     d:IsExpanded="True"
                     Collapsed="Expander_Collapsed"
-                    Expanding="Expander_Expanding"
-                    x:Name="SpecExpander"
-				    ExpandDirection="Down"
-                    VerticalAlignment="Top"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Stretch"
-                    VerticalContentAlignment="Stretch">
+                    ExpandDirection="Down"
+                    Expanding="Expander_Expanding">
                     <muxc:Expander.Header>
                         <Grid>
-                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" x:Uid="WindowsSpecifications"/>
-                            <Button x:Name="CopyButton" VerticalAlignment="Center" HorizontalAlignment="Right" MinWidth="90" Click="CopyButton_Click">
+                            <TextBlock
+                                x:Uid="WindowsSpecifications"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center" />
+                            <Button
+                                x:Name="CopyButton"
+                                MinWidth="90"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Click="CopyButton_Click">
                                 <Button.Resources>
-                                    <Storyboard x:Name="CopyToClipboardSuccessAnimation" x:Key="CopyToClipboardSuccessAnimation">
-                                        <DoubleAnimationUsingKeyFrames Duration="0:0:1.433" Storyboard.TargetName="ButtonContent" Storyboard.TargetProperty="(UIElement.Opacity)">
+                                    <Storyboard x:Key="CopyToClipboardSuccessAnimation" x:Name="CopyToClipboardSuccessAnimation">
+                                        <DoubleAnimationUsingKeyFrames
+                                            Storyboard.TargetName="ButtonContent"
+                                            Storyboard.TargetProperty="(UIElement.Opacity)"
+                                            Duration="0:0:1.433">
                                             <DoubleAnimationUsingKeyFrames.KeyFrames>
                                                 <DiscreteDoubleKeyFrame KeyTime="00:00:00" Value="1" />
-                                                <SplineDoubleKeyFrame KeySpline="0.33,0.0 0.67,1.0" KeyTime="00:00:00.1330000" Value="0" />
+                                                <SplineDoubleKeyFrame
+                                                    KeySpline="0.33,0.0 0.67,1.0"
+                                                    KeyTime="00:00:00.1330000"
+                                                    Value="0" />
                                                 <DiscreteDoubleKeyFrame KeyTime="00:00:01.3000000" Value="0" />
-                                                <SplineDoubleKeyFrame KeySpline="1.0,0.0 1.0,1.0" KeyTime="00:00:01.4330000" Value="1" />
+                                                <SplineDoubleKeyFrame
+                                                    KeySpline="1.0,0.0 1.0,1.0"
+                                                    KeyTime="00:00:01.4330000"
+                                                    Value="1" />
                                             </DoubleAnimationUsingKeyFrames.KeyFrames>
                                         </DoubleAnimationUsingKeyFrames>
-                                        <DoubleAnimationUsingKeyFrames Duration="0:0:1.2" Storyboard.TargetName="CopyToClipboardTextScaleTransform" Storyboard.TargetProperty="(ScaleX)">
+                                        <DoubleAnimationUsingKeyFrames
+                                            Storyboard.TargetName="CopyToClipboardTextScaleTransform"
+                                            Storyboard.TargetProperty="(ScaleX)"
+                                            Duration="0:0:1.2">
                                             <DoubleAnimationUsingKeyFrames.KeyFrames>
                                                 <DiscreteDoubleKeyFrame KeyTime="00:00:00" Value="1" />
-                                                <SplineDoubleKeyFrame KeySpline="0.13,0.0 0.0,1.0" KeyTime="00:00:00.1330000" Value="0.273" />
+                                                <SplineDoubleKeyFrame
+                                                    KeySpline="0.13,0.0 0.0,1.0"
+                                                    KeyTime="00:00:00.1330000"
+                                                    Value="0.273" />
                                                 <DiscreteDoubleKeyFrame KeyTime="00:00:01.1670000" Value="0.273" />
                                                 <LinearDoubleKeyFrame KeyTime="00:00:01.2000000" Value="1" />
                                             </DoubleAnimationUsingKeyFrames.KeyFrames>
                                         </DoubleAnimationUsingKeyFrames>
-                                        <DoubleAnimationUsingKeyFrames Duration="0:0:1.2" Storyboard.TargetName="CopyToClipboardTextScaleTransform" Storyboard.TargetProperty="(ScaleY)">
+                                        <DoubleAnimationUsingKeyFrames
+                                            Storyboard.TargetName="CopyToClipboardTextScaleTransform"
+                                            Storyboard.TargetProperty="(ScaleY)"
+                                            Duration="0:0:1.2">
                                             <DoubleAnimationUsingKeyFrames.KeyFrames>
                                                 <DiscreteDoubleKeyFrame KeyTime="00:00:00" Value="1" />
-                                                <SplineDoubleKeyFrame KeySpline="0.13,0.0 0.0,1.0" KeyTime="00:00:00.1330000" Value="0.273" />
+                                                <SplineDoubleKeyFrame
+                                                    KeySpline="0.13,0.0 0.0,1.0"
+                                                    KeyTime="00:00:00.1330000"
+                                                    Value="0.273" />
                                                 <DiscreteDoubleKeyFrame KeyTime="00:00:01.1670000" Value="0.273" />
                                                 <LinearDoubleKeyFrame KeyTime="00:00:01.2000000" Value="1" />
                                             </DoubleAnimationUsingKeyFrames.KeyFrames>
                                         </DoubleAnimationUsingKeyFrames>
-                                        <DoubleAnimationUsingKeyFrames Duration="0:0:1.3" Storyboard.TargetName="CopySuccessGlyph" Storyboard.TargetProperty="(UIElement.Opacity)">
+                                        <DoubleAnimationUsingKeyFrames
+                                            Storyboard.TargetName="CopySuccessGlyph"
+                                            Storyboard.TargetProperty="(UIElement.Opacity)"
+                                            Duration="0:0:1.3">
                                             <DoubleAnimationUsingKeyFrames.KeyFrames>
                                                 <DiscreteDoubleKeyFrame KeyTime="00:00:00.1330000" Value="0" />
-                                                <SplineDoubleKeyFrame KeySpline="0.33,0.0 0.67,1.0" KeyTime="00:00:00.2670000" Value="1" />
+                                                <SplineDoubleKeyFrame
+                                                    KeySpline="0.33,0.0 0.67,1.0"
+                                                    KeyTime="00:00:00.2670000"
+                                                    Value="1" />
                                                 <DiscreteDoubleKeyFrame KeyTime="00:00:01.1670000" Value="1" />
-                                                <SplineDoubleKeyFrame KeySpline="1.0,0.0 0.98,1.0" KeyTime="00:00:01.3000000" Value="0" />
+                                                <SplineDoubleKeyFrame
+                                                    KeySpline="1.0,0.0 0.98,1.0"
+                                                    KeyTime="00:00:01.3000000"
+                                                    Value="0" />
                                             </DoubleAnimationUsingKeyFrames.KeyFrames>
                                         </DoubleAnimationUsingKeyFrames>
-                                        <DoubleAnimationUsingKeyFrames Duration="0:0:0.333" Storyboard.TargetName="CopyToClipboardSuccessTextScaleTransform" Storyboard.TargetProperty="(ScaleX)">
+                                        <DoubleAnimationUsingKeyFrames
+                                            Storyboard.TargetName="CopyToClipboardSuccessTextScaleTransform"
+                                            Storyboard.TargetProperty="(ScaleX)"
+                                            Duration="0:0:0.333">
                                             <DoubleAnimationUsingKeyFrames.KeyFrames>
                                                 <DiscreteDoubleKeyFrame KeyTime="00:00:00.1330000" Value="0.385" />
-                                                <SplineDoubleKeyFrame KeySpline="0.39,0.0 0.63,1.0" KeyTime="00:00:00.2670000" Value="1.146" />
-                                                <SplineDoubleKeyFrame KeySpline="0.55,0.0 0.02,1.0" KeyTime="00:00:00.3330000" Value="1" />
+                                                <SplineDoubleKeyFrame
+                                                    KeySpline="0.39,0.0 0.63,1.0"
+                                                    KeyTime="00:00:00.2670000"
+                                                    Value="1.146" />
+                                                <SplineDoubleKeyFrame
+                                                    KeySpline="0.55,0.0 0.02,1.0"
+                                                    KeyTime="00:00:00.3330000"
+                                                    Value="1" />
                                             </DoubleAnimationUsingKeyFrames.KeyFrames>
                                         </DoubleAnimationUsingKeyFrames>
-                                        <DoubleAnimationUsingKeyFrames Duration="0:0:0.333" Storyboard.TargetName="CopyToClipboardSuccessTextScaleTransform" Storyboard.TargetProperty="(ScaleY)">
+                                        <DoubleAnimationUsingKeyFrames
+                                            Storyboard.TargetName="CopyToClipboardSuccessTextScaleTransform"
+                                            Storyboard.TargetProperty="(ScaleY)"
+                                            Duration="0:0:0.333">
                                             <DoubleAnimationUsingKeyFrames.KeyFrames>
                                                 <DiscreteDoubleKeyFrame KeyTime="00:00:00.1330000" Value="0.385" />
-                                                <SplineDoubleKeyFrame KeySpline="0.39,0.0 0.63,1.0" KeyTime="00:00:00.2670000" Value="1.146" />
-                                                <SplineDoubleKeyFrame KeySpline="0.55,0.0 0.02,1.0" KeyTime="00:00:00.3330000" Value="1" />
+                                                <SplineDoubleKeyFrame
+                                                    KeySpline="0.39,0.0 0.63,1.0"
+                                                    KeyTime="00:00:00.2670000"
+                                                    Value="1.146" />
+                                                <SplineDoubleKeyFrame
+                                                    KeySpline="0.55,0.0 0.02,1.0"
+                                                    KeyTime="00:00:00.3330000"
+                                                    Value="1" />
                                             </DoubleAnimationUsingKeyFrames.KeyFrames>
                                         </DoubleAnimationUsingKeyFrames>
                                     </Storyboard>
@@ -107,17 +172,30 @@
                                 <Button.Content>
                                     <Grid>
                                         <Grid.Children>
-                                            <ContentPresenter x:Name="ButtonContent" RenderTransformOrigin=".5,.5" HorizontalAlignment="Center">
+                                            <ContentPresenter
+                                                x:Name="ButtonContent"
+                                                HorizontalAlignment="Center"
+                                                RenderTransformOrigin=".5,.5">
                                                 <ContentPresenter.RenderTransform>
                                                     <ScaleTransform x:Name="CopyToClipboardTextScaleTransform" />
                                                 </ContentPresenter.RenderTransform>
-                                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" x:Uid="CopyButton"/>
+                                                <TextBlock
+                                                    x:Uid="CopyButton"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center" />
                                             </ContentPresenter>
-                                            <ContentPresenter x:Name="CopySuccessGlyph" Opacity="0" RenderTransformOrigin=".5,.5" HorizontalAlignment="Center">
+                                            <ContentPresenter
+                                                x:Name="CopySuccessGlyph"
+                                                HorizontalAlignment="Center"
+                                                Opacity="0"
+                                                RenderTransformOrigin=".5,.5">
                                                 <ContentPresenter.RenderTransform>
                                                     <ScaleTransform x:Name="CopyToClipboardSuccessTextScaleTransform" />
                                                 </ContentPresenter.RenderTransform>
-                                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" x:Uid="CopiedButton"/>
+                                                <TextBlock
+                                                    x:Uid="CopiedButton"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center" />
                                             </ContentPresenter>
                                         </Grid.Children>
                                     </Grid>
@@ -127,119 +205,140 @@
                     </muxc:Expander.Header>
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock Margin="0,0,20,5" x:Uid="Edition"/>
-                        <TextBlock 
-						    Name="Edition"
-                            Margin="0,0,0,5"
+                        <TextBlock x:Uid="Edition" Margin="0,0,20,5" />
+                        <TextBlock
+                            Name="Edition"
                             Grid.Column="1"
+                            Margin="0,0,0,5"
+                            HorizontalAlignment="Left"
                             d:Text="Windows 11 Pro"
-                            TextWrapping="WrapWholeWords"
+                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
                             IsTextSelectionEnabled="True"
-                            HorizontalAlignment="Left"
-                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
-                        <TextBlock Margin="0,0,20,5" Grid.Row="1" x:Uid="Version"/>
-                        <TextBlock 
-						    Name="Version"
-                            Margin="0,0,0,5"
+                            TextWrapping="WrapWholeWords" />
+                        <TextBlock
+                            x:Uid="Version"
+                            Grid.Row="1"
+                            Margin="0,0,20,5" />
+                        <TextBlock
+                            Name="Version"
+                            Grid.Row="1"
                             Grid.Column="1"
+                            Margin="0,0,0,5"
+                            HorizontalAlignment="Left"
                             d:Text="21H2"
-                            TextWrapping="WrapWholeWords"
-                            IsTextSelectionEnabled="True"
-                            HorizontalAlignment="Left"
                             Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-                            Grid.Row="1"/>
-                        <TextBlock Margin="0,0,20,5" Grid.Row="2" x:Uid="InstalledOn"/>
-                        <TextBlock 
-						    Name="InstalledOn"
-                            Margin="0,0,0,5"
+                            IsTextSelectionEnabled="True"
+                            TextWrapping="WrapWholeWords" />
+                        <TextBlock
+                            x:Uid="InstalledOn"
+                            Grid.Row="2"
+                            Margin="0,0,20,5" />
+                        <TextBlock
+                            Name="InstalledOn"
+                            Grid.Row="2"
                             Grid.Column="1"
+                            Margin="0,0,0,5"
+                            HorizontalAlignment="Left"
                             d:Text="01/01/1970"
-                            TextWrapping="WrapWholeWords"
-                            IsTextSelectionEnabled="True"
-                            HorizontalAlignment="Left"
                             Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-                            Grid.Row="2"/>
-                        <TextBlock Margin="0,0,20,5" Grid.Row="3" x:Uid="OSBuild"/>
-                        <TextBlock 
-						    Name="Build"
-                            Margin="0,0,0,5"
+                            IsTextSelectionEnabled="True"
+                            TextWrapping="WrapWholeWords" />
+                        <TextBlock
+                            x:Uid="OSBuild"
+                            Grid.Row="3"
+                            Margin="0,0,20,5" />
+                        <TextBlock
+                            Name="Build"
+                            Grid.Row="3"
                             Grid.Column="1"
+                            Margin="0,0,0,5"
+                            HorizontalAlignment="Left"
                             d:Text="22000.1"
-                            TextWrapping="WrapWholeWords"
-                            IsTextSelectionEnabled="True"
-                            HorizontalAlignment="Left"
                             Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-                            Grid.Row="3"/>
-                        <TextBlock Margin="0,0,20,5" Grid.Row="4" x:Uid="Expiration" Name="ExpirationLabel"/>
-                        <TextBlock 
-                            Name="Expiration" 
-                            Margin="0,0,0,5"
-                            Grid.Column="1"
-                            d:Text="01/01/1970"
-                            TextWrapping="WrapWholeWords"
                             IsTextSelectionEnabled="True"
+                            TextWrapping="WrapWholeWords" />
+                        <TextBlock
+                            Name="ExpirationLabel"
+                            x:Uid="Expiration"
+                            Grid.Row="4"
+                            Margin="0,0,20,5" />
+                        <TextBlock
+                            Name="Expiration"
+                            Grid.Row="4"
+                            Grid.Column="1"
+                            Margin="0,0,0,5"
                             HorizontalAlignment="Left"
-                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" 
-                            Grid.Row="4"/>
+                            d:Text="01/01/1970"
+                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                            IsTextSelectionEnabled="True"
+                            TextWrapping="WrapWholeWords" />
                     </Grid>
                 </muxc:Expander>
 
-                <muxc:Expander 
+                <muxc:Expander
                     x:Name="LegalExpander"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Top"
+                    HorizontalContentAlignment="Stretch"
+                    VerticalContentAlignment="Stretch"
                     d:IsExpanded="True"
                     Collapsed="Expander_Collapsed"
-                    Expanding="Expander_Expanding"
-				    ExpandDirection="Down"
-                    VerticalAlignment="Top"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Stretch"
-                    VerticalContentAlignment="Stretch">
+                    ExpandDirection="Down"
+                    Expanding="Expander_Expanding">
                     <muxc:Expander.Header>
                         <Grid>
-                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" x:Uid="LegalLabel"/>
+                            <TextBlock
+                                x:Uid="LegalLabel"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center" />
                         </Grid>
                     </muxc:Expander.Header>
                     <StackPanel HorizontalAlignment="Stretch">
-                        <TextBlock 
-						TextWrapping="WrapWholeWords"
-                        Name="LicensingText"
-                        HorizontalAlignment="Stretch"
-                        x:Uid="Trademark"/>
-                        <TextBlock Name="LicenseTo" Margin="0,20,0,0" TextWrapping="WrapWholeWords" x:Uid="LicenseTo"/>
+                        <TextBlock
+                            Name="LicensingText"
+                            x:Uid="Trademark"
+                            HorizontalAlignment="Stretch"
+                            TextWrapping="WrapWholeWords" />
+                        <TextBlock
+                            Name="LicenseTo"
+                            x:Uid="LicenseTo"
+                            Margin="0,20,0,0"
+                            TextWrapping="WrapWholeWords" />
                         <StackPanel Margin="0,5,0,0">
-                            <TextBlock 
-							    TextWrapping="Wrap"
+                            <TextBlock
                                 Name="OwnerText"
-                                IsTextSelectionEnabled="True"
                                 HorizontalAlignment="Left"
-                                d:Text="Windows User"/>
-                            <TextBlock 
-							    TextWrapping="Wrap"
+                                d:Text="Windows User"
+                                IsTextSelectionEnabled="True"
+                                TextWrapping="Wrap" />
+                            <TextBlock
                                 Name="OrgText"
-                                IsTextSelectionEnabled="True"
                                 HorizontalAlignment="Left"
-                                d:Text="Windows User"/>
+                                d:Text="Windows User"
+                                IsTextSelectionEnabled="True"
+                                TextWrapping="Wrap" />
                         </StackPanel>
                     </StackPanel>
                 </muxc:Expander>
             </StackPanel>
         </ScrollViewer>
-        <Button Style="{StaticResource AccentButtonStyle}"
-                Margin="10"
-                Width="60"
-                Grid.Row="3"
-                HorizontalAlignment="Right"
-                Click="Button_Click"
-                x:Uid="OKButton"/>
+        <Button
+            x:Uid="OKButton"
+            Grid.Row="3"
+            Width="60"
+            Margin="10"
+            HorizontalAlignment="Right"
+            Click="Button_Click"
+            Style="{StaticResource AccentButtonStyle}" />
     </Grid>
 </Page>
