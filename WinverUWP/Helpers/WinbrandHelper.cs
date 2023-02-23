@@ -6,8 +6,6 @@ namespace WinverUWP.Helpers
 {
     public unsafe static class WinbrandHelper
     {
-        private delegate ushort* BrandingFormatString(ushort* format);
-
         public static string GetWinbrand()
         {
             fixed(char* pModuleName = "Winbrand.dll")
@@ -15,7 +13,7 @@ namespace WinverUWP.Helpers
                 HMODULE module = LoadLibraryW((ushort*)pModuleName);
                 fixed(byte* pProc = Encoding.ASCII.GetBytes("BrandingFormatString"))
                 {
-                    var func = Marshal.GetDelegateForFunctionPointer<BrandingFormatString>(GetProcAddress(module, (sbyte*)pProc));
+                    var func = (delegate* unmanaged[Stdcall]<ushort*, ushort*>)GetProcAddress(module, (sbyte*)pProc);
                     fixed (char* pFormatName = "%WINDOWS_LONG%")
                     {
                         ushort* branding = func((ushort*)pFormatName);

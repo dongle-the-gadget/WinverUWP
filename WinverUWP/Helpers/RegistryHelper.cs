@@ -36,19 +36,6 @@ namespace WinverUWP.Helpers
             public ushort* Buffer;
         }
 
-        private delegate int NtClose(Win32Headers.HANDLE Handle);
-        private delegate int NtOpenKey(
-            Win32Headers.HANDLE* KeyHandle,
-            uint DesiredAccess,
-            OBJECT_ATTRIBUTES* ObjectAttributes);
-        private delegate int NtQueryValueKey(
-            Win32Headers.HANDLE KeyHandle,
-            UNICODE_STRING* ValueName,
-            uint KeyValueInformationClass,
-            void* KeyValueInformation,
-            uint Length,
-            uint* ResultLength);
-
         private unsafe struct _KEY_VALUE_PARTIAL_INFORMATION
         {
             public uint TitleIndex;
@@ -57,13 +44,11 @@ namespace WinverUWP.Helpers
             public fixed byte Data[1];
         }
 
-        private delegate void RtlInitUnicodeString(UNICODE_STRING* DestinationString, ushort* SourceString);
-
         private static Win32Headers.HMODULE _ntdll;
-        private static NtClose? _NtClose;
-        private static NtOpenKey? _NtOpenKey;
-        private static NtQueryValueKey? _NtQueryValueKey;
-        private static RtlInitUnicodeString? _RtlInitUnicodeString;
+        private static void* _NtClose;
+        private static void* _NtOpenKey;
+        private static void* _NtQueryValueKey;
+        private static void* _RtlInitUnicodeString;
 
         private static void Initialize()
         {
@@ -79,39 +64,39 @@ namespace WinverUWP.Helpers
             {
                 fixed (byte* test = Encoding.ASCII.GetBytes("NtClose"))
                 {
-                    _NtClose = Marshal.GetDelegateForFunctionPointer<NtClose>(Win32Headers.GetProcAddress(_ntdll, (sbyte*)test));
+                    _NtClose = (void*)Win32Headers.GetProcAddress(_ntdll, (sbyte*)test);
                 }
             }
             if (_NtOpenKey == null)
             {
                 fixed (byte* test = Encoding.ASCII.GetBytes("NtOpenKey"))
                 {
-                    _NtOpenKey = Marshal.GetDelegateForFunctionPointer<NtOpenKey>(Win32Headers.GetProcAddress(_ntdll, (sbyte*)test));
+                    _NtOpenKey = (void*)Win32Headers.GetProcAddress(_ntdll, (sbyte*)test);
                 }
             }
             if (_NtQueryValueKey == null)
             {
                 fixed (byte* test = Encoding.ASCII.GetBytes("NtQueryValueKey"))
                 {
-                    _NtQueryValueKey = Marshal.GetDelegateForFunctionPointer<NtQueryValueKey>(Win32Headers.GetProcAddress(_ntdll, (sbyte*)test));
+                    _NtQueryValueKey = (void*)Win32Headers.GetProcAddress(_ntdll, (sbyte*)test);
                 }
             }
             if (_RtlInitUnicodeString == null)
             {
                 fixed (byte* test = Encoding.ASCII.GetBytes("RtlInitUnicodeString"))
                 {
-                    _RtlInitUnicodeString = Marshal.GetDelegateForFunctionPointer<RtlInitUnicodeString>(Win32Headers.GetProcAddress(_ntdll, (sbyte*)test));
+                    _RtlInitUnicodeString = (void*)Win32Headers.GetProcAddress(_ntdll, (sbyte*)test);
                 }
             }
         }
 
-        private static byte[]? ReadInfo(string valueName)
+        private static _KEY_VALUE_PARTIAL_INFORMATION* ReadInfo(string valueName)
         {
             Initialize();
             fixed (char* key = @"\Registry\Machine\SOFTWARE\Microsoft\Windows NT\CurrentVersion")
             {
                 UNICODE_STRING* uKeyName = (UNICODE_STRING*)Marshal.AllocHGlobal(sizeof(UNICODE_STRING));
-                _RtlInitUnicodeString!(uKeyName, (ushort*)key);
+                ((delegate* unmanaged[Stdcall]<UNICODE_STRING*, ushort*, void>)_RtlInitUnicodeString)(uKeyName, (ushort*)key);
                 OBJECT_ATTRIBUTES objectAttributes = new OBJECT_ATTRIBUTES
                 {
                     Length = (uint)sizeof(OBJECT_ATTRIBUTES),
@@ -122,45 +107,51 @@ namespace WinverUWP.Helpers
                     RootDirectory = Win32Headers.HANDLE.NULL
                 };
                 Win32Headers.HANDLE hKey;
-                _NtOpenKey!(&hKey, 0x80000000, &objectAttributes);
+                ((delegate* unmanaged[Stdcall]<Win32Headers.HANDLE*, uint, OBJECT_ATTRIBUTES*, int>)_NtOpenKey)(&hKey, 0x80000000, &objectAttributes);
 
                 fixed (char* pValue = valueName)
                 {
                     UNICODE_STRING* uValueName = (UNICODE_STRING*)Marshal.AllocHGlobal(sizeof(UNICODE_STRING));
-                    _RtlInitUnicodeString(uValueName, (ushort*)pValue);
+                    ((delegate* unmanaged[Stdcall]<UNICODE_STRING*, ushort*, void>)_RtlInitUnicodeString)(uValueName, (ushort*)pValue);
                     uint resultLength;
-                    int error = _NtQueryValueKey!(hKey, uValueName, 2, null, 0, &resultLength);
+                    int error = ((delegate* unmanaged[Stdcall]<Win32Headers.HANDLE, UNICODE_STRING*, uint, void*, uint, uint*, int>)_NtQueryValueKey)(hKey, uValueName, 2, null, 0, &resultLength);
                     if (error == -1073741772)
                     {
-                        _NtClose!(hKey);
+                        ((delegate* unmanaged[Stdcall]<Win32Headers.HANDLE, int>)_NtClose)(hKey);
                         Marshal.FreeHGlobal((IntPtr)uValueName);
                         Marshal.FreeHGlobal((IntPtr)uKeyName);
                         return null;
                     }
                     _KEY_VALUE_PARTIAL_INFORMATION* partialInfo = (_KEY_VALUE_PARTIAL_INFORMATION*)Marshal.AllocHGlobal((int)resultLength);
-                    _NtQueryValueKey!(hKey, uValueName, 2, partialInfo, resultLength, &resultLength);
-                    _NtClose!(hKey);
-                    byte[] test = new byte[partialInfo->DataLength];
-                    byte* infoData = partialInfo->Data;
-                    Unsafe.CopyBlock(ref test[0], ref *infoData, partialInfo->DataLength);
-                    Marshal.FreeHGlobal((IntPtr)partialInfo);
+                    ((delegate* unmanaged[Stdcall]<Win32Headers.HANDLE, UNICODE_STRING*, uint, void*, uint, uint*, int>)_NtQueryValueKey)(hKey, uValueName, 2, partialInfo, resultLength, &resultLength);
+                    ((delegate* unmanaged[Stdcall]<Win32Headers.HANDLE, int>)_NtClose)(hKey);
                     Marshal.FreeHGlobal((IntPtr)uValueName);
                     Marshal.FreeHGlobal((IntPtr)uKeyName);
-                    return test;
+                    return partialInfo;
                 }
             }
         }
 
         public static uint? GetInfoDWord(string valueName)
         {
-            byte[]? buf = ReadInfo(valueName);
-            return buf != null ? BitConverter.ToUInt32(buf, 0) : null;
+            _KEY_VALUE_PARTIAL_INFORMATION* buf = ReadInfo(valueName);
+            if (buf == null)
+                return null;
+            uint value;
+            Unsafe.CopyBlock(buf->Data, &value, buf->DataLength);
+            Marshal.FreeHGlobal((IntPtr)buf);
+            return value;
         }
 
         public static string? GetInfoString(string valueName)
         {
-            byte[]? buf = ReadInfo(valueName);
-            return buf != null ? Encoding.Unicode.GetString(buf).Replace("\0", "") : null;
+            _KEY_VALUE_PARTIAL_INFORMATION* info = ReadInfo(valueName);
+            if (info == null)
+                return null;
+            byte[] data = new byte[info->DataLength];
+            Unsafe.CopyBlock(ref data[0], ref *info->Data, info->DataLength);
+            Marshal.FreeHGlobal((IntPtr)info);
+            return Encoding.Unicode.GetString(data).Replace("\0", "");
         }
     }
 }

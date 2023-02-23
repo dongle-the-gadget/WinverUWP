@@ -152,7 +152,6 @@ namespace WinverUWP
 
                 Interop.RoGetActivationFactory(hStringActivatableClass, Interop.__uuidof<IPackageStatics_StateRepository>(), packageStatics.GetVoidAddressOf());
 
-
                 // Microsoft.WindowsStore_8wekyb3d8bbwe
                 const string packageName = "MicrosoftWindows.Client.CBS_cw5n1h2txyewy";
                 fixed (char* pPackageName = packageName)
