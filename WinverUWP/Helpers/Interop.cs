@@ -673,7 +673,7 @@ namespace WinverUWP.Helpers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Interop.HRESULT ExistsByPackageFamilyName(Interop.HSTRING packageFamilyName, bool* result)
         {
-            return ((delegate* unmanaged[Stdcall]<IPackageStatics_StateRepository*, Interop.HSTRING, bool*, Interop.HRESULT>)lpVtbl[37])((IPackageStatics_StateRepository*)Unsafe.AsPointer(ref this), packageFamilyName, result);
+            return ((delegate* unmanaged[Stdcall]<IPackageStatics_StateRepository*, Interop.HSTRING, bool*, int>)lpVtbl[37])((IPackageStatics_StateRepository*)Unsafe.AsPointer(ref this), packageFamilyName, result);
         }
     }
 }

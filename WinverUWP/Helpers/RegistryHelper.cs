@@ -12,6 +12,7 @@ namespace WinverUWP.Helpers
 {
     public static unsafe class RegistryHelper
     {
+#pragma warning disable CS0649
         private unsafe struct OBJECT_ATTRIBUTES
         {
             public uint Length;
@@ -43,6 +44,7 @@ namespace WinverUWP.Helpers
             public uint DataLength;
             public fixed byte Data[1];
         }
+#pragma warning restore CS0649
 
         private static Win32Headers.HMODULE _ntdll;
         private static void* _NtClose;

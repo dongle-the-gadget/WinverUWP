@@ -47,7 +47,9 @@
             VerticalScrollBarVisibility="Auto">
             <StackPanel Spacing="10">
                 <StackPanel.ChildrenTransitions>
-                    <RepositionThemeTransition />
+                    <TransitionCollection>
+                        <RepositionThemeTransition />
+                    </TransitionCollection>
                 </StackPanel.ChildrenTransitions>
                 <muxc:Expander
                     x:Name="SpecExpander"
