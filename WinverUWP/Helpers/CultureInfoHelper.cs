@@ -22,16 +22,13 @@ namespace WinverUWP.Helpers
         {
             var name = InvokeGetLocaleInfoEx(LOCALE_NAME_USER_DEFAULT, LOCALE_SNAME);
 
-
             if (name == null)
             {
                 name = InvokeGetLocaleInfoEx(LOCALE_NAME_SYSTEM_DEFAULT, LOCALE_SNAME);
 
-
                 if (name == null)
                     return CultureInfo.InvariantCulture;
             }
-
 
             return new CultureInfo(name);
         }

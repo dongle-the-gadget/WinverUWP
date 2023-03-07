@@ -148,19 +148,23 @@ namespace WinverUWP
                 Interop.HSTRING hStringActivatableClass;
                 Interop.WindowsCreateString((ushort*)pActivatableClassId, (uint)activatableClassId.Length, &hStringActivatableClass);
 
+                using Interop.ComPtr<Interop.IUnknown> packageStaticsUnknown = default;
+                Interop.RoGetActivationFactory(hStringActivatableClass, Interop.__uuidof<Interop.IUnknown>(), packageStaticsUnknown.GetVoidAddressOf());
+
                 using Interop.ComPtr<IPackageStatics_StateRepository> packageStatics = default;
 
-                Interop.RoGetActivationFactory(hStringActivatableClass, Interop.__uuidof<IPackageStatics_StateRepository>(), packageStatics.GetVoidAddressOf());
-
-                // Microsoft.WindowsStore_8wekyb3d8bbwe
-                const string packageName = "MicrosoftWindows.Client.CBS_cw5n1h2txyewy";
-                fixed (char* pPackageName = packageName)
+                if (packageStaticsUnknown.Get()->QueryInterface(Interop.__uuidof<IPackageStatics_StateRepository>(), packageStatics.GetVoidAddressOf()) == 0)
                 {
-                    Interop.HSTRING hStringPackageName;
-                    Interop.WindowsCreateString((ushort*)pPackageName, (uint)packageName.Length, &hStringPackageName);
-                    
-                    bool exists = false;
-                    Interop.HRESULT success = packageStatics.Get()->ExistsByPackageFamilyName(hStringPackageName, &exists);
+                    // QueryInterface was successful, meaning that the IPackageStatics is actually Windows 11.
+                    const string packageName = "MicrosoftWindows.Client.CBS_cw5n1h2txyewy";
+                    fixed (char* pPackageName = packageName)
+                    {
+                        Interop.HSTRING hStringPackageName;
+                        Interop.WindowsCreateString((ushort*)pPackageName, (uint)packageName.Length, &hStringPackageName);
+
+                        bool exists = false;
+                        Interop.HRESULT success = packageStatics.Get()->ExistsByPackageFamilyName(hStringPackageName, &exists);
+                    }
                 }
             }
         }
