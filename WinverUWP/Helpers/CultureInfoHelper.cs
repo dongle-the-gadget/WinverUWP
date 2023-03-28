@@ -38,9 +38,11 @@ namespace WinverUWP.Helpers
         {
             fixed(char* locale = lpLocaleName)
             {
-                char* test = stackalloc char[BUFFER_SIZE];
-                int result = GetLocaleInfoEx((ushort*)locale, LCType, (ushort*)test, BUFFER_SIZE);
-                return new(test);
+                fixed(char* test = stackalloc char[BUFFER_SIZE])
+                {
+                    int result = GetLocaleInfoEx((ushort*)locale, LCType, (ushort*)test, BUFFER_SIZE);
+                    return new(test);
+                }
             }
         }
     }
