@@ -12,10 +12,10 @@ namespace WinverUWP.Helpers
 {
     public static unsafe class RegistryHelper
     {
-        [DllImport("ucrtbase.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("api-ms-win-crt-heap-l1-1-0.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern void* malloc(nuint size);
 
-        [DllImport("ucrtbase.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("api-ms-win-crt-heap-l1-1-0.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern void* free(void* ptr);
 
 #pragma warning disable CS0649
