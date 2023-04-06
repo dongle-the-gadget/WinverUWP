@@ -12,6 +12,12 @@ namespace WinverUWP.Helpers
 {
     public static unsafe class RegistryHelper
     {
+        [DllImport("ucrtbase.dll", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void* malloc(nuint size);
+
+        [DllImport("ucrtbase.dll", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void* free(void* ptr);
+
 #pragma warning disable CS0649
         private unsafe struct OBJECT_ATTRIBUTES
         {
@@ -97,7 +103,7 @@ namespace WinverUWP.Helpers
             Initialize();
             fixed (char* key = @"\Registry\Machine\SOFTWARE\Microsoft\Windows NT\CurrentVersion")
             {
-                UNICODE_STRING* uKeyName = (UNICODE_STRING*)Marshal.AllocHGlobal(sizeof(UNICODE_STRING));
+                UNICODE_STRING* uKeyName = (UNICODE_STRING*)malloc((nuint)sizeof(UNICODE_STRING));
                 ((delegate* unmanaged[Stdcall]<UNICODE_STRING*, ushort*, void>)_RtlInitUnicodeString)(uKeyName, (ushort*)key);
                 OBJECT_ATTRIBUTES objectAttributes = new OBJECT_ATTRIBUTES
                 {
@@ -113,22 +119,22 @@ namespace WinverUWP.Helpers
 
                 fixed (char* pValue = valueName)
                 {
-                    UNICODE_STRING* uValueName = (UNICODE_STRING*)Marshal.AllocHGlobal(sizeof(UNICODE_STRING));
+                    UNICODE_STRING* uValueName = (UNICODE_STRING*)malloc((nuint)sizeof(UNICODE_STRING));
                     ((delegate* unmanaged[Stdcall]<UNICODE_STRING*, ushort*, void>)_RtlInitUnicodeString)(uValueName, (ushort*)pValue);
                     uint resultLength;
                     int error = ((delegate* unmanaged[Stdcall]<Win32Headers.HANDLE, UNICODE_STRING*, uint, void*, uint, uint*, int>)_NtQueryValueKey)(hKey, uValueName, 2, null, 0, &resultLength);
                     if (error == -1073741772)
                     {
                         ((delegate* unmanaged[Stdcall]<Win32Headers.HANDLE, int>)_NtClose)(hKey);
-                        Marshal.FreeHGlobal((IntPtr)uValueName);
-                        Marshal.FreeHGlobal((IntPtr)uKeyName);
+                        free(uValueName);
+                        free(uKeyName);
                         return null;
                     }
-                    _KEY_VALUE_PARTIAL_INFORMATION* partialInfo = (_KEY_VALUE_PARTIAL_INFORMATION*)Marshal.AllocHGlobal((int)resultLength);
+                    _KEY_VALUE_PARTIAL_INFORMATION* partialInfo = (_KEY_VALUE_PARTIAL_INFORMATION*)malloc(resultLength);
                     ((delegate* unmanaged[Stdcall]<Win32Headers.HANDLE, UNICODE_STRING*, uint, void*, uint, uint*, int>)_NtQueryValueKey)(hKey, uValueName, 2, partialInfo, resultLength, &resultLength);
                     ((delegate* unmanaged[Stdcall]<Win32Headers.HANDLE, int>)_NtClose)(hKey);
-                    Marshal.FreeHGlobal((IntPtr)uValueName);
-                    Marshal.FreeHGlobal((IntPtr)uKeyName);
+                    free(uValueName);
+                    free(uKeyName);
                     return partialInfo;
                 }
             }
@@ -141,7 +147,7 @@ namespace WinverUWP.Helpers
                 return null;
             uint value;
             Unsafe.CopyBlock(buf->Data, &value, buf->DataLength);
-            Marshal.FreeHGlobal((IntPtr)buf);
+            free(buf);
             return value;
         }
 
@@ -150,10 +156,12 @@ namespace WinverUWP.Helpers
             _KEY_VALUE_PARTIAL_INFORMATION* info = ReadInfo(valueName);
             if (info == null)
                 return null;
-            byte[] data = new byte[info->DataLength];
-            Unsafe.CopyBlock(ref data[0], ref *info->Data, info->DataLength);
-            Marshal.FreeHGlobal((IntPtr)info);
-            return Encoding.Unicode.GetString(data).Replace("\0", "");
+            fixed (char* pString = stackalloc char[(int)info->DataLength])
+            {
+                Unsafe.CopyBlock(pString, info->Data, info->DataLength);
+                free(info);
+                return new string(pString);
+            }
         }
     }
 }
