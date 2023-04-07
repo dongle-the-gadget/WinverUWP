@@ -17,6 +17,7 @@ using Windows.UI.Composition;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using WinverUWP.Helpers;
@@ -184,7 +185,7 @@ namespace WinverUWP
             ulong build = (version & 0x00000000FFFF0000L) >> 16;
             var revision = version & 0x000000000000FFFF;
 
-            OSName = build >= 21996 ? "Windows11Logo" : "Windows10Logo";
+            OSName = build >= 21996 ? "Windows11" : "Windows10";
             UpdateWindowsBrand();
             SetTitleBarBackground();
 
@@ -250,13 +251,7 @@ namespace WinverUWP
 
         private void UpdateWindowsBrand()
         {
-            BrandImage.Source = new SvgImageSource(
-                new Uri(
-                    "ms-appx:///Assets/"
-                    + OSName
-                    + "-"
-                    + (Application.Current.RequestedTheme == ApplicationTheme.Dark ? "light" : "dark")
-                    + ".svg"));
+            WindowsLogoPath.Data = (Geometry)XamlBindingHelper.ConvertValue(typeof(Geometry), (string)Application.Current.Resources[$"{OSName}Path"]);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

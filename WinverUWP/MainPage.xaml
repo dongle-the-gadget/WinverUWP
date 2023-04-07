@@ -31,6 +31,7 @@
                 VerticalAlignment="Center" />
         </Grid>
 
+        <!--
         <Image
             Name="BrandImage"
             Grid.Row="1"
@@ -39,6 +40,19 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top"
             d:Source="/Assets/Windows11Logo-dark.svg" />
+        -->
+        <Viewbox
+            MaxWidth="300"
+            Grid.Row="1"
+            Margin="100,20">
+            <Path
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                Fill="{ThemeResource ApplicationForegroundThemeBrush}"
+                x:Name="WindowsLogoPath"
+                d:Data="{StaticResource Windows11Path}">
+            </Path>
+        </Viewbox>
 
         <ScrollViewer
             Grid.Row="2"
