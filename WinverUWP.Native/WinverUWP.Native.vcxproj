@@ -147,8 +147,10 @@
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg">
+	<VcpkgPlatform Condition="$(Platform) == 'Win32'">x86</VcpkgPlatform>
+	<VcpkgPlatform Condition="$(Platform) != 'Win32'">$(Platform)</VcpkgPlatform>
     <VcpkgUseStatic>true</VcpkgUseStatic>
-    <VcpkgTriplet>$(Platform)-windows</VcpkgTriplet>
+    <VcpkgTriplet>$(VcpkgPlatform)-windows</VcpkgTriplet>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
