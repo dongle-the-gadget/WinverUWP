@@ -36,7 +36,7 @@ LONG detourFunc(HKEY hKey, LPCWSTR lpValueName, LPDWORD lpReserved, LPDWORD lpTy
 	return originalFunc(hKey, lpValueName, lpReserved, lpType, lpData, lpcbData);
 }
 
-Boolean VectorDetours::InitiateDetours()
+Boolean VectorDetours::EnableVectorRendering()
 {
 	auto module = GetModuleHandleW(L"kernelbase.dll");
 	if (!module)
@@ -46,7 +46,7 @@ Boolean VectorDetours::InitiateDetours()
 		return false;
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
-	DetourAttach(&(PVOID&)originalFunc, detourFunc);
+	auto detourResult = DetourAttach(&(PVOID&)originalFunc, detourFunc);
 	DetourTransactionCommit();
-	return true;
+	return detourResult == NO_ERROR;
 }

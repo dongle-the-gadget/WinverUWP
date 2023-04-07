@@ -23,7 +23,7 @@ namespace WinverUWP
         public App()
         {
             if (ApiInformation.IsTypePresent("Windows.UI.Composition.CompositionShape"))
-                Native.VectorDetours.InitiateDetours();
+                Native.VectorDetours.EnableVectorRendering();
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }

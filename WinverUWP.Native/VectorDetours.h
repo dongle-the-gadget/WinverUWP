@@ -8,6 +8,6 @@ namespace WinverUWP::Native
         VectorDetours() {}
 
     public:
-        static Platform::Boolean InitiateDetours();
+        static Platform::Boolean EnableVectorRendering();
     };
 }
