@@ -200,10 +200,6 @@
     <Content Include="Assets\Wide310x150Logo.scale-125.png" />
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
-    <Content Include="Assets\Windows10Logo-dark.svg" />
-    <Content Include="Assets\Windows10Logo-light.svg" />
-    <Content Include="Assets\Windows11Logo-dark.svg" />
-    <Content Include="Assets\Windows11Logo-light.svg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
@@ -245,6 +241,12 @@
       <SubType>Designer</SubType>
     </PRIResource>
     <None Include="WinverUWP_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WinverUWP.Native\WinverUWP.Native.vcxproj">
+      <Project>{b177d4a1-111d-438a-b602-f8239faa8a6e}</Project>
+      <Name>WinverUWP.Native</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

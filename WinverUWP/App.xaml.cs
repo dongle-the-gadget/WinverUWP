@@ -2,6 +2,7 @@
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -21,6 +22,8 @@ namespace WinverUWP
         /// </summary>
         public App()
         {
+            if (ApiInformation.IsTypePresent("Windows.UI.Composition.CompositionShape"))
+                Native.VectorDetours.InitiateDetours();
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
