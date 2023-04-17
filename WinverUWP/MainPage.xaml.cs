@@ -149,12 +149,12 @@ namespace WinverUWP
                 Interop.HSTRING hStringActivatableClass;
                 Interop.WindowsCreateString((ushort*)pActivatableClassId, (uint)activatableClassId.Length, &hStringActivatableClass);
 
+                using Interop.ComPtr<IPackageStatics_StateRepository> packageStatics = default;
+
                 using Interop.ComPtr<Interop.IUnknown> packageStaticsUnknown = default;
                 Interop.RoGetActivationFactory(hStringActivatableClass, Interop.__uuidof<Interop.IUnknown>(), packageStaticsUnknown.GetVoidAddressOf());
 
-                using Interop.ComPtr<IPackageStatics_StateRepository> packageStatics = default;
-
-                if (packageStaticsUnknown.Get()->QueryInterface(Interop.__uuidof<IPackageStatics_StateRepository>(), packageStatics.GetVoidAddressOf()) == 0)
+                if (packageStaticsUnknown.As(&packageStatics) == 0)
                 {
                     // QueryInterface was successful, meaning that the IPackageStatics is actually Windows 11.
                     const string packageName = "MicrosoftWindows.Client.CBS_cw5n1h2txyewy";

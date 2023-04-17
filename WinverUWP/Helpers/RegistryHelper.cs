@@ -1,4 +1,5 @@
 ﻿#nullable enable
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -73,10 +74,10 @@ namespace WinverUWP.Helpers
 #pragma warning restore CS0649
 
         private static Win32Headers.HMODULE _ntdll;
-        private static void* _NtClose;
-        private static void* _NtOpenKey;
-        private static void* _NtQueryValueKey;
-        private static void* _RtlInitUnicodeString;
+        private static delegate* unmanaged[Stdcall]<Win32Headers.HANDLE, int> _NtClose;
+        private static delegate* unmanaged[Stdcall]<Win32Headers.HANDLE*, uint, OBJECT_ATTRIBUTES*, int> _NtOpenKey;
+        private static delegate* unmanaged[Stdcall]<Win32Headers.HANDLE, UNICODE_STRING*, uint, void*, uint, uint*, int> _NtQueryValueKey;
+        private static delegate* unmanaged[Stdcall]<UNICODE_STRING*, ushort*, void> _RtlInitUnicodeString;
 
         private static void Initialize()
         {
@@ -92,28 +93,28 @@ namespace WinverUWP.Helpers
             {
                 fixed (byte* test = Encoding.ASCII.GetBytes("NtClose"))
                 {
-                    _NtClose = (void*)Win32Headers.GetProcAddress(_ntdll, (sbyte*)test);
+                    _NtClose = (delegate* unmanaged[Stdcall]<Win32Headers.HANDLE, int>)Win32Headers.GetProcAddress(_ntdll, (sbyte*)test);
                 }
             }
             if (_NtOpenKey == null)
             {
                 fixed (byte* test = Encoding.ASCII.GetBytes("NtOpenKey"))
                 {
-                    _NtOpenKey = (void*)Win32Headers.GetProcAddress(_ntdll, (sbyte*)test);
+                    _NtOpenKey = (delegate* unmanaged[Stdcall]<Win32Headers.HANDLE*, uint, OBJECT_ATTRIBUTES*, int>)Win32Headers.GetProcAddress(_ntdll, (sbyte*)test);
                 }
             }
             if (_NtQueryValueKey == null)
             {
                 fixed (byte* test = Encoding.ASCII.GetBytes("NtQueryValueKey"))
                 {
-                    _NtQueryValueKey = (void*)Win32Headers.GetProcAddress(_ntdll, (sbyte*)test);
+                    _NtQueryValueKey = (delegate* unmanaged[Stdcall]<Win32Headers.HANDLE, UNICODE_STRING*, uint, void*, uint, uint*, int>)Win32Headers.GetProcAddress(_ntdll, (sbyte*)test);
                 }
             }
             if (_RtlInitUnicodeString == null)
             {
                 fixed (byte* test = Encoding.ASCII.GetBytes("RtlInitUnicodeString"))
                 {
-                    _RtlInitUnicodeString = (void*)Win32Headers.GetProcAddress(_ntdll, (sbyte*)test);
+                    _RtlInitUnicodeString = (delegate* unmanaged[Stdcall]<UNICODE_STRING*, ushort*, void>)Win32Headers.GetProcAddress(_ntdll, (sbyte*)test);
                 }
             }
         }
@@ -124,7 +125,7 @@ namespace WinverUWP.Helpers
             fixed (char* key = @"\Registry\Machine\SOFTWARE\Microsoft\Windows NT\CurrentVersion")
             {
                 UNICODE_STRING* uKeyName = (UNICODE_STRING*)malloc((nuint)sizeof(UNICODE_STRING));
-                ((delegate* unmanaged[Stdcall]<UNICODE_STRING*, ushort*, void>)_RtlInitUnicodeString)(uKeyName, (ushort*)key);
+                _RtlInitUnicodeString(uKeyName, (ushort*)key);
                 OBJECT_ATTRIBUTES objectAttributes = new OBJECT_ATTRIBUTES
                 {
                     Length = (uint)sizeof(OBJECT_ATTRIBUTES),
@@ -135,24 +136,24 @@ namespace WinverUWP.Helpers
                     RootDirectory = Win32Headers.HANDLE.NULL
                 };
                 Win32Headers.HANDLE hKey;
-                ((delegate* unmanaged[Stdcall]<Win32Headers.HANDLE*, uint, OBJECT_ATTRIBUTES*, int>)_NtOpenKey)(&hKey, 0x80000000, &objectAttributes);
+                _NtOpenKey(&hKey, 0x80000000, &objectAttributes);
 
                 fixed (char* pValue = valueName)
                 {
                     UNICODE_STRING* uValueName = (UNICODE_STRING*)malloc((nuint)sizeof(UNICODE_STRING));
-                    ((delegate* unmanaged[Stdcall]<UNICODE_STRING*, ushort*, void>)_RtlInitUnicodeString)(uValueName, (ushort*)pValue);
+                    _RtlInitUnicodeString(uValueName, (ushort*)pValue);
                     uint resultLength;
-                    int error = ((delegate* unmanaged[Stdcall]<Win32Headers.HANDLE, UNICODE_STRING*, uint, void*, uint, uint*, int>)_NtQueryValueKey)(hKey, uValueName, 2, null, 0, &resultLength);
+                    int error = _NtQueryValueKey(hKey, uValueName, 2, null, 0, &resultLength);
                     if (error == -1073741772)
                     {
-                        ((delegate* unmanaged[Stdcall]<Win32Headers.HANDLE, int>)_NtClose)(hKey);
+                        _NtClose(hKey);
                         free(uValueName);
                         free(uKeyName);
                         return null;
                     }
                     _KEY_VALUE_PARTIAL_INFORMATION* partialInfo = (_KEY_VALUE_PARTIAL_INFORMATION*)malloc(resultLength);
-                    ((delegate* unmanaged[Stdcall]<Win32Headers.HANDLE, UNICODE_STRING*, uint, void*, uint, uint*, int>)_NtQueryValueKey)(hKey, uValueName, 2, partialInfo, resultLength, &resultLength);
-                    ((delegate* unmanaged[Stdcall]<Win32Headers.HANDLE, int>)_NtClose)(hKey);
+                    _NtQueryValueKey(hKey, uValueName, 2, partialInfo, resultLength, &resultLength);
+                    _NtClose(hKey);
                     free(uValueName);
                     free(uKeyName);
                     return partialInfo;
@@ -176,12 +177,10 @@ namespace WinverUWP.Helpers
             _KEY_VALUE_PARTIAL_INFORMATION* info = ReadInfo(valueName);
             if (info == null)
                 return null;
-            fixed (char* pString = stackalloc char[(int)info->DataLength])
-            {
-                Unsafe.CopyBlock(pString, info->Data, info->DataLength);
-                free(info);
-                return new string(pString);
-            }
+            char* pString = stackalloc char[(int)info->DataLength];
+            Unsafe.CopyBlock(pString, info->Data, info->DataLength);
+            free(info);
+            return new string(pString);
         }
     }
 }
