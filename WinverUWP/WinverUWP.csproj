@@ -141,6 +141,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\CultureInfoHelper.cs" />
+    <Compile Include="Helpers\ExpirationHelper.cs" />
     <Compile Include="Helpers\Interop.cs" />
     <Compile Include="Helpers\Win32Headers.cs" />
     <Compile Include="Helpers\WinbrandHelper.cs" />

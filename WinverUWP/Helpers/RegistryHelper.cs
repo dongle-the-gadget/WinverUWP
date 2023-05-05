@@ -167,7 +167,7 @@ namespace WinverUWP.Helpers
             if (buf == null)
                 return null;
             uint value;
-            Unsafe.CopyBlock(buf->Data, &value, buf->DataLength);
+            Unsafe.CopyBlock(&value, buf->Data, buf->DataLength);
             free(buf);
             return value;
         }

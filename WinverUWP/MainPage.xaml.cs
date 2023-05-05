@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.ConstrainedExecution;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -219,20 +220,17 @@ namespace WinverUWP
 
             Version.Text = displayVersion;
 
-            var date = GetWindowsInstallationDateTime().ToLocalTime();
             var userCulture = CultureInfoHelper.GetCurrentCulture();
-            InstalledOn.Text = date.ToString("d", userCulture);
+            InstalledOn.Text = GetWindowsInstallationDateTime().ToString("d", userCulture);
 
 
-            using (X509Certificate2 cert = new X509Certificate2("C:\\Windows\\System32\\ntdll.dll"))
+            DateTime? expiration = ExpirationHelper.GetSystemExpiration();
+            if (expiration != null)
+                Expiration.Text = expiration.Value.ToString("g", userCulture);
+            else
             {
-                if (cert.Issuer.Contains("Development"))
-                    Expiration.Text = cert.NotAfter.ToString("g", userCulture);
-                else
-                {
-                    Expiration.Visibility = Visibility.Collapsed;
-                    ExpirationLabel.Visibility = Visibility.Collapsed;
-                }
+                Expiration.Visibility = Visibility.Collapsed;
+                ExpirationLabel.Visibility = Visibility.Collapsed;
             }
 
             var ownerName = RegistryHelper.GetInfoString("RegisteredOwner");
@@ -262,8 +260,7 @@ namespace WinverUWP
         private DateTime GetWindowsInstallationDateTime()
         {
             var seconds = RegistryHelper.GetInfoDWord("InstallDate");
-            DateTime startDate = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            DateTime installDate = startDate.AddSeconds(seconds.Value);
+            DateTime installDate = DateTimeOffset.FromUnixTimeSeconds(seconds.Value).LocalDateTime;
             return installDate;
         }
 
