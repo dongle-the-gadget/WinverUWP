@@ -10,8 +10,7 @@
     Loaded="Page_Loaded"
     mc:Ignorable="d">
 
-    <Grid isMicaIncompatible:Background="{ThemeResource SystemControlAcrylicWindowBrush}">
-
+    <Grid d:Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" isMicaIncompatible:Background="{ThemeResource SystemControlAcrylicWindowBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -31,27 +30,16 @@
                 VerticalAlignment="Center" />
         </Grid>
 
-        <!--
-        <Image
-            Name="BrandImage"
-            Grid.Row="1"
-            MaxWidth="300"
-            Margin="100,20"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Top"
-            d:Source="/Assets/Windows11Logo-dark.svg" />
-        -->
         <Viewbox
-            MaxWidth="300"
             Grid.Row="1"
+            MaxWidth="300"
             Margin="100,20">
             <Path
+                x:Name="WindowsLogoPath"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Top"
-                Fill="{ThemeResource ApplicationForegroundThemeBrush}"
-                x:Name="WindowsLogoPath"
-                d:Data="{StaticResource Windows11Path}">
-            </Path>
+                d:Data="{StaticResource Windows11Path}"
+                Fill="{ThemeResource ApplicationForegroundThemeBrush}" />
         </Viewbox>
 
         <ScrollViewer
@@ -219,7 +207,10 @@
                             </Button>
                         </Grid>
                     </muxc:Expander.Header>
-                    <Grid HorizontalAlignment="Stretch">
+                    <Grid
+                        HorizontalAlignment="Stretch"
+                        ColumnSpacing="20"
+                        RowSpacing="5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition />
@@ -231,53 +222,40 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock x:Uid="Edition" Margin="0,0,20,5" />
+                        <TextBlock x:Uid="Edition" />
                         <TextBlock
                             Name="Edition"
                             Grid.Column="1"
-                            Margin="0,0,0,5"
                             HorizontalAlignment="Left"
                             d:Text="Windows 11 Pro"
                             Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
                             IsTextSelectionEnabled="True"
                             TextWrapping="WrapWholeWords" />
-                        <TextBlock
-                            x:Uid="Version"
-                            Grid.Row="1"
-                            Margin="0,0,20,5" />
+                        <TextBlock x:Uid="Version" Grid.Row="1" />
                         <TextBlock
                             Name="Version"
                             Grid.Row="1"
                             Grid.Column="1"
-                            Margin="0,0,0,5"
                             HorizontalAlignment="Left"
                             d:Text="21H2"
                             Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
                             IsTextSelectionEnabled="True"
                             TextWrapping="WrapWholeWords" />
-                        <TextBlock
-                            x:Uid="InstalledOn"
-                            Grid.Row="2"
-                            Margin="0,0,20,5" />
+                        <TextBlock x:Uid="InstalledOn" Grid.Row="2" />
                         <TextBlock
                             Name="InstalledOn"
                             Grid.Row="2"
                             Grid.Column="1"
-                            Margin="0,0,0,5"
                             HorizontalAlignment="Left"
                             d:Text="01/01/1970"
                             Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
                             IsTextSelectionEnabled="True"
                             TextWrapping="WrapWholeWords" />
-                        <TextBlock
-                            x:Uid="OSBuild"
-                            Grid.Row="3"
-                            Margin="0,0,20,5" />
+                        <TextBlock x:Uid="OSBuild" Grid.Row="3" />
                         <TextBlock
                             Name="Build"
                             Grid.Row="3"
                             Grid.Column="1"
-                            Margin="0,0,0,5"
                             HorizontalAlignment="Left"
                             d:Text="22000.1"
                             Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
@@ -286,13 +264,11 @@
                         <TextBlock
                             Name="ExpirationLabel"
                             x:Uid="Expiration"
-                            Grid.Row="4"
-                            Margin="0,0,20,5" />
+                            Grid.Row="4" />
                         <TextBlock
                             Name="Expiration"
                             Grid.Row="4"
                             Grid.Column="1"
-                            Margin="0,0,0,5"
                             HorizontalAlignment="Left"
                             d:Text="01/01/1970"
                             Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
