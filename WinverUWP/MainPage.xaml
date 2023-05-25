@@ -4,6 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:isMicaIncompatible="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsTypeNotPresent(Windows.UI.Composition.ICompositionSupportsSystemBackdrop)"
+    xmlns:isShapesCompatible="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsTypePresent(Windows.UI.Composition.CompositionShape)"
+    xmlns:isShapesIncompatible="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsTypeNotPresent(Windows.UI.Composition.CompositionShape)"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
@@ -34,12 +36,15 @@
             Grid.Row="1"
             MaxWidth="300"
             Margin="100,20">
-            <Path
-                x:Name="WindowsLogoPath"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Top"
-                d:Data="{StaticResource Windows11Path}"
-                Fill="{ThemeResource ApplicationForegroundThemeBrush}" />
+            <Grid>
+                <isShapesIncompatible:Path x:Name="NonCompatiblePath" Fill="{ThemeResource ApplicationForegroundThemeBrush}" />
+                <isShapesCompatible:Border>
+                    <Border x:Name="CompatibleCanvas">
+                        <!--  This is only for Designer, not actually loaded in the real UI tree  -->
+                        <d:Path Data="{StaticResource Windows11Path}" Fill="{ThemeResource ApplicationForegroundThemeBrush}" />
+                    </Border>
+                </isShapesCompatible:Border>
+            </Grid>
         </Viewbox>
 
         <ScrollViewer

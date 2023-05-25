@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Uwp.UI.Media.Geometry;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.ApplicationModel.Core;
@@ -7,6 +8,7 @@ using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.System.Profile;
 using Windows.UI;
+using Windows.UI.Composition;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -22,6 +24,7 @@ public sealed partial class MainPage : Page
     private string OSName = "";
     private ResourceLoader resourceLoader;
     private UISettings _uiSettings;
+    private CompositionSpriteShape shape;
     private bool isCopying;
 
     public MainPage()
@@ -179,10 +182,11 @@ public sealed partial class MainPage : Page
 
         _uiSettings.ColorValuesChanged += async (a, b) =>
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                SetTitleBarBackground();
-            });
+            if (shape != null)
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => {
+                    shape.FillBrush.Dispose();
+                    shape.FillBrush = Window.Current.Compositor.CreateColorBrush(((SolidColorBrush)Application.Current.Resources[$"ApplicationForegroundThemeBrush"]).Color);
+                });
         };
 
         Build.Text = build.ToString();
@@ -235,7 +239,26 @@ public sealed partial class MainPage : Page
 
     private void UpdateWindowsBrand()
     {
-        WindowsLogoPath.Data = (Geometry)XamlBindingHelper.ConvertValue(typeof(Geometry), (string)Application.Current.Resources[$"{OSName}Path"]);
+        string path = (string)Application.Current.Resources[$"{OSName}Path"];
+        var geo = (Geometry)XamlBindingHelper.ConvertValue(typeof(Geometry), path);
+        if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.Composition.CompositionShape"))
+        {
+            shape = Window.Current.Compositor.CreateSpriteShape(path);
+            shape.FillBrush = Window.Current.Compositor.CreateColorBrush(((SolidColorBrush)Application.Current.Resources[$"ApplicationForegroundThemeBrush"]).Color);
+            var shapeVisual = Window.Current.Compositor.CreateShapeVisual();
+            shapeVisual.Shapes.Add(shape);
+            shapeVisual.Size = new((float)geo.Bounds.Width, (float)geo.Bounds.Height);
+            Windows.UI.Xaml.Hosting.ElementCompositionPreview.SetElementChildVisual(CompatibleCanvas, shapeVisual);
+            CompatibleCanvas.Width = geo.Bounds.Width;
+            CompatibleCanvas.Height = geo.Bounds.Height;
+        }
+        else
+            NonCompatiblePath.Data = geo;
+    }
+
+    private void UpdateShapeBranding()
+    {
+
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)
