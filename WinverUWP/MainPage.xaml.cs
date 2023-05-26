@@ -262,11 +262,6 @@ public sealed partial class MainPage : Page
             NonCompatiblePath.Data = geo;
     }
 
-    private void UpdateShapeBranding()
-    {
-
-    }
-
     private void Button_Click(object sender, RoutedEventArgs e)
     {
         _ = ApplicationView.GetForCurrentView().TryConsolidateAsync();
