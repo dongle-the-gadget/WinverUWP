@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources;
@@ -180,13 +181,18 @@ public sealed partial class MainPage : Page
         UpdateWindowsBrand();
         SetTitleBarBackground();
 
-        _uiSettings.ColorValuesChanged += async (a, b) =>
+        _uiSettings.ColorValuesChanged += async (uiSettings, _) =>
         {
-            if (shape != null)
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                if (shape != null)
+                {
                     shape.FillBrush.Dispose();
-                    shape.FillBrush = Window.Current.Compositor.CreateColorBrush(((SolidColorBrush)Application.Current.Resources[$"ApplicationForegroundThemeBrush"]).Color);
-                });
+                    shape.FillBrush = Window.Current.Compositor.CreateColorBrush(uiSettings.GetColorValue(UIColorType.Foreground));
+                }
+                SetTitleBarBackground();
+            });
+
         };
 
         Build.Text = build.ToString();
@@ -244,7 +250,7 @@ public sealed partial class MainPage : Page
         if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.Composition.CompositionShape"))
         {
             shape = Window.Current.Compositor.CreateSpriteShape(path);
-            shape.FillBrush = Window.Current.Compositor.CreateColorBrush(((SolidColorBrush)Application.Current.Resources[$"ApplicationForegroundThemeBrush"]).Color);
+            shape.FillBrush = Window.Current.Compositor.CreateColorBrush(_uiSettings.GetColorValue(UIColorType.Foreground));
             var shapeVisual = Window.Current.Compositor.CreateShapeVisual();
             shapeVisual.Shapes.Add(shape);
             shapeVisual.Size = new((float)geo.Bounds.Width, (float)geo.Bounds.Height);
