@@ -11,7 +11,7 @@
 	<Identity
 	  Name="fda0e24a-1e63-4f79-8739-72fd5d68db9c"
 	  Publisher="CN=Dongle"
-	  Version="2.0.3.0" />
+	  Version="2.1.0.0" />
 
 	<mp:PhoneIdentity PhoneProductId="fda0e24a-1e63-4f79-8739-72fd5d68db9c" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -22,26 +22,11 @@
 	</Properties>
 
 	<Dependencies>
-		<TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.15063.0" MaxVersionTested="10.0.22633.1001" />
+		<TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.15063.0" MaxVersionTested="10.0.15063.0" />
 	</Dependencies>
 
 	<Resources>
-		<Resource Language="en-us"/>
-		<Resource Language="ko-kr"/>
-		<Resource Language="it-it"/>
-		<Resource Language="pt-br"/>
-		<Resource Language="pt-pt"/>
-		<Resource Language="qps-ploc"/>
-		<Resource Language="pl-pl"/>
-		<Resource Language="es-es"/>
-		<Resource Language="vi-vn"/>
-		<Resource Language="es-mx"/>
-		<Resource Language="id-id"/>
-		<Resource Language="nl-nl"/>
-		<Resource Language="zh-cn"/>
-		<Resource Language="ro-ro"/>
-		<Resource Language="si-lk"/>
-		<Resource Language="fr-FR"/>
+		<Resource Language="x-generate"/>
 	</Resources>
 
 	<Applications>
@@ -50,13 +35,13 @@
 					 EntryPoint="WinverUWP.App"
 					 desktop4:Subsystem="windows">
 			<uap:VisualElements
-			  DisplayName="WinverUWP"
-			  Square150x150Logo="Assets\Square150x150Logo.png"
-			  Square44x44Logo="Assets\Square44x44Logo.png"
-			  Description="WinverUWP"
-			  BackgroundColor="transparent">
+				DisplayName="WinverUWP"
+				Square150x150Logo="Assets\Square150x150Logo.png"
+				Square44x44Logo="Assets\Square44x44Logo.png"
+				Description="WinverUWP"
+				BackgroundColor="transparent">
 				<uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
-				<uap:SplashScreen Image="Assets\SplashScreen.png" />
+				<uap:SplashScreen Image="Assets\SplashScreen.png" uap5:Optional="true" />
 			</uap:VisualElements>
 
 			<Extensions>

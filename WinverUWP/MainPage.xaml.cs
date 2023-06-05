@@ -1,276 +1,281 @@
-﻿using RegistryRT;
+﻿using Microsoft.Toolkit.Uwp.UI.Media.Geometry;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources;
-using Windows.Foundation.Metadata;
+using Windows.Storage;
 using Windows.System.Profile;
 using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
+using WinverUWP.Helpers;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
-namespace WinverUWP
+namespace WinverUWP;
+
+public sealed partial class MainPage : Page
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class MainPage : Page
+    private string OSName = "";
+    private ResourceLoader resourceLoader;
+    private UISettings _uiSettings;
+    private CompositionSpriteShape shape;
+    private bool isCopying;
+
+    public MainPage()
     {
-        private Registry registry = new Registry();
-        private string OSName = "";
-        private ResourceLoader resourceLoader;
-        private UISettings _uiSettings;
-        private BackdropBrushXaml Backdrop;
+        InitializeComponent();
+            
+        _uiSettings = new UISettings();
 
-        public MainPage()
+        resourceLoader = ResourceLoader.GetForCurrentView();
+
+        var appdata = ApplicationData.Current.LocalSettings.Values.Where(f => f.Key.EndsWith("Expander"));
+
+        if (appdata.Count() == 0)
+            SpecExpander.IsExpanded = LegalExpander.IsExpanded = true;
+        else
+            foreach(var value in appdata)
+                ((Microsoft.UI.Xaml.Controls.Expander)FindName(value.Key)).IsExpanded = (bool)value.Value;
+
+        ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+        titleBar.ButtonBackgroundColor = Colors.Transparent;
+        titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+
+        var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+        coreTitleBar.ExtendViewIntoTitleBar = true;
+
+        UpdateTitleBarLayout(coreTitleBar);
+        coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
+        coreTitleBar.IsVisibleChanged += CoreTitleBar_IsVisibleChanged;
+
+        Window.Current.SetTitleBar(TitleBar);
+
+        Window.Current.Activated += Current_Activated;
+    }
+
+    private void CoreTitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args)
+    {
+        TitleBar.Visibility = sender.IsVisible ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
+    {
+        UpdateTitleBarLayout(sender);
+    }
+
+    private void Current_Activated(object sender, Windows.UI.Core.WindowActivatedEventArgs e)
+    {
+        if (e.WindowActivationState == Windows.UI.Core.CoreWindowActivationState.Deactivated)
+            AppTitle.Style = (Style)Application.Current.Resources["InactivatedAppTitle"];
+        else
+            AppTitle.Style = (Style)Application.Current.Resources["ActivatedAppTitle"];
+    }
+
+    private void UpdateTitleBarLayout(CoreApplicationViewTitleBar coreTitleBar)
+    {
+        // Update title bar control size as needed to account for system size changes.
+        TitleBar.Height = coreTitleBar.Height;
+
+        // Ensure the custom title bar does not overlap window caption controls
+        Thickness currMargin = TitleBar.Margin;
+        TitleBar.Margin = new Thickness(currMargin.Left, currMargin.Top, coreTitleBar.SystemOverlayRightInset, currMargin.Bottom);
+    }
+
+    private void CopyButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (isCopying)
+            return;
+
+        isCopying = true;
+        DataPackage package = new DataPackage();
+
+        Dictionary<string, string> data = new Dictionary<string, string>()
         {
-            this.InitializeComponent();
+            { resourceLoader.GetString("Edition/Text"), Edition.Text },
+            { resourceLoader.GetString("Version/Text"), Version.Text },
+            { resourceLoader.GetString("InstalledOn/Text"), InstalledOn.Text },
+            { resourceLoader.GetString("OSBuild/Text"), Build.Text },
+        };
 
-            _uiSettings = new UISettings();
+        if (Expiration.Visibility == Visibility.Visible)
+            data.Add(resourceLoader.GetString("Expiration/Text"), Expiration.Text);
 
-            resourceLoader = ResourceLoader.GetForCurrentView();
+        int maxLength = data.Keys.Max(f => f.Length + 5);
 
-            if (!ApiInformation.IsTypePresent("Windows.UI.WindowManagement.AppWindow"))
+        var lines = data.Select(f => string.Format($"{{0,-{maxLength}}}", f.Key) + f.Value);
+
+        string targetText = string.Join(Environment.NewLine, lines);
+
+        package.SetText(targetText);
+        Clipboard.SetContent(package);
+        CopyToClipboardSuccessAnimation.Begin();
+        CopyToClipboardSuccessAnimation.Completed += CopyToClipboardSuccessAnimation_Completed;
+    }
+
+    private void CopyToClipboardSuccessAnimation_Completed(object sender, object e)
+    {
+        isCopying = false;
+        CopyToClipboardSuccessAnimation.Completed -= CopyToClipboardSuccessAnimation_Completed;
+    }
+
+    private void SetTitleBarBackground()
+    {
+        var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+        titleBar.ButtonHoverBackgroundColor = (Color)Application.Current.Resources["SubtleFillColorSecondary"];
+        titleBar.ButtonPressedBackgroundColor = (Color)Application.Current.Resources["SubtleFillColorTertiary"];
+    }
+
+#if DEBUG
+    unsafe void Test()
+    {
+        const string activatableClassId = "Windows.Internal.StateRepository.Package";
+        fixed (char* pActivatableClassId = activatableClassId)
+        {
+            Interop.HSTRING hStringActivatableClass;
+            Interop.WindowsCreateString((ushort*)pActivatableClassId, (uint)activatableClassId.Length, &hStringActivatableClass);
+
+            using Interop.ComPtr<IPackageStatics_StateRepository> packageStatics = default;
+
+            using Interop.ComPtr<Interop.IUnknown> packageStaticsUnknown = default;
+            Interop.RoGetActivationFactory(hStringActivatableClass, Interop.__uuidof<Interop.IUnknown>(), packageStaticsUnknown.GetVoidAddressOf());
+
+            if (packageStaticsUnknown.As(&packageStatics) == 0)
             {
-                CloseButton.Visibility = Visibility.Collapsed;
-                ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-                titleBar.ButtonBackgroundColor = Colors.Transparent;
-                titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-
-                var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-                coreTitleBar.ExtendViewIntoTitleBar = true;
-
-                UpdateTitleBarLayout(coreTitleBar);
-                coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
-                coreTitleBar.IsVisibleChanged += CoreTitleBar_IsVisibleChanged;
-
-                Window.Current.SetTitleBar(TitleBar);
-
-                Window.Current.Activated += Current_Activated;
-            }
-            else
-            {
-                Backdrop = new BackdropBrushXaml();
-                Backdrop.SetAppWindow(App.AppWindow);
-                Background = Backdrop;
-                var token = FeatureTokenGenerator.GenerateTokenFromFeatureId("com.microsoft.windows.windowdecorations");
-                var attestation = FeatureTokenGenerator.GenerateAttestation("com.microsoft.windows.windowdecorations");
-                LimitedAccessFeatures.TryUnlockFeature("com.microsoft.windows.windowdecorations", token, attestation);
-                App.AppWindow.TitleBar.SetPreferredVisibility(Windows.UI.WindowManagement.AppWindowTitleBarVisibility.AlwaysHidden);
-                App.AppWindow.Frame.DragRegionVisuals.Add(TitleBar);
-            }
-        }
-
-        private void CoreTitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args)
-        {
-            TitleBar.Visibility = sender.IsVisible ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
-        {
-            UpdateTitleBarLayout(sender);
-        }
-
-        private void Current_Activated(object sender, Windows.UI.Core.WindowActivatedEventArgs e)
-        {
-            SolidColorBrush defaultForegroundBrush = (SolidColorBrush)Application.Current.Resources["TextFillColorPrimaryBrush"];
-            SolidColorBrush inactiveForegroundBrush = (SolidColorBrush)Application.Current.Resources["TextFillColorDisabledBrush"];
-
-            if (e.WindowActivationState == Windows.UI.Core.CoreWindowActivationState.Deactivated)
-            {
-                AppTitle.Foreground = inactiveForegroundBrush;
-            }
-            else
-            {
-                AppTitle.Foreground = defaultForegroundBrush;
-            }
-        }
-
-        private void UpdateTitleBarLayout(CoreApplicationViewTitleBar coreTitleBar)
-        {
-            // Update title bar control size as needed to account for system size changes.
-            TitleBar.Height = coreTitleBar.Height;
-
-            // Ensure the custom title bar does not overlap window caption controls
-            Thickness currMargin = TitleBar.Margin;
-            TitleBar.Margin = new Thickness(currMargin.Left, currMargin.Top, coreTitleBar.SystemOverlayRightInset, currMargin.Bottom);
-        }
-
-        private async void CopyButton_Click(object sender, RoutedEventArgs e)
-        {
-            DataPackage package = new DataPackage();
-            string targetText = "";
-            string deviceFamilyVersion = AnalyticsInfo.VersionInfo.DeviceFamilyVersion;
-            ulong version = ulong.Parse(deviceFamilyVersion);
-            ulong build = (version & 0x00000000FFFF0000L) >> 16;
-            if (build >= 19041)
-            {
-                string[] labels = new[]
+                // QueryInterface was successful, meaning that the IPackageStatics is actually Windows 11.
+                const string packageName = "MicrosoftWindows.Client.CBS_cw5n1h2txyewy";
+                fixed (char* pPackageName = packageName)
                 {
-                    $"{resourceLoader.GetString("Edition/Text")}",
-                    $"{resourceLoader.GetString("Version/Text")}",
-                    $"{resourceLoader.GetString("InstalledOn/Text")}",
-                    $"{resourceLoader.GetString("OSBuild/Text")}",
-                    $"{resourceLoader.GetString("Experience/Text")}",
-                };
+                    Interop.HSTRING hStringPackageName;
+                    Interop.WindowsCreateString((ushort*)pPackageName, (uint)packageName.Length, &hStringPackageName);
 
-                int length = labels.Max(f => f.Length) + 4;
-
-                labels = labels.Select(f => string.Format($"{{0,-{length}}}", f)).ToArray();
-
-                targetText =
-                    $@"{labels[0]}{Edition.Text}
-{labels[1]}{Version.Text}
-{labels[2]}{InstalledOn.Text}
-{labels[3]}{Build.Text}
-{labels[4]}{Experience.Text}";
+                    uint exists;
+                    Interop.HRESULT success = packageStatics.Get()->ExistsByPackageFamilyName(hStringPackageName, &exists);
+                }
             }
-            else
-            {
-                string[] labels = new[]
-                {
-                    resourceLoader.GetString("Edition/Text"),
-                    resourceLoader.GetString("Version/Text"),
-                    resourceLoader.GetString("InstalledOn/Text"),
-                    resourceLoader.GetString("OSBuild/Text")
-                };
-
-                int length = labels.Max(f => f.Length) + 4;
-
-                labels = labels.Select(f => string.Format($"{{0,-{length}}}", f)).ToArray();
-
-                targetText =
-                    $@"{labels[0]}{Edition.Text}
-{labels[1]}{Version.Text}
-{labels[2]}{InstalledOn.Text}
-{labels[3]}{Build.Text}";
-            }
-
-            package.SetText(targetText);
-
-            Clipboard.SetContent(package);
-            CopyButton.Content = resourceLoader.GetString("Copied");
-            await Task.Delay(1000);
-            CopyButton.Content = resourceLoader.GetString("CopyButton/Content");
-        }
-
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-            string deviceFamilyVersion = AnalyticsInfo.VersionInfo.DeviceFamilyVersion;
-            ulong version = ulong.Parse(deviceFamilyVersion);
-            ulong build = (version & 0x00000000FFFF0000L) >> 16;
-            var revision = version & 0x000000000000FFFF;
-
-            OSName = build >= 21996 ? "Windows11Logo" : "Windows10Logo";
-            UpdateWindowsBrand();
-
-            _uiSettings.ColorValuesChanged += async (a, b) =>
-            {
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => UpdateWindowsBrand());
-            };
-
-            Build.Text = build.ToString();
-
-            if (revision != 0)
-                Build.Text += $".{revision}";
-
-            registry.InitNTDLLEntryPoints();
-            string productName = "";
-
-            if (AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop")
-                productName = WinverNative.Winbrand.BrandingFormatString("%WINDOWS_LONG%");
-            else
-                productName = ReturnValueFromRegistry(RegistryHive.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "ProductName");
-
-            Edition.Text = productName;
-            LicensingText.Text = resourceLoader.GetString("Trademark/Text").Replace("Windows", productName);
-
-            var displayVersion = ReturnValueFromRegistry(RegistryHive.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "DisplayVersion");
-            if (string.IsNullOrEmpty(displayVersion))
-                displayVersion = ReturnValueFromRegistry(RegistryHive.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "ReleaseId");
-            Version.Text = displayVersion;
-
-            var date = GetWindowsInstallationDateTime().ToLocalTime();
-            var userCulture = CultureInfoHelper.GetCurrentCulture();
-            InstalledOn.Text = date.ToString("d", userCulture);
-
-            var ownerName = ReturnValueFromRegistry(RegistryHive.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "RegisteredOwner");
-            OwnerText.Text = ownerName;
-            OwnerText.Visibility = string.IsNullOrEmpty(ownerName) ? Visibility.Collapsed : Visibility.Visible;
-
-            var ownerOrg = ReturnValueFromRegistry(RegistryHive.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "RegisteredOrganization");
-            OrgText.Text = ownerOrg;
-            OrgText.Visibility = string.IsNullOrEmpty(ownerOrg) ? Visibility.Collapsed : Visibility.Visible;
-
-            // TODO: Add Experience for non-Desktop.
-            if (build < 19041 || AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Desktop")
-            {
-                ExperienceLabel.Visibility = Visibility.Collapsed;
-                Experience.Visibility = Visibility.Collapsed;
-                return;
-            }
-
-            registry.GetSubKeyList(RegistryHive.HKEY_LOCAL_MACHINE, $@"SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\InboxApplications", out string[] subKeys);
-            string cbs = subKeys.First(f => f.StartsWith("MicrosoftWindows.Client.CBS_", StringComparison.CurrentCultureIgnoreCase));
-            cbs = cbs.Split('_')[1];
-            Experience.Text = $"{resourceLoader.GetString("ExperiencePack")} {cbs}";
-        }
-
-        private void UpdateWindowsBrand()
-        {
-            BrandImage.Source = new SvgImageSource(
-                new Uri(
-                    "ms-appx:///Assets/"
-                    + OSName
-                    + "-"
-                    + (Application.Current.RequestedTheme == ApplicationTheme.Dark ? "light" : "dark")
-                    + ".svg"));
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            if (App.AppWindow == null)
-                Application.Current.Exit();
-            else
-#pragma warning disable CS4014
-                App.AppWindow.CloseAsync();
-#pragma warning restore CS4014
-        }
-
-        private string ReturnValueFromRegistry(RegistryHive hive, string key, string value)
-        {
-            var success = registry.QueryValue(hive, key, value, out RegistryType _, out byte[] rawData);
-            if (!success)
-                return "";
-            return Encoding.Unicode.GetString(rawData).Replace("\0", "");
-        }
-
-        private DateTime GetWindowsInstallationDateTime()
-        {
-            bool success = registry.QueryValue(RegistryHive.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "InstallDate", out RegistryType _, out byte[] buffer);
-            if (!success)
-                throw new Exception();
-
-            var seconds = BitConverter.ToInt32(buffer, 0);
-            DateTime startDate = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            DateTime installDate = startDate.AddSeconds(seconds);
-            return installDate;
         }
     }
+#endif
+
+    private void Page_Loaded(object sender, RoutedEventArgs e)
+    {
+#if DEBUG
+        try
+        {
+            Test();
+        }
+        catch { }
+#endif
+        string deviceFamilyVersion = AnalyticsInfo.VersionInfo.DeviceFamilyVersion;
+        ulong version = ulong.Parse(deviceFamilyVersion);
+        ulong build = (version & 0x00000000FFFF0000L) >> 16;
+        var revision = version & 0x000000000000FFFF;
+
+        OSName = build >= 21996 ? "Windows11" : "Windows10";
+        UpdateWindowsBrand();
+        SetTitleBarBackground();
+
+        _uiSettings.ColorValuesChanged += async (uiSettings, _) =>
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                if (shape != null)
+                {
+                    shape.FillBrush.Dispose();
+                    shape.FillBrush = Window.Current.Compositor.CreateColorBrush(uiSettings.GetColorValue(UIColorType.Foreground));
+                }
+                SetTitleBarBackground();
+            });
+
+        };
+
+        Build.Text = build.ToString();
+
+        if (revision != 0)
+            Build.Text += $".{revision}";
+
+        string productName = "";
+
+        if (AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop")
+            productName = WinbrandHelper.GetWinbrand();
+        else
+            productName = RegistryHelper.GetInfoString("ProductName");
+
+        Edition.Text = productName;
+        LicensingText.Text = resourceLoader.GetString("Trademark/Text").Replace("Windows", productName);
+
+        var displayVersion = RegistryHelper.GetInfoString("DisplayVersion");
+        if (string.IsNullOrEmpty(displayVersion))
+            displayVersion = RegistryHelper.GetInfoString("ReleaseId");
+
+        Version.Text = displayVersion;
+
+        var userCulture = CultureInfoHelper.GetCurrentCulture();
+        InstalledOn.Text = GetWindowsInstallationDateTime().ToString("d", userCulture);
+
+
+        DateTime? expiration = ExpirationHelper.GetSystemExpiration();
+        if (expiration != null)
+            Expiration.Text = expiration.Value.ToString("g", userCulture);
+        else
+        {
+            Expiration.Visibility = Visibility.Collapsed;
+            ExpirationLabel.Visibility = Visibility.Collapsed;
+        }
+
+        var ownerName = RegistryHelper.GetInfoString("RegisteredOwner");
+        if (ownerName != null)
+            OwnerText.Text = ownerName;
+        OwnerText.Visibility = string.IsNullOrEmpty(ownerName) ? Visibility.Collapsed : Visibility.Visible;
+
+        var ownerOrg = RegistryHelper.GetInfoString("RegisteredOrganization");
+        if (ownerOrg != null)
+            OrgText.Text = ownerOrg;
+        OrgText.Visibility = string.IsNullOrEmpty(ownerOrg) ? Visibility.Collapsed : Visibility.Visible;
+
+        if (string.IsNullOrEmpty(ownerName) && string.IsNullOrEmpty(ownerOrg))
+            LicenseTo.Visibility = Visibility.Collapsed;
+    }
+
+    private void UpdateWindowsBrand()
+    {
+        string path = (string)Application.Current.Resources[$"{OSName}Path"];
+        var geo = (Geometry)XamlBindingHelper.ConvertValue(typeof(Geometry), path);
+        if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.Composition.CompositionShape"))
+        {
+            shape = Window.Current.Compositor.CreateSpriteShape(path);
+            shape.FillBrush = Window.Current.Compositor.CreateColorBrush(_uiSettings.GetColorValue(UIColorType.Foreground));
+            var shapeVisual = Window.Current.Compositor.CreateShapeVisual();
+            shapeVisual.Shapes.Add(shape);
+            shapeVisual.Size = new((float)geo.Bounds.Width, (float)geo.Bounds.Height);
+            Windows.UI.Xaml.Hosting.ElementCompositionPreview.SetElementChildVisual(CompatibleCanvas, shapeVisual);
+            CompatibleCanvas.Width = geo.Bounds.Width;
+            CompatibleCanvas.Height = geo.Bounds.Height;
+        }
+        else
+            NonCompatiblePath.Data = geo;
+    }
+
+    private void Button_Click(object sender, RoutedEventArgs e)
+    {
+        _ = ApplicationView.GetForCurrentView().TryConsolidateAsync();
+    }
+
+    private DateTime GetWindowsInstallationDateTime()
+    {
+        var seconds = RegistryHelper.GetInfoDWord("InstallDate");
+        DateTime installDate = DateTimeOffset.FromUnixTimeSeconds(seconds.Value).LocalDateTime;
+        return installDate;
+    }
+
+    private void Expander_Collapsed(Microsoft.UI.Xaml.Controls.Expander sender, Microsoft.UI.Xaml.Controls.ExpanderCollapsedEventArgs args)
+        => ApplicationData.Current.LocalSettings.Values[sender.Name] = false;
+
+    private void Expander_Expanding(Microsoft.UI.Xaml.Controls.Expander sender, Microsoft.UI.Xaml.Controls.ExpanderExpandingEventArgs args)
+        => ApplicationData.Current.LocalSettings.Values[sender.Name] = true;
 }
