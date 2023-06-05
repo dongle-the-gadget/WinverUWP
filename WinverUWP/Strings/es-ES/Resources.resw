@@ -120,10 +120,10 @@
   <data name="AboutWindows.Text" xml:space="preserve">
     <value>Sobre Windows</value>
   </data>
-  <data name="Copied" xml:space="preserve">
+  <data name="CopiedButton.Text" xml:space="preserve">
     <value>¡Copiado!</value>
   </data>
-  <data name="CopyButton.Content" xml:space="preserve">
+  <data name="CopyButton.Text" xml:space="preserve">
     <value>Copiar</value>
   </data>
   <data name="Edition.Text" xml:space="preserve">

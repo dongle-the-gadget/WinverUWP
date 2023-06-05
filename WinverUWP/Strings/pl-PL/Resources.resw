@@ -53,6 +53,7 @@
     value   : The object must be serialized with 
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
+
     mimetype: application/x-microsoft.net.object.bytearray.base64
     value   : The object must be serialized into a byte array 
             : using a System.ComponentModel.TypeConverter
@@ -119,10 +120,10 @@
   <data name="AboutWindows.Text" xml:space="preserve">
     <value>Informacje o Windows</value>
   </data>
-  <data name="Copied" xml:space="preserve">
+  <data name="CopiedButton.Text" xml:space="preserve">
     <value>Skopiowano!</value>
   </data>
-  <data name="CopyButton.Content" xml:space="preserve">
+  <data name="CopyButton.Text" xml:space="preserve">
     <value>Skopiuj</value>
   </data>
   <data name="Edition.Text" xml:space="preserve">

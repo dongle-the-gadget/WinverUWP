@@ -120,10 +120,10 @@
   <data name="AboutWindows.Text" xml:space="preserve">
     <value>关于"Windows"</value>
   </data>
-  <data name="Copied" xml:space="preserve">
+  <data name="CopiedButton.Text" xml:space="preserve">
     <value>已复制!</value>
   </data>
-  <data name="CopyButton.Content" xml:space="preserve">
+  <data name="CopyButton.Text" xml:space="preserve">
     <value>复制</value>
   </data>
   <data name="Edition.Text" xml:space="preserve">

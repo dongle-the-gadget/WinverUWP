@@ -2,6 +2,8 @@
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+    <LangVersion>11.0</LangVersion>
+    <AppxOSMinVersionReplaceManifestVersion>false</AppxOSMinVersionReplaceManifestVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProjectGuid>{020EE1C0-2940-4B2B-A355-867D2A4DD576}</ProjectGuid>
@@ -11,23 +13,23 @@
     <AssemblyName>WinverUWP</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22000.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion Condition="'$(Platform)' != 'ARM64'">10.0.15063.0</TargetPlatformMinVersion>
-    <TargetPlatformMinVersion Condition="'$(Platform)' == 'ARM64'">10.0.16299.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22621.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <PackageCertificateThumbprint>1ADE8713004D629C49932C8DD03A3ABDB10D2F69</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>814888685AAAEB607ED7CEAC08F0080647E72239</PackageCertificateThumbprint>
     <PackageCertificateKeyFile>WinverUWP_TemporaryKey.pfx</PackageCertificateKeyFile>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
-    <AppxBundle>Never</AppxBundle>
+    <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm|arm64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <PolySharpIncludeGeneratedTypes>System.Diagnostics.CodeAnalysis.UnscopedRefAttribute</PolySharpIncludeGeneratedTypes>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -115,8 +117,8 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <Optimize>true</Optimize>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -138,13 +140,64 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BackdropBrushXaml.cs" />
-    <Compile Include="CultureInfoHelper.cs" />
-    <Compile Include="FeatureTokenGenerator.cs" />
+    <Compile Include="Geometry\CanvasDrawingSessionExtensions.cs" />
+    <Compile Include="Geometry\CanvasPathBuilderExtensions.cs" />
+    <Compile Include="Geometry\CanvasPathGeometry.cs" />
+    <Compile Include="Geometry\CanvasStroke.cs" />
+    <Compile Include="Geometry\CompositorGeometryExtensions.cs" />
+    <Compile Include="Geometry\Core\CanvasRoundRect.cs" />
+    <Compile Include="Geometry\Core\GeometryTypeDefinitions.cs" />
+    <Compile Include="Geometry\Core\PathElementFactory.cs" />
+    <Compile Include="Geometry\Core\RegexFactory.cs" />
+    <Compile Include="Geometry\CultureShield.cs" />
+    <Compile Include="Geometry\Elements\Brush\AbstractCanvasBrushElement.cs" />
+    <Compile Include="Geometry\Elements\Brush\ICanvasBrushElement.cs" />
+    <Compile Include="Geometry\Elements\Brush\LinearGradientBrushElement.cs" />
+    <Compile Include="Geometry\Elements\Brush\LinearGradientHdrBrushElement.cs" />
+    <Compile Include="Geometry\Elements\Brush\RadialGradientBrushElement.cs" />
+    <Compile Include="Geometry\Elements\Brush\RadialGradientHdrBrushElement.cs" />
+    <Compile Include="Geometry\Elements\Brush\SolidColorBrushElement.cs" />
+    <Compile Include="Geometry\Elements\Path\AbstractPathElement.cs" />
+    <Compile Include="Geometry\Elements\Path\ArcElement.cs" />
+    <Compile Include="Geometry\Elements\Path\CanvasEllipseFigure.cs" />
+    <Compile Include="Geometry\Elements\Path\CanvasPathFigure.cs" />
+    <Compile Include="Geometry\Elements\Path\CanvasPolygonFigure.cs" />
+    <Compile Include="Geometry\Elements\Path\CanvasRectangleFigure.cs" />
+    <Compile Include="Geometry\Elements\Path\CanvasRoundRectangleFigure.cs" />
+    <Compile Include="Geometry\Elements\Path\ClosePathElement.cs" />
+    <Compile Include="Geometry\Elements\Path\CubicBezierElement.cs" />
+    <Compile Include="Geometry\Elements\Path\FillRuleElement.cs" />
+    <Compile Include="Geometry\Elements\Path\HorizontalLineElement.cs" />
+    <Compile Include="Geometry\Elements\Path\ICanvasPathElement.cs" />
+    <Compile Include="Geometry\Elements\Path\LineElement.cs" />
+    <Compile Include="Geometry\Elements\Path\MoveToElement.cs" />
+    <Compile Include="Geometry\Elements\Path\QuadraticBezierElement.cs" />
+    <Compile Include="Geometry\Elements\Path\SmoothCubicBezierElement.cs" />
+    <Compile Include="Geometry\Elements\Path\SmoothQuadraticBezierElement.cs" />
+    <Compile Include="Geometry\Elements\Path\VerticalLineElement.cs" />
+    <Compile Include="Geometry\Elements\Stroke\AbstractCanvasStrokeElement.cs" />
+    <Compile Include="Geometry\Elements\Stroke\CanvasStrokeElement.cs" />
+    <Compile Include="Geometry\Elements\Stroke\CanvasStrokeStyleElement.cs" />
+    <Compile Include="Geometry\Elements\Stroke\ICanvasStrokeElement.cs" />
+    <Compile Include="Geometry\Elements\Stroke\ICanvasStrokeStyleElement.cs" />
+    <Compile Include="Geometry\ICanvasStroke.cs" />
+    <Compile Include="Geometry\Parsers\CanvasBrushParser.cs" />
+    <Compile Include="Geometry\Parsers\CanvasGeometryParser.cs" />
+    <Compile Include="Geometry\Parsers\CanvasStrokeParser.cs" />
+    <Compile Include="Geometry\Parsers\CanvasStrokeStyleParser.cs" />
+    <Compile Include="Geometry\Parsers\ColorParser.cs" />
+    <Compile Include="Geometry\Scalar.cs" />
+    <Compile Include="Geometry\Utils.cs" />
+    <Compile Include="Helpers\CultureInfoHelper.cs" />
+    <Compile Include="Helpers\ExpirationHelper.cs" />
+    <Compile Include="Helpers\Interop.cs" />
+    <Compile Include="Helpers\Win32Headers.cs" />
+    <Compile Include="Helpers\WinbrandHelper.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Helpers\RegistryHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -197,12 +250,7 @@
     <Content Include="Assets\Wide310x150Logo.scale-125.png" />
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
-    <Content Include="Assets\Windows10Logo-dark.svg" />
-    <Content Include="Assets\Windows10Logo-light.svg" />
-    <Content Include="Assets\Windows11Logo-dark.svg" />
-    <Content Include="Assets\Windows11Logo-light.svg" />
     <Content Include="Properties\Default.rd.xml" />
-    <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
@@ -221,10 +269,21 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.13</Version>
+      <Version>6.2.14</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.7.0</Version>
+      <Version>2.7.3</Version>
+    </PackageReference>
+    <PackageReference Include="PolySharp">
+      <Version>1.13.1</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="System.Memory">
+      <Version>4.5.5</Version>
+    </PackageReference>
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe">
+      <Version>6.0.0</Version>
     </PackageReference>
     <PackageReference Include="Win2D.uwp">
       <Version>1.26.0</Version>
@@ -283,16 +342,6 @@
       <SubType>Designer</SubType>
     </PRIResource>
     <None Include="WinverUWP_TemporaryKey.pfx" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\RegistryRT\RegistryRT.vcxproj">
-      <Project>{84a7225c-2daf-410d-ab85-282ab220a89f}</Project>
-      <Name>RegistryRT</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WinverNative\WinverNative.vcxproj">
-      <Project>{60eaf77f-6fe9-4394-b61c-f2e7604ab471}</Project>
-      <Name>WinverNative</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

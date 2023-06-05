@@ -31,14 +31,13 @@ You can download WinverUWP for free in [Microsoft Store](https://www.microsoft.c
    
    **Note:** During installation, PowerShell may ask you about execution policies and administrator privileges. For execution scopes, select **Unrestricted**, and for administrator privileges (User Account Control), select Yes or enter in your administrator credentials.
 
-<!--
 ## Launching
 You could launch this program in one of these three ways:
 - As an app entry in Start, Search, PowerToys Run, ... (whatever has you)
 - Using the app execution alias: `winveruwp.exe`
 - Using the app protocol: `winveruwp://`
--->
 
+<!--
 ## Contributing
 ### Language translation
 If you want to help translate, follow the steps below:
@@ -69,3 +68,4 @@ If you want to help translate, follow the steps below:
 6. Create a new line after the tag with the value: `<Resource Language="(your locale here)"/>`.
 7. Commit your translations into your fork.
 8. Create a Pull request and wait for me to review it.
+-->
