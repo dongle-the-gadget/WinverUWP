@@ -120,20 +120,17 @@
   <data name="AboutWindows.Text" xml:space="preserve">
     <value>Windows - névjegy</value>
   </data>
-  <data name="Copied" xml:space="preserve">
+  <data name="CopiedButton.Text" xml:space="preserve">
     <value>Másolás kész</value>
   </data>
-  <data name="CopyButton.Content" xml:space="preserve">
+  <data name="CopyButton.Text" xml:space="preserve">
     <value>Másolás</value>
   </data>
   <data name="Edition.Text" xml:space="preserve">
     <value>Kiadás</value>
   </data>
-  <data name="Experience.Text" xml:space="preserve">
+  <data name="Expiration.Text" xml:space="preserve">
     <value>Minőség</value>
-  </data>
-  <data name="ExperiencePack" xml:space="preserve">
-    <value>Windows-szolgáltatások élménycsomagja</value>
   </data>
   <data name="InstalledOn.Text" xml:space="preserve">
     <value>Telepítés dátuma</value>
