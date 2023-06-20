@@ -129,9 +129,6 @@
   <data name="Edition.Text" xml:space="preserve">
     <value>에디션</value>
   </data>
-  <data name="Experience.Text" xml:space="preserve">
-    <value>경험</value>
-  </data>
   <data name="InstalledOn.Text" xml:space="preserve">
     <value>설치 날짜</value>
   </data>
