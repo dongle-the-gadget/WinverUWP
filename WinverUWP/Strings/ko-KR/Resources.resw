@@ -132,9 +132,6 @@
   <data name="Experience.Text" xml:space="preserve">
     <value>경험</value>
   </data>
-  <data name="ExperiencePack" xml:space="preserve">
-    <value>Windows Feature Experience Pack</value>
-  </data>
   <data name="InstalledOn.Text" xml:space="preserve">
     <value>설치 날짜</value>
   </data>
