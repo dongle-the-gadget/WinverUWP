@@ -129,6 +129,9 @@
   <data name="Edition.Text" xml:space="preserve">
     <value>에디션</value>
   </data>
+  <data name="Expiration.Text" xml:space="preserve">
+    <value>만료</value>
+  </data>
   <data name="InstalledOn.Text" xml:space="preserve">
     <value>설치 날짜</value>
   </data>
@@ -139,7 +142,7 @@
     <value>이 제품은 Microsoft 소프트웨어 사용 조건에 따라 다음 사용자가 사용할 수 있습니다:</value>
   </data>
   <data name="OKButton.Content" xml:space="preserve">
-    <value>OK</value>
+    <value>확인</value>
   </data>
   <data name="OSBuild.Text" xml:space="preserve">
     <value>OS 빌드</value>
