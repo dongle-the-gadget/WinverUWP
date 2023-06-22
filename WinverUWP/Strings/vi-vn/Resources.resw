@@ -118,45 +118,42 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AboutWindows.Text" xml:space="preserve">
-    <value>Thông tin về Windows</value>
+    <value>About Windows</value>
   </data>
   <data name="CopiedButton.Text" xml:space="preserve">
-    <value>Đã sao chép.</value>
+    <value>Copied!</value>
   </data>
   <data name="CopyButton.Text" xml:space="preserve">
-    <value>Sao chép</value>
+    <value>Copy</value>
   </data>
   <data name="Edition.Text" xml:space="preserve">
-    <value>Phiên bản</value>
+    <value>Edition</value>
   </data>
-  <data name="Experience.Text" xml:space="preserve">
-    <value>Đang sử dụng</value>
-  </data>
-  <data name="ExperiencePack" xml:space="preserve">
-    <value>Gói tính năng trải nghiệm Windows</value>
+  <data name="Expiration.Text" xml:space="preserve">
+    <value>Expiration</value>
   </data>
   <data name="InstalledOn.Text" xml:space="preserve">
-    <value>Đã cài đặt vào ngày</value>
+    <value>Installed on</value>
   </data>
   <data name="LegalLabel.Text" xml:space="preserve">
-    <value>Giấy phép</value>
+    <value>Legal</value>
   </data>
   <data name="LicenseTo.Text" xml:space="preserve">
-    <value>Sản phẩm này được cấp phép dưới Điều khoản sử dụng của Microsoft cho:</value>
+    <value>This product is licensed under the Microsoft Software License Terms to:</value>
   </data>
   <data name="OKButton.Content" xml:space="preserve">
     <value>OK</value>
   </data>
   <data name="OSBuild.Text" xml:space="preserve">
-    <value>Số phiên bản</value>
+    <value>OS build</value>
   </data>
   <data name="Trademark.Text" xml:space="preserve">
-    <value>Hệ điều hành Windows và giao diện người dùng được bảo vệ bởi các nhãn hiệu và các quyền sở hữu trí tuệ đang có hoặc đang chờ xử lý ở Hợp chủng quốc Hoa Kỳ và các quốc gia hoặc khu vực khác.</value>
+    <value>The Windows operating system and its user interface are protected by trademark and other pending or existing intellectual property rights in the United States and other countries or regions.</value>
   </data>
   <data name="Version.Text" xml:space="preserve">
-    <value>Nhánh</value>
+    <value>Version</value>
   </data>
   <data name="WindowsSpecifications.Text" xml:space="preserve">
-    <value>Cấu hình Windows</value>
+    <value>Windows specifications</value>
   </data>
 </root>
