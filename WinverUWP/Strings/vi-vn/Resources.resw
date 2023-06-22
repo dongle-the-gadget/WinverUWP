@@ -118,42 +118,42 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AboutWindows.Text" xml:space="preserve">
-    <value>About Windows</value>
+    <value>Thông tin về Windows</value>
   </data>
   <data name="CopiedButton.Text" xml:space="preserve">
-    <value>Copied!</value>
+    <value>Đã sao chép !</value>
   </data>
   <data name="CopyButton.Text" xml:space="preserve">
-    <value>Copy</value>
+    <value>Sao chép</value>
   </data>
   <data name="Edition.Text" xml:space="preserve">
-    <value>Edition</value>
+    <value>Hệ điều hành</value>
   </data>
   <data name="Expiration.Text" xml:space="preserve">
-    <value>Expiration</value>
+    <value>Ngày hết hạn</value>
   </data>
   <data name="InstalledOn.Text" xml:space="preserve">
-    <value>Installed on</value>
+    <value>Đã cài đặt vào</value>
   </data>
   <data name="LegalLabel.Text" xml:space="preserve">
-    <value>Legal</value>
+    <value>Điều khoản Cấp phép Phần mềm</value>
   </data>
   <data name="LicenseTo.Text" xml:space="preserve">
-    <value>This product is licensed under the Microsoft Software License Terms to:</value>
+    <value>Sản phẩm này được cấp phép dựa theo Điều khoản Sử dụng Phần mềm của Microsoft cho người dùng:</value>
   </data>
   <data name="OKButton.Content" xml:space="preserve">
     <value>OK</value>
   </data>
   <data name="OSBuild.Text" xml:space="preserve">
-    <value>OS build</value>
+    <value>Bản dựng HĐH</value>
   </data>
   <data name="Trademark.Text" xml:space="preserve">
-    <value>The Windows operating system and its user interface are protected by trademark and other pending or existing intellectual property rights in the United States and other countries or regions.</value>
+    <value>Hệ điều hành Windows và giao diện người dùng của nó được bảo vệ bởi thương hiệu và các giấy phép sở hữu trí tuệ hiện có hoặc đang chờ xử lý ở Hoa Kỳ và các quốc gia/khu vực khác.</value>
   </data>
   <data name="Version.Text" xml:space="preserve">
-    <value>Version</value>
+    <value>Phiên Bản</value>
   </data>
   <data name="WindowsSpecifications.Text" xml:space="preserve">
-    <value>Windows specifications</value>
+    <value>Thông số kỹ thuật của Windows</value>
   </data>
 </root>
