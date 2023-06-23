@@ -118,45 +118,45 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AboutWindows.Text" xml:space="preserve">
-    <value>Âβôúƭ Windows</value>
+    <value>关于"Windows"</value>
   </data>
   <data name="CopiedButton.Text" xml:space="preserve">
-    <value>Çôƥïèδ!</value>
+    <value>已复制!</value>
   </data>
   <data name="CopyButton.Text" xml:space="preserve">
-    <value>Çôƥ¥</value>
+    <value>复制</value>
   </data>
   <data name="Edition.Text" xml:space="preserve">
-    <value>Éδïƭïôñ</value>
+    <value>版本</value>
   </data>
   <data name="Experience.Text" xml:space="preserve">
-    <value>Éжƥèřïèñçè</value>
+    <value>体验</value>
   </data>
   <data name="ExperiencePack" xml:space="preserve">
-    <value>Windows Fèáƭúřè Éжƥèřïèñçè Þáçƙ</value>
+    <value>Windows 功能体验包</value>
   </data>
   <data name="InstalledOn.Text" xml:space="preserve">
-    <value>Ìñƨƭáℓℓèδ ôñ</value>
+    <value>安装日期</value>
   </data>
   <data name="LegalLabel.Text" xml:space="preserve">
-    <value>£èϱáℓ</value>
+    <value>法律</value>
   </data>
   <data name="LicenseTo.Text" xml:space="preserve">
-    <value>Tλïƨ ƥřôδúçƭ ïƨ ℓïçèñƨèδ úñδèř ƭλè Microsoft §ôƒƭωářè £ïçèñƨè Tèř₥ƨ ƭô:</value>
+    <value>根据 Microsoft 软件许可条款，许可如下用户使用本产品:</value>
   </data>
   <data name="OKButton.Content" xml:space="preserve">
-    <value>ÓK</value>
+    <value>确定</value>
   </data>
   <data name="OSBuild.Text" xml:space="preserve">
-    <value>Ó§ βúïℓδ</value>
+    <value>操作系统版本</value>
   </data>
   <data name="Trademark.Text" xml:space="preserve">
-    <value>Tλè Windows ôƥèřáƭïñϱ ƨ¥ƨƭè₥ áñδ ïƭƨ úƨèř ïñƭèřƒáçè ářè ƥřôƭèçƭèδ β¥ ƭřáδè₥ářƙ áñδ ôƭλèř ƥèñδïñϱ ôř èжïƨƭïñϱ ïñƭèℓℓèçúƭáℓ ƥřôƥèřƭ¥ řïϱλƭƨ ïñ ƭλè Ûñïƭèδ §ƭáƭèƨ áñδ ôƭλèř çôúñƭřïèƨ ôř řèϱïôñƨ.</value>
+    <value>Windows 操作系统及其用户界面受美国和其它国家/地区的商标法和其他待颁布或已颁布的知识产权法保护。</value>
   </data>
   <data name="Version.Text" xml:space="preserve">
-    <value>Vèřƨïôñ</value>
+    <value>版本</value>
   </data>
   <data name="WindowsSpecifications.Text" xml:space="preserve">
-    <value>Windows ƨƥèçïƒïçáƭïôñƨ</value>
+    <value>Windows 规格</value>
   </data>
 </root>

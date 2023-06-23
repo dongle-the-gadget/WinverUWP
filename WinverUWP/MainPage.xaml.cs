@@ -244,9 +244,10 @@ public sealed partial class MainPage : Page
 
     private void UpdateWindowsBrand()
     {
-        string path = (string)Application.Current.Resources[$"{OSName}Path"];
+        
+        string path = (string)Application.Current.Resources[$"Windows11Path"];
         var geo = (Geometry)XamlBindingHelper.ConvertValue(typeof(Geometry), path);
-        if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.Composition.CompositionShape"))
+        /*if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.Composition.CompositionShape"))
         {
             shape = Window.Current.Compositor.CreateSpriteShape(path);
             shape.FillBrush = Window.Current.Compositor.CreateColorBrush(_uiSettings.GetColorValue(UIColorType.Foreground));
@@ -258,7 +259,8 @@ public sealed partial class MainPage : Page
             CompatibleCanvas.Height = geo.Bounds.Height;
         }
         else
-            NonCompatiblePath.Data = geo;
+        */
+        NonCompatiblePath.Data = geo;
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)
