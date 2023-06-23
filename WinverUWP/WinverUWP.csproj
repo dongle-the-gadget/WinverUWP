@@ -267,7 +267,7 @@
     <PRIResource Include="Strings\ko-KR\Resources.resw">
       <SubType>Designer</SubType>
     </PRIResource>
-    <PRIResource Include="Strings\nl-nl\Resources.resw">
+    <PRIResource Include="Strings\nl-NL\Resources.resw">
       <SubType>Designer</SubType>
     </PRIResource>
     <PRIResource Include="Strings\pl-PL\Resources.resw">
@@ -288,13 +288,16 @@
     <PRIResource Include="Strings\si-LK\Resources.resw">
       <SubType>Designer</SubType>
     </PRIResource>
-    <PRIResource Include="Strings\vi-vn\Resources.resw">
+    <PRIResource Include="Strings\vi-VN\Resources.resw">
       <SubType>Designer</SubType>
     </PRIResource>
     <PRIResource Include="Strings\zh-CN\Resources.resw">
       <SubType>Designer</SubType>
     </PRIResource>
     <PRIResource Include="Strings\hu-HU\Resources.resw">
+      <SubType>Designer</SubType>
+    </PRIResource>
+    <PRIResource Include="Strings\fr-FR\Resources.resw">
       <SubType>Designer</SubType>
     </PRIResource>
     <None Include="WinverUWP_TemporaryKey.pfx" />
