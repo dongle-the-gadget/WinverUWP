@@ -1,0 +1,3 @@
+files:
+  - source: /WinverUWP/Strings/en-US/Resources.resw
+    translation: /WinverUWP/Strings/%locale%/Resources.resw
