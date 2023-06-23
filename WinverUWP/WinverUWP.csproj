@@ -279,9 +279,6 @@
     <PRIResource Include="Strings\pt-PT\Resources.resw">
       <SubType>Designer</SubType>
     </PRIResource>
-    <PRIResource Include="Strings\qps-ploc\Resources.resw">
-      <SubType>Designer</SubType>
-    </PRIResource>
     <PRIResource Include="Strings\ro-RO\Resources.resw">
       <SubType>Designer</SubType>
     </PRIResource>
