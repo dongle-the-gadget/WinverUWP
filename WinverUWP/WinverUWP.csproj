@@ -279,9 +279,6 @@
     <PRIResource Include="Strings\pt-PT\Resources.resw">
       <SubType>Designer</SubType>
     </PRIResource>
-    <PRIResource Include="Strings\qps-ploc\Resources.resw">
-      <SubType>Designer</SubType>
-    </PRIResource>
     <PRIResource Include="Strings\ro-RO\Resources.resw">
       <SubType>Designer</SubType>
     </PRIResource>
@@ -291,7 +288,7 @@
     <PRIResource Include="Strings\vi-VN\Resources.resw">
       <SubType>Designer</SubType>
     </PRIResource>
-    <PRIResource Include="Strings\zh-CN\Resources.resw">
+    <PRIResource Include="Strings\zh-Hans\Resources.resw">
       <SubType>Designer</SubType>
     </PRIResource>
     <PRIResource Include="Strings\hu-HU\Resources.resw">
