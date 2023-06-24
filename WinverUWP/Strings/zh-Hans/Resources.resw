@@ -129,11 +129,8 @@
   <data name="Edition.Text" xml:space="preserve">
     <value>版本</value>
   </data>
-  <data name="Experience.Text" xml:space="preserve">
-    <value>体验</value>
-  </data>
-  <data name="ExperiencePack" xml:space="preserve">
-    <value>Windows 功能体验包</value>
+  <data name="Expiration.Text" xml:space="preserve">
+    <value>过期时间</value>
   </data>
   <data name="InstalledOn.Text" xml:space="preserve">
     <value>安装日期</value>
