@@ -1,4 +1,4 @@
-﻿using Microsoft.Toolkit.Uwp.UI.Media.Geometry;
+﻿using Microsoft.Graphics.Canvas.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,6 @@ using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
 using WinverUWP.Helpers;
 
-
 namespace WinverUWP;
 
 public sealed partial class MainPage : Page
@@ -30,7 +29,7 @@ public sealed partial class MainPage : Page
     public MainPage()
     {
         InitializeComponent();
-            
+
         _uiSettings = new UISettings();
 
         resourceLoader = ResourceLoader.GetForCurrentView();
@@ -40,7 +39,7 @@ public sealed partial class MainPage : Page
         if (appdata.Count() == 0)
             SpecExpander.IsExpanded = LegalExpander.IsExpanded = true;
         else
-            foreach(var value in appdata)
+            foreach (var value in appdata)
                 ((Microsoft.UI.Xaml.Controls.Expander)FindName(value.Key)).IsExpanded = (bool)value.Value;
 
         ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
@@ -131,46 +130,8 @@ public sealed partial class MainPage : Page
         titleBar.ButtonPressedBackgroundColor = (Color)Application.Current.Resources["SubtleFillColorTertiary"];
     }
 
-#if DEBUG
-    unsafe void Test()
-    {
-        const string activatableClassId = "Windows.Internal.StateRepository.Package";
-        fixed (char* pActivatableClassId = activatableClassId)
-        {
-            Interop.HSTRING hStringActivatableClass;
-            Interop.WindowsCreateString((ushort*)pActivatableClassId, (uint)activatableClassId.Length, &hStringActivatableClass);
-
-            using Interop.ComPtr<IPackageStatics_StateRepository> packageStatics = default;
-
-            using Interop.ComPtr<Interop.IUnknown> packageStaticsUnknown = default;
-            Interop.RoGetActivationFactory(hStringActivatableClass, Interop.__uuidof<Interop.IUnknown>(), packageStaticsUnknown.GetVoidAddressOf());
-
-            if (packageStaticsUnknown.As(&packageStatics) == 0)
-            {
-                // QueryInterface was successful, meaning that the IPackageStatics is actually Windows 11.
-                const string packageName = "MicrosoftWindows.Client.CBS_cw5n1h2txyewy";
-                fixed (char* pPackageName = packageName)
-                {
-                    Interop.HSTRING hStringPackageName;
-                    Interop.WindowsCreateString((ushort*)pPackageName, (uint)packageName.Length, &hStringPackageName);
-
-                    uint exists;
-                    Interop.HRESULT success = packageStatics.Get()->ExistsByPackageFamilyName(hStringPackageName, &exists);
-                }
-            }
-        }
-    }
-#endif
-
     private void Page_Loaded(object sender, RoutedEventArgs e)
     {
-#if DEBUG
-        try
-        {
-            Test();
-        }
-        catch { }
-#endif
         string deviceFamilyVersion = AnalyticsInfo.VersionInfo.DeviceFamilyVersion;
         ulong version = ulong.Parse(deviceFamilyVersion);
         ulong build = (version & 0x00000000FFFF0000L) >> 16;
@@ -244,23 +205,28 @@ public sealed partial class MainPage : Page
 
     private void UpdateWindowsBrand()
     {
-        
-        string path = (string)Application.Current.Resources[$"Windows11Path"];
-        var geo = (Geometry)XamlBindingHelper.ConvertValue(typeof(Geometry), path);
-        /*if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.Composition.CompositionShape"))
+        if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.Composition.CompositionShape"))
         {
-            shape = Window.Current.Compositor.CreateSpriteShape(path);
-            shape.FillBrush = Window.Current.Compositor.CreateColorBrush(_uiSettings.GetColorValue(UIColorType.Foreground));
-            var shapeVisual = Window.Current.Compositor.CreateShapeVisual();
+            using FirstDisposableTuple<CanvasPathBuilder, float, float> path = OSName == "Windows11" ? OSPathsHelper.GetWindows11Path() : OSPathsHelper.GetWindows10Path();
+            using CanvasGeometry canvasGeo = CanvasGeometry.CreatePath(path.Item1);
+            CompositionPath compPath = new(canvasGeo);
+            var compositor = Window.Current.Compositor;
+            var compGeo = compositor.CreatePathGeometry(compPath);
+            var shape = compositor.CreateSpriteShape(compGeo);
+            shape.FillBrush = compositor.CreateColorBrush(_uiSettings.GetColorValue(UIColorType.Foreground));
+            var shapeVisual = compositor.CreateShapeVisual();
             shapeVisual.Shapes.Add(shape);
-            shapeVisual.Size = new((float)geo.Bounds.Width, (float)geo.Bounds.Height);
+            shapeVisual.Size = new(path.Item2, path.Item3);
             Windows.UI.Xaml.Hosting.ElementCompositionPreview.SetElementChildVisual(CompatibleCanvas, shapeVisual);
-            CompatibleCanvas.Width = geo.Bounds.Width;
-            CompatibleCanvas.Height = geo.Bounds.Height;
+            CompatibleCanvas.Width = path.Item2;
+            CompatibleCanvas.Height = path.Item3;
         }
         else
-        */
-        NonCompatiblePath.Data = geo;
+        {
+            string path = (string)Application.Current.Resources[$"{OSName}Path"];
+            var geo = (Geometry)XamlBindingHelper.ConvertValue(typeof(Geometry), path);
+            NonCompatiblePath.Data = geo;
+        }
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)

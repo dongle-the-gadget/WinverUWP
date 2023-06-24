@@ -143,8 +143,7 @@
     </Compile>
     <Compile Include="Helpers\CultureInfoHelper.cs" />
     <Compile Include="Helpers\ExpirationHelper.cs" />
-    <Compile Include="Helpers\Interop.cs" />
-    <Compile Include="Helpers\Win32Headers.cs" />
+    <Compile Include="Helpers\OSPathsHelper.cs" />
     <Compile Include="Helpers\WinbrandHelper.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -224,9 +223,6 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Media">
-      <Version>7.1.3</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.7.3</Version>
     </PackageReference>
@@ -298,6 +294,12 @@
       <SubType>Designer</SubType>
     </PRIResource>
     <None Include="WinverUWP_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WinverUWP.Interop\WinverUWP.Interop.csproj">
+      <Project>{f5252d7c-7179-4206-97c3-df295e1fcbfc}</Project>
+      <Name>WinverUWP.Interop</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

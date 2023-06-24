@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
-using static WinverUWP.Helpers.Win32Headers;
+using static WinverUWP.Interop.Windows;
 
 namespace WinverUWP.Helpers;
 

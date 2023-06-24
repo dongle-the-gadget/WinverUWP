@@ -1,8 +1,7 @@
 ﻿#nullable enable
-using System;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using static WinverUWP.Interop.Windows;
 
 namespace WinverUWP.Helpers;
 
@@ -44,7 +43,7 @@ public static unsafe class RegistryHelper
     {
         public uint Length;
 
-        public Win32Headers.HANDLE RootDirectory;
+        public HANDLE RootDirectory;
 
         public UNICODE_STRING* ObjectName;
 
@@ -73,19 +72,19 @@ public static unsafe class RegistryHelper
     }
 #pragma warning restore CS0649
 
-    private static Win32Headers.HMODULE _ntdll;
-    private static delegate* unmanaged[Stdcall]<Win32Headers.HANDLE, int> _NtClose;
-    private static delegate* unmanaged[Stdcall]<Win32Headers.HANDLE*, uint, OBJECT_ATTRIBUTES*, int> _NtOpenKey;
-    private static delegate* unmanaged[Stdcall]<Win32Headers.HANDLE, UNICODE_STRING*, uint, void*, uint, uint*, int> _NtQueryValueKey;
+    private static HMODULE _ntdll;
+    private static delegate* unmanaged[Stdcall]<HANDLE, int> _NtClose;
+    private static delegate* unmanaged[Stdcall]<HANDLE*, uint, OBJECT_ATTRIBUTES*, int> _NtOpenKey;
+    private static delegate* unmanaged[Stdcall]<HANDLE, UNICODE_STRING*, uint, void*, uint, uint*, int> _NtQueryValueKey;
     private static delegate* unmanaged[Stdcall]<UNICODE_STRING*, ushort*, void> _RtlInitUnicodeString;
 
     private static void Initialize()
     {
-        if (_ntdll == Win32Headers.HMODULE.NULL)
+        if (_ntdll == HMODULE.NULL)
         {
             fixed (char* libName = "ntdll.dll")
             {
-                _ntdll = Win32Headers.GetModuleHandleW((ushort*)libName);
+                _ntdll = GetModuleHandleW((ushort*)libName);
                 var test = Marshal.GetLastWin32Error();
             }
         }
@@ -93,28 +92,28 @@ public static unsafe class RegistryHelper
         {
             fixed (byte* test = Encoding.ASCII.GetBytes("NtClose"))
             {
-                _NtClose = (delegate* unmanaged[Stdcall]<Win32Headers.HANDLE, int>)Win32Headers.GetProcAddress(_ntdll, (sbyte*)test);
+                _NtClose = (delegate* unmanaged[Stdcall]<HANDLE, int>)GetProcAddress(_ntdll, (sbyte*)test);
             }
         }
         if (_NtOpenKey == null)
         {
             fixed (byte* test = Encoding.ASCII.GetBytes("NtOpenKey"))
             {
-                _NtOpenKey = (delegate* unmanaged[Stdcall]<Win32Headers.HANDLE*, uint, OBJECT_ATTRIBUTES*, int>)Win32Headers.GetProcAddress(_ntdll, (sbyte*)test);
+                _NtOpenKey = (delegate* unmanaged[Stdcall]<HANDLE*, uint, OBJECT_ATTRIBUTES*, int>)GetProcAddress(_ntdll, (sbyte*)test);
             }
         }
         if (_NtQueryValueKey == null)
         {
             fixed (byte* test = Encoding.ASCII.GetBytes("NtQueryValueKey"))
             {
-                _NtQueryValueKey = (delegate* unmanaged[Stdcall]<Win32Headers.HANDLE, UNICODE_STRING*, uint, void*, uint, uint*, int>)Win32Headers.GetProcAddress(_ntdll, (sbyte*)test);
+                _NtQueryValueKey = (delegate* unmanaged[Stdcall]<HANDLE, UNICODE_STRING*, uint, void*, uint, uint*, int>)GetProcAddress(_ntdll, (sbyte*)test);
             }
         }
         if (_RtlInitUnicodeString == null)
         {
             fixed (byte* test = Encoding.ASCII.GetBytes("RtlInitUnicodeString"))
             {
-                _RtlInitUnicodeString = (delegate* unmanaged[Stdcall]<UNICODE_STRING*, ushort*, void>)Win32Headers.GetProcAddress(_ntdll, (sbyte*)test);
+                _RtlInitUnicodeString = (delegate* unmanaged[Stdcall]<UNICODE_STRING*, ushort*, void>)GetProcAddress(_ntdll, (sbyte*)test);
             }
         }
     }
@@ -133,9 +132,9 @@ public static unsafe class RegistryHelper
                 Attributes = 0x00000040,
                 SecurityDescriptor = null,
                 SecurityQualityOfService = null,
-                RootDirectory = Win32Headers.HANDLE.NULL
+                RootDirectory = HANDLE.NULL
             };
-            Win32Headers.HANDLE hKey;
+            HANDLE hKey;
             _NtOpenKey(&hKey, 0x80000000, &objectAttributes);
 
             fixed (char* pValue = valueName)
