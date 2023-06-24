@@ -130,7 +130,7 @@
     <value>版本</value>
   </data>
   <data name="Expiration.Text" xml:space="preserve">
-    <value>Expiration</value>
+    <value>过期时间</value>
   </data>
   <data name="InstalledOn.Text" xml:space="preserve">
     <value>安装日期</value>
