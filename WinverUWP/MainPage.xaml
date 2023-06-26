@@ -37,7 +37,7 @@
             MaxWidth="300"
             Margin="100,20">
             <Grid>
-                <Path x:Name="NonCompatiblePath" Fill="{ThemeResource ApplicationForegroundThemeBrush}" />
+                <isShapesIncompatible:Path x:Name="NonCompatiblePath" Fill="{ThemeResource ApplicationForegroundThemeBrush}" />
                 <isShapesCompatible:Border>
                     <Border x:Name="CompatibleCanvas">
                         <!--  This is only for Designer, not actually loaded in the real UI tree  -->
