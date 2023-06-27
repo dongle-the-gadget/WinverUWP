@@ -129,11 +129,8 @@
   <data name="Edition.Text" xml:space="preserve">
     <value>Ediție</value>
   </data>
-  <data name="Experience.Text" xml:space="preserve">
-    <value>Experiență</value>
-  </data>
-  <data name="ExperiencePack" xml:space="preserve">
-    <value>Pachet de experiență pentru caracteristici Windows</value>
+  <data name="Expiration.Text" xml:space="preserve">
+    <value>Data expirării</value>
   </data>
   <data name="InstalledOn.Text" xml:space="preserve">
     <value>Instalat pe</value>
