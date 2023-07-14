@@ -129,11 +129,8 @@
   <data name="Edition.Text" xml:space="preserve">
     <value>Edisi</value>
   </data>
-  <data name="Experience.Text" xml:space="preserve">
-    <value>Pengalaman</value>
-  </data>
-  <data name="ExperiencePack" xml:space="preserve">
-    <value>Paket Pengalaman Fitur Windows</value>
+  <data name="Expiration.Text" xml:space="preserve">
+    <value>Kedaluwarsa</value>
   </data>
   <data name="InstalledOn.Text" xml:space="preserve">
     <value>Terpasang pada</value>
