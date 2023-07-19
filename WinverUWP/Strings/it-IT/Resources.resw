@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AboutWindows.Text" xml:space="preserve">
+    <data name="AboutWindows.Text" xml:space="preserve">
     <value>Informazioni su Windows</value>
   </data>
   <data name="CopiedButton.Text" xml:space="preserve">
@@ -129,11 +129,8 @@
   <data name="Edition.Text" xml:space="preserve">
     <value>Edizione</value>
   </data>
-  <data name="Experience.Text" xml:space="preserve">
-    <value>Funzionalità</value>
-  </data>
-  <data name="ExperiencePack" xml:space="preserve">
-    <value>Windows Feature Experience Pack</value>
+  <data name="Expiration.Text" xml:space="preserve">
+    <value>Scadenza</value>
   </data>
   <data name="InstalledOn.Text" xml:space="preserve">
     <value>Installato il</value>
