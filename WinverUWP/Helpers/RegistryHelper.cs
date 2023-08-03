@@ -90,28 +90,28 @@ public static unsafe class RegistryHelper
         }
         if (_NtClose == null)
         {
-            fixed (byte* test = Encoding.ASCII.GetBytes("NtClose"))
+            fixed (byte* test = "NtClose"u8)
             {
                 _NtClose = (delegate* unmanaged[Stdcall]<HANDLE, int>)GetProcAddress(_ntdll, (sbyte*)test);
             }
         }
         if (_NtOpenKey == null)
         {
-            fixed (byte* test = Encoding.ASCII.GetBytes("NtOpenKey"))
+            fixed (byte* test = "NtOpenKey"u8)
             {
                 _NtOpenKey = (delegate* unmanaged[Stdcall]<HANDLE*, uint, OBJECT_ATTRIBUTES*, int>)GetProcAddress(_ntdll, (sbyte*)test);
             }
         }
         if (_NtQueryValueKey == null)
         {
-            fixed (byte* test = Encoding.ASCII.GetBytes("NtQueryValueKey"))
+            fixed (byte* test = "NtQueryValueKey"u8)
             {
                 _NtQueryValueKey = (delegate* unmanaged[Stdcall]<HANDLE, UNICODE_STRING*, uint, void*, uint, uint*, int>)GetProcAddress(_ntdll, (sbyte*)test);
             }
         }
         if (_RtlInitUnicodeString == null)
         {
-            fixed (byte* test = Encoding.ASCII.GetBytes("RtlInitUnicodeString"))
+            fixed (byte* test = "RtlInitUnicodeString"u8)
             {
                 _RtlInitUnicodeString = (delegate* unmanaged[Stdcall]<UNICODE_STRING*, ushort*, void>)GetProcAddress(_ntdll, (sbyte*)test);
             }

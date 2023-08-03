@@ -11,7 +11,7 @@ public unsafe static class WinbrandHelper
         fixed(char* pModuleName = "Winbrand.dll")
         {
             HMODULE module = LoadLibraryW((ushort*)pModuleName);
-            fixed(byte* pProc = Encoding.ASCII.GetBytes("BrandingFormatString"))
+            fixed(byte* pProc = "BrandingFormatString"u8)
             {
                 var func = (delegate* unmanaged[Stdcall]<ushort*, ushort*>)GetProcAddress(module, (sbyte*)pProc);
                 fixed (char* pFormatName = "%WINDOWS_LONG%")
