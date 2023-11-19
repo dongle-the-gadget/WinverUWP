@@ -212,7 +212,7 @@ public sealed partial class MainPage : Page
             CompositionPath compPath = new(canvasGeo);
             var compositor = Window.Current.Compositor;
             var compGeo = compositor.CreatePathGeometry(compPath);
-            var shape = compositor.CreateSpriteShape(compGeo);
+            shape = compositor.CreateSpriteShape(compGeo);
             shape.FillBrush = compositor.CreateColorBrush(_uiSettings.GetColorValue(UIColorType.Foreground));
             var shapeVisual = compositor.CreateShapeVisual();
             shapeVisual.Shapes.Add(shape);
