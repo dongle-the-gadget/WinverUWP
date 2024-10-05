@@ -1,26 +1,14 @@
 ﻿using System.Runtime.InteropServices;
-using System.Text;
-using static WinverUWP.Interop.Windows;
 
 namespace WinverUWP.Helpers;
 
-public unsafe static class WinbrandHelper
+public unsafe static partial class WinbrandHelper
 {
+    [LibraryImport("winbrand.dll", StringMarshalling = StringMarshalling.Utf16)]
+    public static partial char* BrandingFormatString(string format);
+
     public static string GetWinbrand()
     {
-        fixed(char* pModuleName = "Winbrand.dll")
-        {
-            HMODULE module = LoadLibraryW((ushort*)pModuleName);
-            fixed(byte* pProc = "BrandingFormatString"u8)
-            {
-                var func = (delegate* unmanaged[Stdcall]<ushort*, ushort*>)GetProcAddress(module, (sbyte*)pProc);
-                fixed (char* pFormatName = "%WINDOWS_LONG%")
-                {
-                    ushort* branding = func((ushort*)pFormatName);
-                    FreeLibrary(module);
-                    return new string((char*)branding);
-                }
-            }
-        }
+        return new string(BrandingFormatString("%WINDOWS_LONG%"));
     }
 }

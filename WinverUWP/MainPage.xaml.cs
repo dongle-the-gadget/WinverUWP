@@ -12,8 +12,6 @@ using Windows.UI.Composition;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Markup;
-using Windows.UI.Xaml.Media;
 using WinverUWP.Helpers;
 
 namespace WinverUWP;
@@ -55,7 +53,13 @@ public sealed partial class MainPage : Page
 
         Window.Current.SetTitleBar(TitleBar);
 
-        Window.Current.Activated += Current_Activated;
+        Window.Current.Activated += (_, e) =>
+        {
+            if (e.WindowActivationState == Windows.UI.Core.CoreWindowActivationState.Deactivated)
+                VisualStateManager.GoToState(this, "WindowInactive", true);
+            else
+                VisualStateManager.GoToState(this, "WindowActive", true);
+        };
     }
 
     private void CoreTitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args)
@@ -66,14 +70,6 @@ public sealed partial class MainPage : Page
     private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
     {
         UpdateTitleBarLayout(sender);
-    }
-
-    private void Current_Activated(object sender, Windows.UI.Core.WindowActivatedEventArgs e)
-    {
-        if (e.WindowActivationState == Windows.UI.Core.CoreWindowActivationState.Deactivated)
-            AppTitle.Style = (Style)Application.Current.Resources["InactivatedAppTitle"];
-        else
-            AppTitle.Style = (Style)Application.Current.Resources["ActivatedAppTitle"];
     }
 
     private void UpdateTitleBarLayout(CoreApplicationViewTitleBar coreTitleBar)
@@ -205,28 +201,19 @@ public sealed partial class MainPage : Page
 
     private void UpdateWindowsBrand()
     {
-        if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.Composition.CompositionShape"))
-        {
-            using FirstDisposableTuple<CanvasPathBuilder, float, float> path = OSName == "Windows11" ? OSPathsHelper.GetWindows11Path() : OSPathsHelper.GetWindows10Path();
-            using CanvasGeometry canvasGeo = CanvasGeometry.CreatePath(path.Item1);
-            CompositionPath compPath = new(canvasGeo);
-            var compositor = Window.Current.Compositor;
-            var compGeo = compositor.CreatePathGeometry(compPath);
-            shape = compositor.CreateSpriteShape(compGeo);
-            shape.FillBrush = compositor.CreateColorBrush(_uiSettings.GetColorValue(UIColorType.Foreground));
-            var shapeVisual = compositor.CreateShapeVisual();
-            shapeVisual.Shapes.Add(shape);
-            shapeVisual.Size = new(path.Item2, path.Item3);
-            Windows.UI.Xaml.Hosting.ElementCompositionPreview.SetElementChildVisual(CompatibleCanvas, shapeVisual);
-            CompatibleCanvas.Width = path.Item2;
-            CompatibleCanvas.Height = path.Item3;
-        }
-        else
-        {
-            string path = (string)Application.Current.Resources[$"{OSName}Path"];
-            var geo = (Geometry)XamlBindingHelper.ConvertValue(typeof(Geometry), path);
-            NonCompatiblePath.Data = geo;
-        }
+        using FirstDisposableTuple<CanvasPathBuilder, float, float> path = OSName == "Windows11" ? OSPathsHelper.GetWindows11Path() : OSPathsHelper.GetWindows10Path();
+        using CanvasGeometry canvasGeo = CanvasGeometry.CreatePath(path.Item1);
+        CompositionPath compPath = new(canvasGeo);
+        var compositor = Window.Current.Compositor;
+        var compGeo = compositor.CreatePathGeometry(compPath);
+        shape = compositor.CreateSpriteShape(compGeo);
+        shape.FillBrush = compositor.CreateColorBrush(_uiSettings.GetColorValue(UIColorType.Foreground));
+        var shapeVisual = compositor.CreateShapeVisual();
+        shapeVisual.Shapes.Add(shape);
+        shapeVisual.Size = new(path.Item2, path.Item3);
+        Windows.UI.Xaml.Hosting.ElementCompositionPreview.SetElementChildVisual(CompatibleCanvas, shapeVisual);
+        CompatibleCanvas.Width = path.Item2;
+        CompatibleCanvas.Height = path.Item3;
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)

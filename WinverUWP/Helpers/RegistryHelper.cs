@@ -1,7 +1,6 @@
 ﻿#nullable enable
+using System;
 using System.Runtime.InteropServices;
-using System.Text;
-using static WinverUWP.Interop.Windows;
 
 namespace WinverUWP.Helpers;
 
@@ -30,20 +29,14 @@ namespace WinverUWP.Helpers;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public static unsafe class RegistryHelper
+public static unsafe partial class RegistryHelper
 {
-    [DllImport("api-ms-win-crt-heap-l1-1-0.dll", CallingConvention = CallingConvention.Cdecl)]
-    internal static extern void* malloc(nuint size);
-
-    [DllImport("api-ms-win-crt-heap-l1-1-0.dll", CallingConvention = CallingConvention.Cdecl)]
-    internal static extern void* free(void* ptr);
-
 #pragma warning disable CS0649
     private unsafe struct OBJECT_ATTRIBUTES
     {
         public uint Length;
 
-        public HANDLE RootDirectory;
+        public IntPtr RootDirectory;
 
         public UNICODE_STRING* ObjectName;
 
@@ -72,95 +65,54 @@ public static unsafe class RegistryHelper
     }
 #pragma warning restore CS0649
 
-    private static HMODULE _ntdll;
-    private static delegate* unmanaged[Stdcall]<HANDLE, int> _NtClose;
-    private static delegate* unmanaged[Stdcall]<HANDLE*, uint, OBJECT_ATTRIBUTES*, int> _NtOpenKey;
-    private static delegate* unmanaged[Stdcall]<HANDLE, UNICODE_STRING*, uint, void*, uint, uint*, int> _NtQueryValueKey;
-    private static delegate* unmanaged[Stdcall]<UNICODE_STRING*, ushort*, void> _RtlInitUnicodeString;
+    [LibraryImport("ntdll.dll", StringMarshalling = StringMarshalling.Utf16)]
+    private static partial void RtlInitUnicodeString(UNICODE_STRING* DestinationString, string SourceString);
 
-    private static void Initialize()
-    {
-        if (_ntdll == HMODULE.NULL)
-        {
-            fixed (char* libName = "ntdll.dll")
-            {
-                _ntdll = GetModuleHandleW((ushort*)libName);
-                var test = Marshal.GetLastWin32Error();
-            }
-        }
-        if (_NtClose == null)
-        {
-            fixed (byte* test = "NtClose"u8)
-            {
-                _NtClose = (delegate* unmanaged[Stdcall]<HANDLE, int>)GetProcAddress(_ntdll, (sbyte*)test);
-            }
-        }
-        if (_NtOpenKey == null)
-        {
-            fixed (byte* test = "NtOpenKey"u8)
-            {
-                _NtOpenKey = (delegate* unmanaged[Stdcall]<HANDLE*, uint, OBJECT_ATTRIBUTES*, int>)GetProcAddress(_ntdll, (sbyte*)test);
-            }
-        }
-        if (_NtQueryValueKey == null)
-        {
-            fixed (byte* test = "NtQueryValueKey"u8)
-            {
-                _NtQueryValueKey = (delegate* unmanaged[Stdcall]<HANDLE, UNICODE_STRING*, uint, void*, uint, uint*, int>)GetProcAddress(_ntdll, (sbyte*)test);
-            }
-        }
-        if (_RtlInitUnicodeString == null)
-        {
-            fixed (byte* test = "RtlInitUnicodeString"u8)
-            {
-                _RtlInitUnicodeString = (delegate* unmanaged[Stdcall]<UNICODE_STRING*, ushort*, void>)GetProcAddress(_ntdll, (sbyte*)test);
-            }
-        }
-    }
+    [DllImport("ntdll.dll")]
+    private static extern int NtClose(IntPtr hObject);
+
+    [DllImport("ntdll.dll")]
+    private static extern int NtOpenKey(IntPtr* KeyHandle, uint DesiredAccess, OBJECT_ATTRIBUTES* ObjectAttributes);
+
+    [DllImport("ntdll.dll")]
+    private static extern int NtQueryValueKey(IntPtr KeyHandle, UNICODE_STRING* ValueName, uint KeyValueInformationClass, void* KeyValueInformation, uint Length, uint* ResultLength);
 
     private static _KEY_VALUE_PARTIAL_INFORMATION* ReadInfo(string valueName)
     {
-        Initialize();
-        fixed (char* key = @"\Registry\Machine\SOFTWARE\Microsoft\Windows NT\CurrentVersion")
+        UNICODE_STRING* uKeyName = (UNICODE_STRING*)NativeMemory.Alloc((nuint)sizeof(UNICODE_STRING));
+        RtlInitUnicodeString(uKeyName, @"\Registry\Machine\SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+        OBJECT_ATTRIBUTES objectAttributes = new OBJECT_ATTRIBUTES
         {
-            UNICODE_STRING* uKeyName = (UNICODE_STRING*)malloc((nuint)sizeof(UNICODE_STRING));
-            _RtlInitUnicodeString(uKeyName, (ushort*)key);
-            OBJECT_ATTRIBUTES objectAttributes = new OBJECT_ATTRIBUTES
-            {
-                Length = (uint)sizeof(OBJECT_ATTRIBUTES),
-                ObjectName = uKeyName,
-                Attributes = 0x00000040,
-                SecurityDescriptor = null,
-                SecurityQualityOfService = null,
-                RootDirectory = HANDLE.NULL
-            };
-            HANDLE hKey;
-            _NtOpenKey(&hKey, 0x80000000, &objectAttributes);
+            Length = (uint)sizeof(OBJECT_ATTRIBUTES),
+            ObjectName = uKeyName,
+            Attributes = 0x00000040,
+            SecurityDescriptor = null,
+            SecurityQualityOfService = null,
+            RootDirectory = IntPtr.Zero
+        };
+        IntPtr hKey;
+        NtOpenKey(&hKey, 0x80000000, &objectAttributes);
 
-            fixed (char* pValue = valueName)
-            {
-                UNICODE_STRING* uValueName = (UNICODE_STRING*)malloc((nuint)sizeof(UNICODE_STRING));
-                _RtlInitUnicodeString(uValueName, (ushort*)pValue);
-                // Query once to get the size of KEY_VALUE_PARTIAL_INFORMATION we need
-                uint resultLength;
-                int error = _NtQueryValueKey(hKey, uValueName, 2, null, 0, &resultLength);
-                if (error == -1073741772)
-                {
-                    // Key doesn't exist
-                    _NtClose(hKey);
-                    free(uValueName);
-                    free(uKeyName);
-                    return null;
-                }
-                // Second query for value.
-                _KEY_VALUE_PARTIAL_INFORMATION* partialInfo = (_KEY_VALUE_PARTIAL_INFORMATION*)malloc(resultLength);
-                _NtQueryValueKey(hKey, uValueName, 2, partialInfo, resultLength, &resultLength);
-                _NtClose(hKey);
-                free(uValueName);
-                free(uKeyName);
-                return partialInfo;
-            }
+        UNICODE_STRING* uValueName = (UNICODE_STRING*)NativeMemory.Alloc((nuint)sizeof(UNICODE_STRING));
+        RtlInitUnicodeString(uValueName, valueName);
+        // Query once to get the size of KEY_VALUE_PARTIAL_INFORMATION we need
+        uint resultLength;
+        int error = NtQueryValueKey(hKey, uValueName, 2, null, 0, &resultLength);
+        if (error == -1073741772)
+        {
+            // Key doesn't exist
+            NtClose(hKey);
+            NativeMemory.Free(uValueName);
+            NativeMemory.Free(uKeyName);
+            return null;
         }
+        // Second query for value.
+        _KEY_VALUE_PARTIAL_INFORMATION* partialInfo = (_KEY_VALUE_PARTIAL_INFORMATION*)NativeMemory.Alloc(resultLength);
+        NtQueryValueKey(hKey, uValueName, 2, partialInfo, resultLength, &resultLength);
+        NtClose(hKey);
+        NativeMemory.Free(uValueName);
+        NativeMemory.Free(uKeyName);
+        return partialInfo;
     }
 
     public static uint? GetInfoDWord(string valueName)
@@ -169,7 +121,7 @@ public static unsafe class RegistryHelper
         if (buf == null)
             return null;
         uint value = *(uint*)buf->Data;
-        free(buf);
+        NativeMemory.Free(buf);
         return value;
     }
 
@@ -179,7 +131,7 @@ public static unsafe class RegistryHelper
         if (info == null)
             return null;
         string test = new string((char*)info->Data);
-        free(info);
+        NativeMemory.Free(info);
         return test;
     }
 }
