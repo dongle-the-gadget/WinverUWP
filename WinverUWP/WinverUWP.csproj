@@ -15,11 +15,14 @@
     <IncludePublishItemsOutputGroup Condition="'$(Configuration)' == 'Release'">true</IncludePublishItemsOutputGroup>
     <DisableRuntimeMarshalling>true</DisableRuntimeMarshalling>
     <SelfContained>true</SelfContained>
+    <CsWinRTEnableDynamicObjectsSupport>false</CsWinRTEnableDynamicObjectsSupport>
+    <CsWinRTEnableICustomPropertyProviderSupport>false</CsWinRTEnableICustomPropertyProviderSupport>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DisposableMemory.ModernNetUAP.WinUI" Version="2.8.6.3-preview" />
     <PackageReference Include="Win2D.uwp" Version="1.28.0-preview1" />
     <PackageReference Include="Microsoft.UI.Xaml" Version="2.8.6" ExcludeAssets="compile" />
     <PackageReference Include="Microsoft.Web.WebView2" ExcludeAssets="all" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.5" />
   </ItemGroup>
 </Project>
