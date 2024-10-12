@@ -84,10 +84,6 @@ public sealed partial class MainPage : Page
 
     private void CopyButton_Click(object sender, RoutedEventArgs e)
     {
-        if (isCopying)
-            return;
-
-        isCopying = true;
         DataPackage package = new DataPackage();
 
         Dictionary<string, string> data = new Dictionary<string, string>()
@@ -109,6 +105,11 @@ public sealed partial class MainPage : Page
 
         package.SetText(targetText);
         Clipboard.SetContent(package);
+
+        if (isCopying)
+            return;
+
+        isCopying = true;
         CopyToClipboardSuccessAnimation.Begin();
         CopyToClipboardSuccessAnimation.Completed += CopyToClipboardSuccessAnimation_Completed;
     }
@@ -124,6 +125,7 @@ public sealed partial class MainPage : Page
         var titleBar = ApplicationView.GetForCurrentView().TitleBar;
         titleBar.ButtonHoverBackgroundColor = (Color)Application.Current.Resources["SubtleFillColorSecondary"];
         titleBar.ButtonPressedBackgroundColor = (Color)Application.Current.Resources["SubtleFillColorTertiary"];
+        titleBar.ButtonForegroundColor = titleBar.ButtonHoverForegroundColor = (Color)Application.Current.Resources["TextFillColorPrimary"];
     }
 
     private void Page_Loaded(object sender, RoutedEventArgs e)
