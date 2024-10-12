@@ -6,6 +6,7 @@ using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
+using Windows.System;
 using Windows.System.Profile;
 using Windows.UI;
 using Windows.UI.Composition;
@@ -23,10 +24,13 @@ public sealed partial class MainPage : Page
     private UISettings _uiSettings;
     private CompositionSpriteShape shape;
     private bool isCopying;
+    private DispatcherQueue dispatcherQueue;
 
     public MainPage()
     {
         InitializeComponent();
+
+        dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
         _uiSettings = new UISettings();
 
@@ -139,9 +143,9 @@ public sealed partial class MainPage : Page
         UpdateWindowsBrand();
         SetTitleBarBackground();
 
-        _uiSettings.ColorValuesChanged += async (uiSettings, _) =>
+        _uiSettings.ColorValuesChanged += (uiSettings, _) =>
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            dispatcherQueue.TryEnqueue(() =>
             {
                 if (shape != null)
                 {
@@ -150,7 +154,6 @@ public sealed partial class MainPage : Page
                 }
                 SetTitleBarBackground();
             });
-
         };
 
         Build.Text = build.ToString();
