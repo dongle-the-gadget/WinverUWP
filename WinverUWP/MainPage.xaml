@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:isMicaIncompatible="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsTypeNotPresent(Windows.UI.Composition.ICompositionSupportsSystemBackdrop)"
+    xmlns:local="using:WinverUWP.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
@@ -31,17 +32,12 @@
                 Style="{StaticResource CaptionTextBlockStyle}" />
         </Grid>
 
-        <Viewbox
+        <local:WindowsBrandingControl
+            x:Name="BrandingControl"
             Grid.Row="1"
             MaxWidth="300"
-            Margin="100,20">
-            <Grid>
-                <Border x:Name="CompatibleCanvas">
-                    <!--  This is only for Designer, not actually loaded in the real UI tree  -->
-                    <d:Path Data="{StaticResource Windows11Path}" Fill="{ThemeResource ApplicationForegroundThemeBrush}" />
-                </Border>
-            </Grid>
-        </Viewbox>
+            Margin="100,20"
+            Foreground="{ThemeResource ApplicationForegroundThemeBrush}" />
 
         <ScrollViewer
             Grid.Row="2"

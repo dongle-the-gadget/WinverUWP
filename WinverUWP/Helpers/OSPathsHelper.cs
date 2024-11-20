@@ -8,18 +8,22 @@ using System.Threading.Tasks;
 
 namespace WinverUWP.Helpers;
 
-public class FirstDisposableTuple<T1, T2, T3> : Tuple<T1, T2, T3>, IDisposable where T1 : IDisposable
+public class OSPath(CanvasGeometry geometry, float width, float height)
 {
-    public FirstDisposableTuple(T1 item1, T2 item2, T3 item3) : base(item1, item2, item3)
-    { }
-
-    public void Dispose() => Item1.Dispose();
+    public CanvasGeometry Geometry { get; } = geometry;
+    public float Width { get; } = width;
+    public float Height { get; } = height;
 }
 
 public static class OSPathsHelper
 {
-    public static FirstDisposableTuple<CanvasPathBuilder, float, float> GetWindows11Path()
+    private static OSPath? _windows11Path = null;
+    private static OSPath? _windows10Path = null;
+
+    public static OSPath GetWindows11Path()
     {
+        if (_windows11Path != null)
+            return _windows11Path;
         var pathBuilder = new CanvasPathBuilder(null);
 
         pathBuilder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Winding);
@@ -191,11 +195,16 @@ public static class OSPathsHelper
         pathBuilder.AddLine(new Vector2(103.418f, 9.863f));
         pathBuilder.EndFigure(CanvasFigureLoop.Closed);
 
-        return new(pathBuilder, 264.58319091796875f, 48.747001647949219f);
+        CanvasGeometry geometry = CanvasGeometry.CreatePath(pathBuilder);
+        _windows11Path = new(geometry, 264.58319091796875f, 48.747001647949219f);
+        return _windows11Path;
     }
 
-    public static FirstDisposableTuple<CanvasPathBuilder, float, float> GetWindows10Path()
+    public static OSPath GetWindows10Path()
     {
+        if (_windows10Path is not null)
+            return _windows10Path;
+        
         var pathBuilder = new CanvasPathBuilder(null);
 
         pathBuilder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Winding);
@@ -373,6 +382,8 @@ public static class OSPathsHelper
         pathBuilder.AddCubicBezier(new Vector2(462.937f, 21.4013f), new Vector2(458.568f, 20.0787f), new Vector2(455.031f, 21.5f));
         pathBuilder.EndFigure(CanvasFigureLoop.Open);
 
-        return new(pathBuilder, 475.1199951171875f, 87.598602294921875f);
+        CanvasGeometry geometry = CanvasGeometry.CreatePath(pathBuilder);
+
+        return _windows10Path = new(geometry, 475.1199951171875f, 87.598602294921875f);
     }
 }

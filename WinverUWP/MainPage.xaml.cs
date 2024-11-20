@@ -1,5 +1,4 @@
-﻿using Microsoft.Graphics.Canvas.Geometry;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.ApplicationModel.Core;
@@ -13,6 +12,7 @@ using Windows.UI.Composition;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using WinverUWP.Controls;
 using WinverUWP.Helpers;
 
 namespace WinverUWP;
@@ -29,7 +29,6 @@ public sealed partial class MainPage : Page
     public MainPage()
     {
         InitializeComponent();
-
         dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
         _uiSettings = new UISettings();
@@ -206,19 +205,8 @@ public sealed partial class MainPage : Page
 
     private void UpdateWindowsBrand()
     {
-        using FirstDisposableTuple<CanvasPathBuilder, float, float> path = OSName == "Windows11" ? OSPathsHelper.GetWindows11Path() : OSPathsHelper.GetWindows10Path();
-        using CanvasGeometry canvasGeo = CanvasGeometry.CreatePath(path.Item1);
-        CompositionPath compPath = new(canvasGeo);
-        var compositor = Window.Current.Compositor;
-        var compGeo = compositor.CreatePathGeometry(compPath);
-        shape = compositor.CreateSpriteShape(compGeo);
-        shape.FillBrush = compositor.CreateColorBrush(_uiSettings.GetColorValue(UIColorType.Foreground));
-        var shapeVisual = compositor.CreateShapeVisual();
-        shapeVisual.Shapes.Add(shape);
-        shapeVisual.Size = new(path.Item2, path.Item3);
-        Windows.UI.Xaml.Hosting.ElementCompositionPreview.SetElementChildVisual(CompatibleCanvas, shapeVisual);
-        CompatibleCanvas.Width = path.Item2;
-        CompatibleCanvas.Height = path.Item3;
+        WindowsBranding brand = OSName == "Windows11" ? WindowsBranding.Windows11 : WindowsBranding.Windows10;
+        BrandingControl.Branding = brand;
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)
