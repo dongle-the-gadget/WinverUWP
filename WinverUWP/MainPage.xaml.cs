@@ -5,10 +5,8 @@ using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
-using Windows.System;
 using Windows.System.Profile;
 using Windows.UI;
-using Windows.UI.Composition;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -21,17 +19,11 @@ public sealed partial class MainPage : Page
 {
     private string OSName = "";
     private ResourceLoader resourceLoader;
-    private UISettings _uiSettings;
-    private CompositionSpriteShape shape;
     private bool isCopying;
-    private DispatcherQueue dispatcherQueue;
 
     public MainPage()
     {
         InitializeComponent();
-        dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-
-        _uiSettings = new UISettings();
 
         resourceLoader = ResourceLoader.GetForCurrentView();
 
@@ -141,19 +133,6 @@ public sealed partial class MainPage : Page
         OSName = build >= 21996 ? "Windows11" : "Windows10";
         UpdateWindowsBrand();
         SetTitleBarBackground();
-
-        _uiSettings.ColorValuesChanged += (uiSettings, _) =>
-        {
-            dispatcherQueue.TryEnqueue(() =>
-            {
-                if (shape != null)
-                {
-                    shape.FillBrush.Dispose();
-                    shape.FillBrush = Window.Current.Compositor.CreateColorBrush(uiSettings.GetColorValue(UIColorType.Foreground));
-                }
-                SetTitleBarBackground();
-            });
-        };
 
         Build.Text = build.ToString();
 

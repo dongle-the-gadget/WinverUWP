@@ -15,16 +15,14 @@
     <SelfContained>true</SelfContained> <!-- Don't ask me why this is needed -->
     <CsWinRTEnableDynamicObjectsSupport>false</CsWinRTEnableDynamicObjectsSupport>
     <CsWinRTEnableICustomPropertyProviderSupport>false</CsWinRTEnableICustomPropertyProviderSupport>
-    <MicrosoftWindowsSDKBuildToolsMSIXPackageVersion>1.1.20241024.1</MicrosoftWindowsSDKBuildToolsMSIXPackageVersion>
+    <MicrosoftWindowsSDKBuildToolsMSIXPackageVersion>1.1.20250107.1</MicrosoftWindowsSDKBuildToolsMSIXPackageVersion>
     <IlcGenerateMstatFile>true</IlcGenerateMstatFile>
     <IlcGenerateDgmlFile>true</IlcGenerateDgmlFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DisposableMemory.ModernNetUAP.WinUI" Version="2.8.6.3-preview" />
-    <!--<PackageReference Include="Microsoft.Windows.SDK.CPP" Version="10.0.26100.2161" />-->
     <PackageReference Include="Win2D.uwp" Version="1.28.0" />
-    <PackageReference Include="Microsoft.UI.Xaml" Version="2.8.6" ExcludeAssets="compile" />
+    <PackageReference Include="Microsoft.UI.Xaml" Version="2.8.7" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2839-prerelease" ExcludeAssets="all" />
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.5" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
   </ItemGroup>
 </Project>
