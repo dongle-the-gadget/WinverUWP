@@ -22,7 +22,7 @@
   <ItemGroup>
     <PackageReference Include="Win2D.uwp" Version="1.28.0" />
     <PackageReference Include="Microsoft.UI.Xaml" Version="2.8.7" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2839-prerelease" ExcludeAssets="all" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2849.39" ExcludeAssets="all" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
   </ItemGroup>
 </Project>
