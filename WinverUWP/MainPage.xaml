@@ -26,7 +26,7 @@
             Background="Transparent">
             <TextBlock
                 Name="AppTitle"
-                x:Uid="AboutWindows"
+                Text = "Winver UWP"
                 Margin="{StaticResource TitleBarLeftMargin}"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center" />
